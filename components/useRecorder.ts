@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { diag } from "@/lib/diag";
 
 export type RecorderState = "idle" | "starting" | "recording";
 
@@ -85,6 +86,7 @@ export function useRecorder() {
   const timer = useRef(0);
   const chunks = useRef<Blob[]>([]);
   const peak = useRef(0);
+  const stats = useRef({ sum: 0, frames: 0, loud: 0, startedAt: 0 });
 
   const cleanup = useCallback(() => {
     window.clearInterval(timer.current);
@@ -103,8 +105,20 @@ export function useRecorder() {
   const start = useCallback(async (deviceId?: string): Promise<boolean> => {
     setError("");
     setDeviceLabel("");
+    diag("mic-start", {
+      device: deviceId ? "specific" : "default",
+      secure: window.isSecureContext,
+      origin: window.location.origin,
+      ua: navigator.userAgent.slice(0, 140),
+    });
+    // Permission state, logged when it resolves. Not awaited, so it can't delay the microphone request.
+    void navigator.permissions
+      ?.query({ name: "microphone" as PermissionName })
+      .then((p) => diag("mic-permission", { state: p.state }))
+      .catch(() => {});
     const problem = micSupportProblem();
     if (problem) {
+      diag("mic-unavailable", { reason: problem.slice(0, 80) });
       setError(problem);
       return false;
     }
@@ -118,18 +132,38 @@ export function useRecorder() {
           autoGainControl: true,
         },
       });
-      setDeviceLabel(s.getAudioTracks()[0]?.label ?? "");
+      const track = s.getAudioTracks()[0];
+      const settings = track?.getSettings?.() ?? {};
+      diag("mic-open", {
+        label: track?.label,
+        muted: track?.muted,
+        readyState: track?.readyState,
+        sampleRate: settings.sampleRate,
+        channels: settings.channelCount,
+        echoCancellation: settings.echoCancellation,
+        noiseSuppression: settings.noiseSuppression,
+        autoGainControl: settings.autoGainControl,
+      });
+      if (track) {
+        track.onmute = () => diag("track-muted");
+        track.onunmute = () => diag("track-unmuted");
+        track.onended = () => diag("track-ended");
+      }
+      setDeviceLabel(track?.label ?? "");
       stream.current = s;
       chunks.current = [];
       peak.current = 0;
+      stats.current = { sum: 0, frames: 0, loud: 0, startedAt: Date.now() };
 
       const mimeType = pickMimeType((t) => MediaRecorder.isTypeSupported(t));
       const r = new MediaRecorder(s, mimeType ? { mimeType } : undefined);
       r.ondataavailable = (e) => {
         if (e.data.size > 0) chunks.current.push(e.data);
       };
+      r.onerror = () => diag("recorder-error");
       recorder.current = r;
       r.start(1000);
+      diag("recorder-started", { mimeType: r.mimeType, requested: mimeType ?? "browser default" });
 
       // Live level meter from the raw input.
       const AudioCtx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -137,6 +171,7 @@ export function useRecorder() {
       ctx.current = ac;
       // Some browsers (Safari especially) start the context suspended, which would leave the meter flat.
       void ac.resume().catch(() => {});
+      window.setTimeout(() => diag("audio-context", { state: ac.state }), 600);
       const analyser = ac.createAnalyser();
       analyser.fftSize = 512;
       ac.createMediaStreamSource(s).connect(analyser);
@@ -153,12 +188,16 @@ export function useRecorder() {
         // Root-mean-square, lightly boosted so normal speech fills most of the meter.
         const rms = Math.min(1, Math.sqrt(sum / data.length) * 3);
         peak.current = Math.max(peak.current, rms);
+        stats.current.sum += rms;
+        stats.current.frames += 1;
+        if (rms > 0.06) stats.current.loud += 1;
         setLevel(rms);
       }, 80);
 
       setState("recording");
       return true;
     } catch (e) {
+      diag("mic-error", { name: (e as Error)?.name, message: String((e as Error)?.message ?? e).slice(0, 120) });
       cleanup();
       setError(describeMicError(e));
       return false;
@@ -175,6 +214,16 @@ export function useRecorder() {
       r.onstop = () => {
         const blob = chunks.current.length ? new Blob(chunks.current, { type: r.mimeType || "audio/webm" }) : null;
         const p = peak.current;
+        const st = stats.current;
+        diag("recorder-stopped", {
+          seconds: +((Date.now() - st.startedAt) / 1000).toFixed(1),
+          chunks: chunks.current.length,
+          bytes: blob?.size ?? 0,
+          type: blob?.type,
+          peakPct: Math.round(p * 100),
+          avgPct: st.frames ? Math.round((st.sum / st.frames) * 100) : 0,
+          loudFramesPct: st.frames ? Math.round((st.loud / st.frames) * 100) : 0,
+        });
         cleanup();
         resolve({ blob, peak: p });
       };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { diag } from "@/lib/diag";
 
 type Result = { isFinal: boolean; 0: { transcript: string } };
 type RecEvent = { resultIndex: number; results: ArrayLike<Result> };
@@ -10,7 +11,7 @@ type Recognition = {
   interimResults: boolean;
   onresult: ((e: RecEvent) => void) | null;
   onend: (() => void) | null;
-  onerror: (() => void) | null;
+  onerror: ((e: { error?: string }) => void) | null;
   start(): void;
   stop(): void;
 };
@@ -63,10 +64,18 @@ export function useDictation(onText: (text: string) => void, onInterim?: (text: 
       rec.current = null;
       setListening(false);
     };
-    r.onend = done;
-    r.onerror = done;
+    r.onend = () => {
+      diag("speech-end");
+      done();
+    };
+    r.onerror = (e) => {
+      // Codes such as "not-allowed", "audio-capture", "network" or "no-speech" explain why captions stopped.
+      diag("speech-error", { error: e.error });
+      done();
+    };
     rec.current = r;
     r.start();
+    diag("speech-start", { interim: r.interimResults });
     setListening(true);
   }, []);
 

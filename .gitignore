@@ -42,3 +42,6 @@ next-env.d.ts
 
 # keep the template, never the real secrets
 !.env.example
+
+# local voice-feature trace (development only)
+/.diagnostics/

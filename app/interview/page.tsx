@@ -7,9 +7,11 @@ import LevelMeter from "@/components/LevelMeter";
 import Progress from "@/components/Progress";
 import ScoreRing from "@/components/ScoreRing";
 import { speak, stopSpeaking, useDictation } from "@/components/speech";
+import DiagPanel from "@/components/DiagPanel";
 import MicPicker from "@/components/MicPicker";
 import { micSupportProblem, SILENCE_PEAK, useRecorder } from "@/components/useRecorder";
 import { postJson, transcribeBlob } from "@/lib/api";
+import { diag } from "@/lib/diag";
 import { MAX_QUESTIONS, STAGES, type ScoreResult, type Stage, type Turn } from "@/lib/interview";
 import { useSector } from "@/lib/prefs";
 import { SECTOR_BY_ID, SECTORS } from "@/lib/sectors";
@@ -50,6 +52,7 @@ export default function InterviewPage() {
   const [micRefresh, setMicRefresh] = useState(0);
   const [voiceReady, setVoiceReady] = useState<boolean | null>(null);
   const [supportProblem, setSupportProblem] = useState<string | null>(null);
+  const [captionsOn, setCaptionsOn] = useState(false);
   const [captionFinal, setCaptionFinal] = useState("");
   const [captionInterim, setCaptionInterim] = useState("");
 
@@ -208,6 +211,7 @@ export default function InterviewPage() {
     setCaptionInterim("");
     blobRef.current = null;
     stopSpeaking(); // don't let the read-aloud question bleed into the recording
+    diag("answer-begin", { question: history.length + 1, captions: captionsOn });
     setVstate("starting");
     const ok = await recorder.start(micId || undefined);
     if (!ok) {
@@ -220,7 +224,7 @@ export default function InterviewPage() {
     setRunning(true);
     setVstate("recording");
     const phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (captions.supported && !micId && !phone) captions.start();
+    if (captionsOn && captions.supported && !micId && !phone) captions.start();
   }
 
   /** Send a finished recording for transcription. A failure keeps the recording so it can be retried. */
@@ -239,6 +243,7 @@ export default function InterviewPage() {
       setAnswer(text);
       // "Heard" means we got words back. The meter only words the message, since it can't run in a background tab.
       setSilent(!text.trim());
+      diag("transcript", { chars: text.trim().length, heard: Boolean(text.trim()) });
       setVstate("review");
     } catch (e) {
       setError((e as Error).message);
@@ -249,6 +254,7 @@ export default function InterviewPage() {
   /** End the video-style answer: stop recording, then transcribe it. */
   async function finishVideoAnswer() {
     if (vstate !== "recording") return;
+    diag("answer-finish", { secondsLeft: left });
     setRunning(false);
     captions.stop();
     setVstate("transcribing");
@@ -425,6 +431,19 @@ export default function InterviewPage() {
                 </p>
               )}
               <MicPicker value={micId} onChange={setMicId} refreshKey={micRefresh} />
+              {captions.supported && (
+                <label className="flex items-start gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    className="mt-1 accent-brand-600"
+                    checked={captionsOn}
+                    onChange={(e) => setCaptionsOn(e.target.checked)}
+                  />
+                  <span>
+                    Show live captions while I speak <span className="text-muted">(experimental, uses your browser&apos;s speech service)</span>
+                  </span>
+                </label>
+              )}
               <div className="flex flex-wrap items-center gap-4">
                 <button
                   type="button"
@@ -456,6 +475,7 @@ export default function InterviewPage() {
                   {micTest.error}
                 </p>
               )}
+              <DiagPanel />
             </div>
           )}
 
@@ -610,6 +630,7 @@ export default function InterviewPage() {
         <h1 className="text-xl font-bold leading-snug sm:text-2xl">{question}</h1>
       </div>
       {video && <CameraPreview />}
+      {video && <DiagPanel />}
       {video ? (
         <>
           {vstate === "idle" && (
