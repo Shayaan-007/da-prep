@@ -23,6 +23,21 @@ function getClient() {
 /** Dev/testing only: serve canned responses so the UI can be exercised without an API key. */
 export const mockEnabled = () => process.env.MOCK_AI === "1" && process.env.NODE_ENV !== "production";
 
+export const transcribeModel = () => process.env.OPENAI_TRANSCRIBE_MODEL || "gpt-transcribe";
+
+/** Turn a recorded answer (webm, mp4, ogg, wav...) into text. Returns an empty string if no speech was detected. */
+export async function transcribeAudio(file: File): Promise<string> {
+  if (mockEnabled()) {
+    return "In Year 11 I led a four person robotics team. We were behind on the build, so I split the jobs by strength and we finished two days early.";
+  }
+  const res = await getClient().audio.transcriptions.create({
+    file,
+    model: transcribeModel(),
+    languages: ["en"],
+  });
+  return (res.text ?? "").trim();
+}
+
 type AskOptions<T extends z.ZodTypeAny> = {
   system: string;
   user: string;

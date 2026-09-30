@@ -3,7 +3,7 @@
 AI mock interviews, practice tests, an application tracker and guides for UK degree apprenticeship applicants.
 
 ## Features
-- **Mock interview** (`/interview`): questions built from a pasted job advert and a chosen sector; text or timed video style (60s, one attempt); optional read-aloud, dictation and camera self-view; STAR feedback, score and stronger sample answers.
+- **Mock interview** (`/interview`): questions built from a pasted job advert and a chosen sector, one planned theme per question so none repeat; text, or timed video style (60s, one attempt) where your voice is recorded with a live level meter, transcribed, and shown for you to check before marking; optional read-aloud, text-mode dictation and camera self-view; STAR feedback, score and stronger sample answers.
 - **Practice tests** (`/practice`): 48 original SJT, numerical, verbal and logical questions with explanations, timers and a review of the ones you missed.
 - **Statement review** (`/review`), **stories bank** with AI STAR builder (`/stories`).
 - **Tracker** (`/tracker`) with closing-date warnings and calendar (.ics) export.
@@ -40,7 +40,7 @@ Any Node host works (Vercel is the simplest). Set the environment variables abov
 
 ## Layout
 - `app/` pages and API routes (`app/api/*`); `components/` shared UI; `lib/` prompts, schemas, question bank, sector packs, store, backup and calendar helpers; `lib/server/` service-role helpers (never import from client code); `supabase/schema.sql`; `tests/`.
-- AI provider: OpenAI Responses API in `lib/ai.ts`. Two tiers, set by `OPENAI_MODEL` (marking and feedback, default `gpt-6.1-sol`) and `OPENAI_MODEL_FAST` (questions and STAR drafts, default `gpt-6-luna`). Requests use `store: false`. Canned dev responses: `lib/mocks.ts`.
+- AI provider: OpenAI Responses API in `lib/ai.ts`. Two tiers, set by `OPENAI_MODEL` (marking and feedback, default `gpt-6.1-sol`) and `OPENAI_MODEL_FAST` (questions and STAR drafts, default `gpt-6-luna`), and `OPENAI_TRANSCRIBE_MODEL` (video-style voice answers, default `gpt-transcribe`). Requests use `store: false`. Canned dev responses: `lib/mocks.ts`.
 
 ## Before going public
 - The in-memory rate limiter (`lib/rateLimit.ts`) is per-instance: replace with Redis/Upstash on serverless.

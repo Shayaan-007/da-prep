@@ -2,13 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 const create = vi.fn();
+const transcribe = vi.fn();
 vi.mock("openai", () => ({
   default: class {
     responses = { create: (...a: unknown[]) => create(...a) };
+    audio = { transcriptions: { create: (...a: unknown[]) => transcribe(...a) } };
   },
 }));
 
-import { askJson, modelFor } from "@/lib/ai";
+import { askJson, modelFor, transcribeAudio, transcribeModel } from "@/lib/ai";
 
 const schema = z.object({ question: z.string() });
 const ok = (text: string) => ({ status: "completed", output_text: text });
@@ -16,6 +18,8 @@ const base = { system: "You are an interviewer.", user: "Advert goes here.", sch
 
 beforeEach(() => {
   create.mockReset();
+  transcribe.mockReset();
+  vi.stubEnv("OPENAI_TRANSCRIBE_MODEL", "");
   vi.stubEnv("OPENAI_API_KEY", "sk-test");
   vi.stubEnv("OPENAI_MODEL", "");
   vi.stubEnv("OPENAI_MODEL_FAST", "");
@@ -95,6 +99,47 @@ describe("parsing and retries", () => {
     create.mockRejectedValue(new Error("401 invalid api key"));
     await expect(askJson(base)).rejects.toThrow(/401/);
     expect(create).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("transcription", () => {
+  const file = new File([new Uint8Array(100)], "answer.webm", { type: "audio/webm" });
+
+  it("sends the recording to the transcription model and returns trimmed text", async () => {
+    transcribe.mockResolvedValue({ text: "  I led a robotics team.  " });
+    await expect(transcribeAudio(file)).resolves.toBe("I led a robotics team.");
+    const req = transcribe.mock.calls[0][0];
+    expect(req.file).toBe(file);
+    expect(req.model).toBe("gpt-transcribe");
+    expect(req.languages).toEqual(["en"]);
+  });
+
+  it("uses the model override from the environment", async () => {
+    vi.stubEnv("OPENAI_TRANSCRIBE_MODEL", "my-transcriber");
+    expect(transcribeModel()).toBe("my-transcriber");
+    transcribe.mockResolvedValue({ text: "hi" });
+    await transcribeAudio(file);
+    expect(transcribe.mock.calls[0][0].model).toBe("my-transcriber");
+  });
+
+  it("returns an empty string when no speech was detected", async () => {
+    transcribe.mockResolvedValue({ text: "" });
+    await expect(transcribeAudio(file)).resolves.toBe("");
+  });
+
+  it("fails clearly without an API key and passes API errors through", async () => {
+    vi.stubEnv("OPENAI_API_KEY", "");
+    await expect(transcribeAudio(file)).rejects.toThrow(/OPENAI_API_KEY/);
+    vi.stubEnv("OPENAI_API_KEY", "sk-test");
+    transcribe.mockRejectedValue(new Error("413 too large"));
+    await expect(transcribeAudio(file)).rejects.toThrow(/413/);
+  });
+
+  it("serves a canned transcript in mock mode without calling the API", async () => {
+    vi.stubEnv("MOCK_AI", "1");
+    vi.stubEnv("OPENAI_API_KEY", "");
+    await expect(transcribeAudio(file)).resolves.toMatch(/robotics/);
+    expect(transcribe).not.toHaveBeenCalled();
   });
 });
 

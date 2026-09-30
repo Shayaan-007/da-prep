@@ -18,10 +18,13 @@ export default function Privacy() {
         Job adverts, CV or statement text and your interview answers are sent to OpenAI&apos;s API to generate
         questions and feedback. Please don&apos;t include names, addresses, phone numbers or other personal details.
       </p>
-      <h2 className="font-semibold">Speech and camera</h2>
+      <h2 className="font-semibold">Voice, speech and camera</h2>
       <p>
-        Dictation uses your browser&apos;s speech recognition, which may send audio to your browser provider. The
-        camera self-view stays on your device and is never recorded or uploaded.
+        In video-style interviews your voice is recorded by your browser while you answer and sent to OpenAI to be
+        transcribed. This site does not keep the recording, and only the transcript you confirm is marked. The
+        microphone test on the setup screen runs entirely on your device. Text-mode dictation uses your browser&apos;s
+        own speech recognition, which may send audio to your browser provider. The camera self-view stays on your
+        device and is never recorded or uploaded.
       </p>
       <h2 className="font-semibold">Deleting your data</h2>
       <p>
