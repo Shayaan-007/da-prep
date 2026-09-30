@@ -1,68 +1,61 @@
 @import "tailwindcss";
 
+/*
+  Clean, professional: one family of type, one solid brand colour, flat white surfaces on a quiet
+  background, small consistent radii, no gradients or glows, restrained motion.
+*/
+
 :root {
   color-scheme: light;
-  --background: #f3f9fa;
-  --foreground: #0f2a2e;
+  --background: #f6f8f9;
+  --foreground: #10262b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-body), system-ui, sans-serif;
-  --font-display: var(--font-heading), var(--font-body), system-ui, sans-serif;
+  --font-display: var(--font-body), system-ui, sans-serif;
 
-  --color-ink: #0f2a2e;
-  --color-muted: #52686c;
-  --color-line: #dbe8ea;
+  --color-ink: #10262b;
+  --color-muted: #566b70;
+  --color-line: #e1e8ea;
   --color-paper: #ffffff;
 
-  /* Brand: teal, with a blue second stop for gradients (accent-500) and warm orange (pop-500). */
-  --color-brand-50: #e5f6f7;
-  --color-brand-100: #c9ecef;
-  --color-brand-500: #0e9aa7;
-  --color-brand-600: #0b7c89;
-  --color-brand-700: #085e69;
-  --color-accent-500: #2f80ed;
-  --color-pop-500: #ff8a3d;
+  --color-brand-50: #eaf6f7;
+  --color-brand-100: #cfe9ec;
+  --color-brand-500: #13909d;
+  --color-brand-600: #0c7784;
+  --color-brand-700: #095c66;
+  --color-accent-500: #0c7784;
+  --color-pop-500: #d9782b;
 
-  --color-mint-50: #e3f7ec;
-  --color-mint-600: #12874d;
-  --color-coral-50: #ffeeea;
-  --color-coral-600: #e5484d;
-  --color-sun-50: #fff6de;
-  --color-sun-600: #a16207;
+  --color-mint-50: #e6f5ec;
+  --color-mint-600: #177a45;
+  --color-coral-50: #fdeceb;
+  --color-coral-600: #c93c3c;
+  --color-sun-50: #fdf3dc;
+  --color-sun-600: #96600a;
 
-  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-float: float 7s ease-in-out infinite;
-  --animate-pop: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-up: fade-up 0.25s ease-out both;
+  --animate-pop: pop 0.2s ease-out both;
 
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(14px);
+      transform: translateY(4px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  @keyframes float {
-    0%, 100% {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    50% {
-      transform: translate3d(20px, -24px, 0) scale(1.06);
-    }
-  }
   @keyframes pop {
     from {
       opacity: 0;
-      transform: scale(0.94);
     }
     to {
       opacity: 1;
-      transform: scale(1);
     }
   }
 }
@@ -72,10 +65,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(900px 500px at 85% -10%, rgba(255, 138, 61, 0.1), transparent 60%),
-    radial-gradient(700px 420px at -5% 0%, rgba(14, 154, 167, 0.12), transparent 60%),
-    var(--background);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -94,16 +84,15 @@ body {
   .card {
     background: #fff;
     border: 1px solid var(--color-line);
-    border-radius: 1.1rem;
-    box-shadow: 0 1px 2px rgba(15, 42, 46, 0.04), 0 8px 24px -12px rgba(15, 42, 46, 0.1);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px rgba(16, 38, 43, 0.04);
   }
   .card-hover {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .card-hover:hover {
-    transform: translateY(-3px);
-    border-color: var(--color-brand-100);
-    box-shadow: 0 2px 4px rgba(15, 42, 46, 0.05), 0 18px 36px -14px rgba(11, 124, 137, 0.3);
+    border-color: var(--color-brand-500);
+    box-shadow: 0 1px 3px rgba(16, 38, 43, 0.08);
   }
 
   .btn {
@@ -111,16 +100,13 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
-    border-radius: 0.8rem;
-    padding: 0.6rem 1.1rem;
+    border-radius: 0.5rem;
+    padding: 0.55rem 1rem;
     font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.25;
     cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-  }
-  .btn:active:not(:disabled) {
-    transform: scale(0.97);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
   }
   .btn:disabled {
     opacity: 0.45;
@@ -128,26 +114,26 @@ body {
   }
   .btn-primary {
     color: #fff;
-    background: linear-gradient(135deg, var(--color-brand-500), var(--color-accent-500));
-    box-shadow: 0 6px 18px -6px rgba(14, 154, 167, 0.6);
+    background: var(--color-brand-600);
+    border: 1px solid var(--color-brand-600);
   }
   .btn-primary:hover:not(:disabled) {
-    box-shadow: 0 10px 24px -6px rgba(14, 154, 167, 0.7);
-    transform: translateY(-1px);
+    background: var(--color-brand-700);
+    border-color: var(--color-brand-700);
   }
   .btn-secondary {
     color: var(--color-ink);
     background: #fff;
-    border: 1px solid var(--color-line);
+    border: 1px solid #cdd8db;
   }
   .btn-secondary:hover:not(:disabled) {
-    border-color: var(--color-brand-500);
+    border-color: var(--color-brand-600);
     color: var(--color-brand-700);
   }
   .btn-danger {
     color: var(--color-coral-600);
     background: #fff;
-    border: 1px solid #f5c6c8;
+    border: 1px solid #f0c4c4;
   }
   .btn-danger:hover:not(:disabled) {
     background: var(--color-coral-50);
@@ -156,66 +142,56 @@ body {
   .input {
     width: 100%;
     background: #fff;
-    border: 1px solid var(--color-line);
-    border-radius: 0.8rem;
-    padding: 0.6rem 0.8rem;
+    border: 1px solid #cdd8db;
+    border-radius: 0.5rem;
+    padding: 0.55rem 0.75rem;
     font-size: 0.9rem;
     color: var(--color-ink);
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .input::placeholder {
-    color: #8aa0a4;
+    color: #8a9ea2;
   }
   .input:focus {
     outline: none;
-    border-color: var(--color-brand-500);
-    box-shadow: 0 0 0 4px rgba(14, 154, 167, 0.15);
+    border-color: var(--color-brand-600);
+    box-shadow: 0 0 0 3px rgba(19, 144, 157, 0.18);
   }
 
   .chip {
-    border: 1px solid var(--color-line);
+    border: 1px solid #cdd8db;
     background: #fff;
-    border-radius: 999px;
-    padding: 0.3rem 0.85rem;
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.75rem;
     font-size: 0.8rem;
     font-weight: 500;
-    color: var(--color-muted);
+    color: var(--color-ink);
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
   }
   .chip:hover {
-    border-color: var(--color-brand-500);
+    border-color: var(--color-brand-600);
     color: var(--color-brand-700);
   }
-  .chip-active {
+  .chip-active,
+  .chip-active:hover {
     background: var(--color-brand-600);
     border-color: var(--color-brand-600);
     color: #fff;
   }
-  .chip-active:hover {
-    color: #fff;
-  }
 
   .page-title {
-    font-family: var(--font-display);
-    font-size: 1.9rem;
-    font-weight: 800;
-    letter-spacing: -0.025em;
-    line-height: 1.12;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
   }
   .display {
-    font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
   }
   .lead {
     color: var(--color-muted);
-    line-height: 1.6;
-  }
-  .gradient-text {
-    background: linear-gradient(120deg, var(--color-brand-600), var(--color-accent-500) 60%, var(--color-pop-500));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    line-height: 1.65;
   }
   .label {
     display: block;
@@ -224,8 +200,8 @@ body {
     color: var(--color-ink);
   }
   .callout {
-    border-radius: 0.9rem;
-    padding: 0.8rem 1rem;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
     font-size: 0.875rem;
   }
 }

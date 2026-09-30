@@ -47,8 +47,8 @@ export default function Guide() {
       </p>
       <ol className="relative space-y-5 border-l-2 border-brand-100 pl-8">
         {stages.map((s, i) => (
-          <li key={s.name} className="animate-fade-up relative" style={{ animationDelay: `${i * 90}ms` }}>
-            <span className="display absolute -left-[2.85rem] grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-sm font-extrabold text-white shadow-md shadow-brand-500/30">
+          <li key={s.name} className="animate-fade-up relative">
+            <span className="display absolute -left-[2.85rem] grid h-9 w-9 place-items-center rounded-md bg-brand-600 text-sm font-bold text-white">
               {i + 1}
             </span>
             <section className="card p-5">

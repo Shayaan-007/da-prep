@@ -39,7 +39,7 @@ export default function CameraPreview() {
           autoPlay
           muted
           playsInline
-          className="w-full max-w-xs -scale-x-100 rounded-2xl bg-ink"
+          className="w-full max-w-xs -scale-x-100 rounded-lg bg-ink"
           aria-label="Camera self-view"
         />
       )}

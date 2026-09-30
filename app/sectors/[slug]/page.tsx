@@ -55,7 +55,7 @@ export default async function SectorPage({ params }: { params: Promise<{ slug: s
         <h2 className="font-bold">Show these in your examples</h2>
         <div className="flex flex-wrap gap-2">
           {sector.showcase.map((s) => (
-            <span key={s} className="rounded-full bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700">
+            <span key={s} className="rounded-md bg-brand-50 px-3 py-1 text-sm font-medium text-brand-700">
               {s}
             </span>
           ))}

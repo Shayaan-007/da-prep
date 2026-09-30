@@ -95,23 +95,22 @@ export default function Practice() {
           Timed (per question)
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
-          {CATEGORIES.map((c, n) => (
+          {CATEGORIES.map((c) => (
             <button
               key={c}
               onClick={() => begin(c)}
               className="card card-hover animate-fade-up p-5 text-left"
-              style={{ animationDelay: `${n * 70}ms` }}
             >
               <h2 className="flex items-center gap-2 font-bold">
                 {CATEGORY_INFO[c].label}
                 {sector && SECTOR_BY_ID[sector].tests.includes(c) && (
-                  <span className="rounded-full bg-mint-50 px-2 py-0.5 text-xs font-semibold text-mint-600">
+                  <span className="rounded-md bg-mint-50 px-2 py-0.5 text-xs font-semibold text-mint-600">
                     Recommended for {SECTOR_BY_ID[sector].name.toLowerCase()}
                   </span>
                 )}
               </h2>
               <p className="mt-1 text-sm text-muted">{CATEGORY_INFO[c].blurb}</p>
-              <p className="mt-3 inline-block rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">
+              <p className="mt-3 inline-block rounded-md bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">
                 {questionsFor(c).length} questions
               </p>
             </button>
@@ -156,7 +155,7 @@ export default function Practice() {
           </p>
           {timed && !answered && (
             <p
-              className={`rounded-full px-3 py-1 text-base font-semibold tabular-nums ${
+              className={`rounded-md px-3 py-1 text-base font-semibold tabular-nums ${
                 left <= 10 ? "animate-pulse bg-coral-50 text-coral-600" : "bg-brand-50 text-brand-700"
               }`}
             >
@@ -178,15 +177,15 @@ export default function Practice() {
               : idx === picked
                 ? "border-coral-600 bg-coral-50"
                 : "border-line bg-white opacity-60"
-            : "border-line bg-white hover:-translate-y-0.5 hover:border-brand-500 hover:shadow-md";
+            : "border-line bg-white hover:border-brand-500";
           return (
-            <li key={idx} className="animate-fade-up" style={{ animationDelay: `${n * 60}ms` }}>
+            <li key={idx} className="animate-fade-up">
               <button
                 onClick={() => choose(idx)}
                 disabled={answered || timeUp}
-                className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left text-sm font-medium transition-all ${style}`}
+                className={`flex w-full items-center gap-3 rounded-lg border p-4 text-left text-sm font-medium transition-all ${style}`}
               >
-                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-50 text-xs font-bold text-brand-700">
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-brand-50 text-xs font-bold text-brand-700">
                   {String.fromCharCode(65 + n)}
                 </span>
                 {q.options[idx]}

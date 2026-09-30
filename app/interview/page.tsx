@@ -266,9 +266,9 @@ export default function InterviewPage() {
                   type="button"
                   onClick={() => setMode(m)}
                   aria-pressed={mode === m}
-                  className={`rounded-2xl border p-4 text-left transition-all ${
+                  className={`rounded-lg border p-4 text-left transition-all ${
                     mode === m
-                      ? "border-brand-500 bg-brand-50 ring-4 ring-brand-500/10"
+                      ? "border-brand-500 bg-brand-50 ring-1 ring-brand-500"
                       : "border-line bg-white hover:border-brand-100"
                   }`}
                 >
@@ -321,7 +321,7 @@ export default function InterviewPage() {
   if (phase === "done" && result) {
     return (
       <div className="mx-auto max-w-3xl space-y-6">
-        <section className="card flex flex-col items-center gap-6 bg-gradient-to-br from-white to-brand-50 p-6 sm:flex-row">
+        <section className="card flex flex-col items-center gap-6 p-6 sm:flex-row">
           <ScoreRing value={Math.round(result.overall)} size={140} label="out of 100" />
           <div className="space-y-2">
             <h1 className="page-title">Your result</h1>
@@ -337,7 +337,7 @@ export default function InterviewPage() {
               ))}
             </ul>
           </section>
-          <section className="card animate-fade-up space-y-2 p-5 [animation-delay:100ms]">
+          <section className="card animate-fade-up space-y-2 p-5">
             <h2 className="font-bold text-sun-600">To improve</h2>
             <ul className="list-disc space-y-1 pl-5 text-sm">
               {result.improvements.map((s, i) => (
@@ -352,13 +352,12 @@ export default function InterviewPage() {
             <section
               key={i}
               className="card animate-fade-up space-y-3 p-5"
-              style={{ animationDelay: `${150 + i * 90}ms` }}
             >
               <div className="flex items-start justify-between gap-3">
                 <h3 className="font-bold">
                   <span className="text-brand-600">Q{i + 1}.</span> {t.question}
                 </h3>
-                <span className="shrink-0 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
+                <span className="shrink-0 rounded-md bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700">
                   {r.score}/10
                 </span>
               </div>
@@ -370,7 +369,7 @@ export default function InterviewPage() {
                 {(["situation", "task", "action", "result"] as const).map((k) => (
                   <span
                     key={k}
-                    className={`rounded-full px-2.5 py-1 capitalize ${
+                    className={`rounded-md px-2.5 py-1 capitalize ${
                       r.star[k] ? "bg-mint-50 text-mint-600" : "bg-coral-50 text-coral-600"
                     }`}
                   >
@@ -409,7 +408,7 @@ export default function InterviewPage() {
           </p>
           {video && started && (
             <p
-              className={`rounded-full px-3 py-1 text-base font-semibold tabular-nums ${
+              className={`rounded-md px-3 py-1 text-base font-semibold tabular-nums ${
                 left <= 10 ? "animate-pulse bg-coral-50 text-coral-600" : "bg-brand-50 text-brand-700"
               }`}
               aria-live="off"
@@ -420,7 +419,7 @@ export default function InterviewPage() {
         </div>
         <Progress value={history.length} max={MAX_QUESTIONS} label="Interview progress" />
       </div>
-      <div key={question} className="card animate-pop bg-gradient-to-br from-white to-brand-50 p-6">
+      <div key={question} className="card animate-pop p-6">
         <p className="mb-2 text-xs font-bold uppercase tracking-wide text-brand-600">Interviewer</p>
         <h1 className="text-xl font-bold leading-snug sm:text-2xl">{question}</h1>
       </div>

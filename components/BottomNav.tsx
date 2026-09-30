@@ -18,7 +18,7 @@ export default function BottomNav() {
   return (
     <nav
       aria-label="Quick links"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl sm:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white pb-[env(safe-area-inset-bottom)] sm:hidden"
     >
       <ul className="mx-auto flex max-w-md justify-around">
         {items.map((i) => {
@@ -28,7 +28,7 @@ export default function BottomNav() {
               <Link
                 href={i.href}
                 aria-current={on ? "page" : undefined}
-                className={`flex flex-col items-center gap-0.5 px-3 py-2 text-[11px] font-semibold transition-colors ${
+                className={`flex flex-col items-center gap-0.5 px-3 py-2 text-[11px] font-semibold ${
                   on ? "text-brand-600" : "text-muted"
                 }`}
               >

@@ -7,14 +7,9 @@ import { EMPLOYERS } from "@/lib/employers";
 import { useCollection } from "@/lib/store";
 import { STATUSES, type Application, type Status } from "@/lib/types";
 
-const ACCENT: Record<Status, string> = {
-  Interested: "border-l-brand-100",
-  Applied: "border-l-brand-500",
-  "Online tests": "border-l-accent-500",
-  "Video interview": "border-l-accent-500",
-  "Assessment centre": "border-l-sun-600",
-  Offer: "border-l-mint-600",
-  Rejected: "border-l-coral-600",
+const OUTCOME: Partial<Record<Status, string>> = {
+  Offer: "bg-mint-50 text-mint-600",
+  Rejected: "bg-coral-50 text-coral-600",
 };
 
 export default function Tracker() {
@@ -122,15 +117,22 @@ export default function Tracker() {
           return (
             <li
               key={a.id}
-              className={`card animate-pop space-y-3 border-l-4 p-4 ${ACCENT[a.status]}`}
+              className="card animate-pop space-y-3 p-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="display font-bold">{a.employer}</p>
+                  <p className="font-semibold">
+                    {a.employer}
+                    {OUTCOME[a.status] && (
+                      <span className={`ml-2 rounded-md px-2 py-0.5 text-xs font-semibold ${OUTCOME[a.status]}`}>
+                        {a.status}
+                      </span>
+                    )}
+                  </p>
                   <p className="text-sm text-muted">{a.role || "No role set"}</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 text-sm">
-                  <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${overdue ? "bg-coral-50 text-coral-600" : "bg-brand-50 text-brand-700"}`}>
+                  <span className={`rounded-md px-2.5 py-1 text-xs font-semibold ${overdue ? "bg-coral-50 text-coral-600" : "bg-brand-50 text-brand-700"}`}>
                     {a.deadline ? `Closes ${a.deadline}` : "No date"}
                     {overdue && " (passed)"}
                   </span>

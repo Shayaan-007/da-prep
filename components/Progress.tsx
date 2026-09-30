@@ -18,10 +18,10 @@ export default function Progress({
       aria-valuemax={max}
       aria-valuenow={value}
       aria-label={label}
-      className={`h-2 overflow-hidden rounded-full bg-brand-100 ${className}`}
+      className={`h-1.5 overflow-hidden rounded-md bg-brand-100 ${className}`}
     >
       <div
-        className="h-full origin-left rounded-full bg-gradient-to-r from-brand-500 to-accent-500 transition-transform duration-500 ease-out"
+        className="h-full origin-left rounded-md bg-brand-600 transition-transform duration-500 ease-out"
         style={{ transform: `scaleX(${pct})` }}
       />
     </div>

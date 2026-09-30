@@ -52,7 +52,7 @@ export default function Dashboard() {
     <section className="card animate-fade-up grid gap-6 p-6 md:grid-cols-[1.4fr_1fr]" aria-label="Your prep">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="display text-lg font-extrabold tracking-tight">
+          <h2 className="display text-lg font-bold tracking-tight">
             Your prep{sector && <span className="font-medium text-muted"> · {SECTOR_BY_ID[sector].name}</span>}
           </h2>
           <span className="text-sm font-bold text-brand-700">
@@ -70,7 +70,7 @@ export default function Dashboard() {
                 }`}
               >
                 <span
-                  className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border text-[11px] font-bold ${
+                  className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border text-[11px] font-bold ${
                     c.done ? "border-mint-600 bg-mint-600 text-white" : "border-line"
                   }`}
                   aria-hidden
@@ -84,7 +84,7 @@ export default function Dashboard() {
         </ul>
       </div>
 
-      <div className="flex flex-col justify-between gap-4 rounded-2xl bg-brand-50 p-4">
+      <div className="flex flex-col justify-between gap-4 rounded-lg bg-brand-50 p-4">
         <div className="space-y-3">
           <p className="flex items-center gap-2 text-sm font-bold">
             <Icon name="flame" className={`h-5 w-5 ${s > 0 ? "text-pop-500" : "text-muted"}`} />

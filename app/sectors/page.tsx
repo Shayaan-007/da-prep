@@ -17,7 +17,7 @@ export default function Sectors() {
     <div className="space-y-14">
       <div className="max-w-2xl space-y-3">
         <h1 className="page-title">
-          One process, <span className="gradient-text">many sectors</span>
+          One process, <span className="text-brand-600">many sectors</span>
         </h1>
         <p className="lead">
           Most of what you need is the same for every degree apprenticeship. What changes is the subject content, the
@@ -55,14 +55,13 @@ export default function Sectors() {
       </div>
 
       <section className="space-y-4">
-        <h2 className="display text-2xl font-extrabold tracking-tight">Pick your sector</h2>
+        <h2 className="display text-2xl font-bold tracking-tight">Pick your sector</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SECTORS.map((s, i) => (
+          {SECTORS.map((s) => (
             <Link
               key={s.id}
               href={`/sectors/${s.id}`}
               className="card card-hover group animate-fade-up space-y-2 p-5"
-              style={{ animationDelay: `${i * 60}ms` }}
             >
               <h3 className="display flex items-center justify-between font-bold">
                 {s.name}
