@@ -47,9 +47,13 @@ describe("request shape", () => {
 
     const req = create.mock.calls[0][0];
     expect(req.model).toBe("gpt-6-luna");
-    expect(req.input).toBe("Advert goes here.");
-    expect(req.instructions).toContain("You are an interviewer.");
-    expect(req.instructions).toMatch(/single JSON object/);
+    // JSON mode needs the word "JSON" in the input messages, so the prompt goes in a system message.
+    expect(req.input).toHaveLength(2);
+    expect(req.input[0].role).toBe("system");
+    expect(req.input[0].content).toContain("You are an interviewer.");
+    expect(req.input[0].content).toMatch(/JSON/);
+    expect(req.input[1]).toEqual({ role: "user", content: "Advert goes here." });
+    expect(req).not.toHaveProperty("instructions");
     expect(req.text).toEqual({ format: { type: "json_object" } });
     expect(req.max_output_tokens).toBe(1234);
     expect(req.store).toBe(false);

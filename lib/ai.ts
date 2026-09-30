@@ -63,8 +63,11 @@ export async function askJson<T extends z.ZodTypeAny>({
   for (let attempt = 0; attempt < 2; attempt++) {
     const res = await openai.responses.create({
       model: modelFor(tier),
-      instructions: `${system}\n\nRespond with a single JSON object only. No prose, no code fences.`,
-      input: user,
+      // JSON mode requires the word "JSON" in the input messages themselves (the `instructions` field doesn't count).
+      input: [
+        { role: "system", content: `${system}\n\nRespond with a single JSON object only. No prose, no code fences.` },
+        { role: "user", content: user },
+      ],
       max_output_tokens: maxTokens,
       text: { format: { type: "json_object" } },
       store: false, // don't retain users' applications or answers on the provider side
