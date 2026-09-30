@@ -1,4 +1,4 @@
-import { askJson } from "@/lib/claude";
+import { askJson } from "@/lib/ai";
 import { mockStar } from "@/lib/mocks";
 import { rateLimit } from "@/lib/rateLimit";
 import { starInput, starOutput, starSystem, starUser } from "@/lib/writing";
@@ -11,13 +11,14 @@ export async function POST(req: Request) {
   const parsed = starInput.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: "Invalid input" }, { status: 400 });
   try {
-    const out = await askJson(
-      starSystem(),
-      starUser(parsed.data.notes, parsed.data.competency),
-      starOutput,
-      800,
-      mockStar,
-    );
+    const out = await askJson({
+      system: starSystem(),
+      user: starUser(parsed.data.notes, parsed.data.competency),
+      schema: starOutput,
+      tier: "fast",
+      maxTokens: 4000,
+      mock: mockStar,
+    });
     return Response.json(out);
   } catch (e) {
     console.error(e);

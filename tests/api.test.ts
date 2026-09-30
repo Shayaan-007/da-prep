@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const askJson = vi.fn();
 const consumeInterview = vi.fn();
 
-vi.mock("@/lib/claude", () => ({ askJson: (...a: unknown[]) => askJson(...a), mockEnabled: () => false }));
+vi.mock("@/lib/ai", () => ({ askJson: (...a: unknown[]) => askJson(...a), mockEnabled: () => false }));
 vi.mock("@/lib/server/usage", () => ({ consumeInterview: (...a: unknown[]) => consumeInterview(...a) }));
 
 import { DELETE as deleteAccount } from "@/app/api/account/route";
@@ -47,7 +47,7 @@ describe("POST /api/interview/next", () => {
     const res = await next(req({ jobAd: ad, stage: "competency", sector: "digital", history: [] }));
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ question: "Tell me about a project." });
-    const system = askJson.mock.calls[0][0] as string;
+    const system = (askJson.mock.calls[0][0] as { system: string }).system;
     expect(system).toContain("Sector: Digital and technology");
   });
 

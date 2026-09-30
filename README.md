@@ -15,7 +15,7 @@ AI mock interviews, practice tests, an application tracker and guides for UK deg
 
 ## Run
 ```
-cp .env.example .env.local   # add ANTHROPIC_API_KEY, or set MOCK_AI=1 to develop without one
+cp .env.example .env.local   # add OPENAI_API_KEY, or set MOCK_AI=1 to develop without one
 npm install
 npm run dev                  # http://localhost:3000
 npm test                     # vitest
@@ -40,9 +40,9 @@ Any Node host works (Vercel is the simplest). Set the environment variables abov
 
 ## Layout
 - `app/` pages and API routes (`app/api/*`); `components/` shared UI; `lib/` prompts, schemas, question bank, sector packs, store, backup and calendar helpers; `lib/server/` service-role helpers (never import from client code); `supabase/schema.sql`; `tests/`.
-- Claude model: `lib/claude.ts` (`MODEL`). Canned dev responses: `lib/mocks.ts`.
+- AI provider: OpenAI Responses API in `lib/ai.ts`. Two tiers, set by `OPENAI_MODEL` (marking and feedback, default `gpt-6.1-sol`) and `OPENAI_MODEL_FAST` (questions and STAR drafts, default `gpt-6-luna`). Requests use `store: false`. Canned dev responses: `lib/mocks.ts`.
 
 ## Before going public
 - The in-memory rate limiter (`lib/rateLimit.ts`) is per-instance: replace with Redis/Upstash on serverless.
 - Privacy notice and terms are drafts: have them reviewed. Check employer data in `lib/employers.ts`, sector content in `lib/sectors.ts` and the guide content, and keep the "last updated" dates current.
-- Supabase, Stripe and Google sign-in code paths are written but were not exercised against live services. The Claude prompts were only exercised through mocks and tests, not a live key.
+- Supabase, Stripe and Google sign-in code paths are written but were not exercised against live services. The OpenAI integration (request shape, model ids, output token budgets) was only exercised through mocks and unit tests, not a live key.

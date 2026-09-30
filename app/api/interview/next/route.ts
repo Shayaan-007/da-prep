@@ -1,4 +1,4 @@
-import { askJson } from "@/lib/claude";
+import { askJson } from "@/lib/ai";
 import {
   nextInput,
   nextOutput,
@@ -25,13 +25,14 @@ export async function POST(req: Request) {
     if (!usage.ok) return Response.json({ error: usage.error }, { status: usage.status });
   }
   try {
-    const out = await askJson(
-      nextQuestionSystem(stage, sector),
-      nextQuestionUser(jobAd, cv, history),
-      nextOutput,
-      300,
-      () => mockQuestion(history),
-    );
+    const out = await askJson({
+      system: nextQuestionSystem(stage, sector),
+      user: nextQuestionUser(jobAd, cv, history),
+      schema: nextOutput,
+      tier: "fast",
+      maxTokens: 2000,
+      mock: () => mockQuestion(history),
+    });
     return Response.json(out);
   } catch (e) {
     console.error(e);

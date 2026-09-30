@@ -15,7 +15,7 @@ export default function Privacy() {
       </p>
       <h2 className="font-semibold">What is sent to AI services</h2>
       <p>
-        Job adverts, CV or statement text and your interview answers are sent to Anthropic&apos;s Claude API to generate
+        Job adverts, CV or statement text and your interview answers are sent to OpenAI&apos;s API to generate
         questions and feedback. Please don&apos;t include names, addresses, phone numbers or other personal details.
       </p>
       <h2 className="font-semibold">Speech and camera</h2>
