@@ -41,7 +41,7 @@ export default function ReviewPage() {
       <label className="block text-sm font-medium">
         What are you reviewing?
         <select
-          className="input mt-1 !w-auto font-normal"
+          className="input mt-2.5 !w-auto font-normal"
           value={kind}
           onChange={(e) => setKind(e.target.value as "statement" | "answer")}
         >
@@ -52,7 +52,7 @@ export default function ReviewPage() {
       <label className="block text-sm font-medium">
         Your text
         <textarea
-          className="mt-1 h-48 w-full input font-normal"
+          className="mt-2.5 h-48 w-full input font-normal"
           value={text}
           onChange={(e) => setText(e.target.value)}
           maxLength={6000}
@@ -61,7 +61,7 @@ export default function ReviewPage() {
       <label className="block text-sm font-medium">
         Job advert (optional, for tailoring)
         <textarea
-          className="mt-1 h-28 w-full input font-normal"
+          className="mt-2.5 h-28 w-full input font-normal"
           value={jobAd}
           onChange={(e) => setJobAd(e.target.value)}
           maxLength={6000}
