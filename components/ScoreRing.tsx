@@ -37,13 +37,13 @@ export default function ScoreRing({
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }} role="img" aria-label={`${value} out of ${max}`}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#e1eef0" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#d6e9ea" strokeWidth={stroke} />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="#0c7784"
+          stroke="#007e82"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
