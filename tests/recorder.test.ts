@@ -1,5 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { describeMicError, micSupportProblem, pickMimeType, SILENCE_PEAK } from "@/components/useRecorder";
+import { describeMicError, micSupportProblem, mutedAdvice, pickMimeType, SILENCE_PEAK } from "@/components/useRecorder";
+
+describe("muted-microphone advice", () => {
+  const windows = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154.0.0.0 Safari/537.36";
+  const mac = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Safari/605.1.15";
+
+  it("gives Windows-specific steps, including the mute key and privacy setting", () => {
+    const steps = mutedAdvice(windows).join(" ");
+    expect(steps).toMatch(/mute key/);
+    expect(steps).toMatch(/Settings → System → Sound → Input/);
+    expect(steps).toMatch(/Let desktop apps access your microphone/);
+  });
+
+  it("gives macOS steps and a generic fallback, always ending with the option to pick another microphone", () => {
+    expect(mutedAdvice(mac).join(" ")).toMatch(/System Settings → Privacy & Security → Microphone/);
+    expect(mutedAdvice("SomeOtherOS").join(" ")).toMatch(/system sound settings/);
+    for (const ua of [windows, mac, "x"]) expect(mutedAdvice(ua).at(-1)).toMatch(/different microphone/);
+  });
+});
 
 const okEnv = { isSecureContext: true, origin: "http://localhost:3000", hasGetUserMedia: true, hasMediaRecorder: true };
 

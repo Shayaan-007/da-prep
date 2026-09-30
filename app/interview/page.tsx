@@ -9,6 +9,7 @@ import ScoreRing from "@/components/ScoreRing";
 import { speak, stopSpeaking, useDictation } from "@/components/speech";
 import DiagPanel from "@/components/DiagPanel";
 import MicPicker from "@/components/MicPicker";
+import MutedNotice from "@/components/MutedNotice";
 import { micSupportProblem, SILENCE_PEAK, useRecorder } from "@/components/useRecorder";
 import { postJson, transcribeBlob } from "@/lib/api";
 import { diag } from "@/lib/diag";
@@ -48,6 +49,7 @@ export default function InterviewPage() {
   const [heard, setHeard] = useState(false);
   const [silent, setSilent] = useState(false);
   const [quiet, setQuiet] = useState(false);
+  const [wasMuted, setWasMuted] = useState(false);
   const [micId, setMicId] = useState("");
   const [micRefresh, setMicRefresh] = useState(0);
   const [voiceReady, setVoiceReady] = useState<boolean | null>(null);
@@ -254,7 +256,8 @@ export default function InterviewPage() {
   /** End the video-style answer: stop recording, then transcribe it. */
   async function finishVideoAnswer() {
     if (vstate !== "recording") return;
-    diag("answer-finish", { secondsLeft: left });
+    diag("answer-finish", { secondsLeft: left, systemMuted: recorder.muted });
+    setWasMuted(recorder.muted);
     setRunning(false);
     captions.stop();
     setVstate("transcribing");
@@ -475,6 +478,7 @@ export default function InterviewPage() {
                   {micTest.error}
                 </p>
               )}
+              {micTest.state === "recording" && micTest.muted && <MutedNotice />}
               <DiagPanel />
             </div>
           )}
@@ -697,7 +701,8 @@ export default function InterviewPage() {
                   {liveCaption}
                 </p>
               )}
-              {!heard && left <= VIDEO_SECONDS - 5 && (
+              {recorder.muted && <MutedNotice />}
+              {!heard && !recorder.muted && left <= VIDEO_SECONDS - 5 && (
                 <p role="alert" className="callout bg-sun-50 text-sun-600">
                   We can&apos;t hear you yet. Check your microphone is on and not muted, speak a little louder, or pick a
                   different microphone after this answer.
@@ -737,11 +742,15 @@ export default function InterviewPage() {
             <div className="card space-y-4 p-5">
               {silent ? (
                 <>
-                  <p role="alert" className="callout bg-sun-50 text-sun-600">
-                    {quiet
-                      ? "We couldn't hear anything. Check your microphone is on, not muted, and that the right one is selected, then record again."
-                      : "We couldn't make out what you said. Try again, speaking clearly and a little closer to the microphone."}
-                  </p>
+                  {wasMuted ? (
+                    <MutedNotice />
+                  ) : (
+                    <p role="alert" className="callout bg-sun-50 text-sun-600">
+                      {quiet
+                        ? "We couldn't hear anything. Check your microphone is on, not muted, and that the right one is selected, then record again."
+                        : "We couldn't make out what you said. Try again, speaking clearly and a little closer to the microphone."}
+                    </p>
+                  )}
                   <MicPicker value={micId} onChange={setMicId} refreshKey={micRefresh} />
                   <div className="flex flex-wrap gap-3">
                     <button onClick={recordAgain} className="btn btn-primary">

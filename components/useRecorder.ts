@@ -53,6 +53,37 @@ export function micSupportProblem(env?: {
   return null;
 }
 
+/**
+ * Steps to try when the browser found the microphone but the computer is sending it no sound (the track reports
+ * `muted`). This is an operating-system level mute, not something a website can switch off.
+ */
+export function mutedAdvice(userAgent: string): string[] {
+  const choose = "Or pick a different microphone from the list above, such as a headset.";
+  if (/Windows/i.test(userAgent)) {
+    return [
+      "Press the microphone-mute key on your keyboard if you have one (a microphone icon, often on F4, F8 or F10) so it is not lit or crossed out.",
+      "Open Settings → System → Sound → Input, choose your microphone, and check it isn't muted and that the test bar moves when you talk.",
+      "Open Settings → Privacy & security → Microphone and turn on \"Let desktop apps access your microphone\".",
+      "Close other apps that might be using the microphone, such as Teams, Zoom or Discord.",
+      choose,
+    ];
+  }
+  if (/Mac/i.test(userAgent)) {
+    return [
+      "Open System Settings → Privacy & Security → Microphone and make sure your browser is switched on.",
+      "Open System Settings → Sound → Input, choose your microphone, and check the input level moves when you talk.",
+      "Close other apps that might be using the microphone, such as Zoom or Teams.",
+      choose,
+    ];
+  }
+  return [
+    "Check for a microphone-mute key or switch on your keyboard or headset.",
+    "Check your system sound settings: the right input device should be selected, unmuted, and its level should move when you talk.",
+    "Close other apps that might be using the microphone.",
+    choose,
+  ];
+}
+
 export function describeMicError(e: unknown): string {
   const name = (e as { name?: string })?.name;
   if (name === "NotAllowedError" || name === "SecurityError") {
@@ -79,6 +110,8 @@ export function useRecorder() {
   const [level, setLevel] = useState(0);
   const [error, setError] = useState("");
   const [deviceLabel, setDeviceLabel] = useState("");
+  // True when the browser has the microphone but the computer is sending it no sound (system-level mute).
+  const [muted, setMuted] = useState(false);
 
   const recorder = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
@@ -96,6 +129,7 @@ export function useRecorder() {
     ctx.current = null;
     recorder.current = null;
     setLevel(0);
+    setMuted(false);
     setState("idle");
   }, []);
 
@@ -124,15 +158,32 @@ export function useRecorder() {
     }
     setState("starting");
     try {
-      const s = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
-      const track = s.getAudioTracks()[0];
+      const open = (processing: boolean) =>
+        navigator.mediaDevices.getUserMedia({
+          audio: {
+            ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
+            echoCancellation: processing,
+            noiseSuppression: processing,
+            autoGainControl: processing,
+          },
+        });
+      let s = await open(true);
+      let track = s.getAudioTracks()[0];
+      // Found the microphone but the computer is sending no sound? Some laptop microphone arrays fall silent
+      // when the browser applies echo cancellation and noise suppression, so retry once with processing off.
+      if (track?.muted) {
+        diag("mic-muted-at-open", { label: track.label });
+        await new Promise((r) => setTimeout(r, 700));
+        if (track.muted) {
+          diag("mic-retry-without-processing");
+          s.getTracks().forEach((t) => t.stop());
+          s = await open(false);
+          track = s.getAudioTracks()[0];
+          await new Promise((r) => setTimeout(r, 400));
+          diag("mic-retry-result", { muted: track?.muted });
+        }
+      }
+      setMuted(Boolean(track?.muted));
       const settings = track?.getSettings?.() ?? {};
       diag("mic-open", {
         label: track?.label,
@@ -145,8 +196,14 @@ export function useRecorder() {
         autoGainControl: settings.autoGainControl,
       });
       if (track) {
-        track.onmute = () => diag("track-muted");
-        track.onunmute = () => diag("track-unmuted");
+        track.onmute = () => {
+          diag("track-muted");
+          setMuted(true);
+        };
+        track.onunmute = () => {
+          diag("track-unmuted");
+          setMuted(false);
+        };
         track.onended = () => diag("track-ended");
       }
       setDeviceLabel(track?.label ?? "");
@@ -231,5 +288,5 @@ export function useRecorder() {
     });
   }, [cleanup]);
 
-  return { state, level, error, deviceLabel, start, stop };
+  return { state, level, error, deviceLabel, muted, start, stop };
 }
