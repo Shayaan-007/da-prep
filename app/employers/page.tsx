@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { EMPLOYERS, FIND_APPRENTICESHIP_URL } from "@/lib/employers";
+import { FIRMS } from "@/lib/firms";
 import { SECTORS, type SectorId } from "@/lib/sectors";
 import { useCollection } from "@/lib/store";
 import type { Application } from "@/lib/types";
@@ -59,6 +61,14 @@ export default function Employers() {
                 {e.sector}
                 {e.note && ` · ${e.note}`}
               </p>
+              {FIRMS.find((f) => f.name.toLowerCase().startsWith(e.name.toLowerCase().split(" ")[0])) && (
+                <Link
+                  className="text-sm underline mr-3"
+                  href={`/employers/${FIRMS.find((f) => f.name.toLowerCase().startsWith(e.name.toLowerCase().split(" ")[0]))!.slug}`}
+                >
+                  Process guide
+                </Link>
+              )}
               {e.link && (
                 <a className="text-sm underline" href={e.link} target="_blank" rel="noreferrer">
                   Employer / guidance page
