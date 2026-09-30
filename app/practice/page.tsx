@@ -1,0 +1,212 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Progress from "@/components/Progress";
+import ScoreRing from "@/components/ScoreRing";
+import { useSector } from "@/lib/prefs";
+import { CATEGORY_INFO, questionsFor, type Category, type Question } from "@/lib/questions";
+import { SECTOR_BY_ID } from "@/lib/sectors";
+import { useCollection } from "@/lib/store";
+import type { PracticeRecord } from "@/lib/types";
+
+const CATEGORIES = Object.keys(CATEGORY_INFO) as Category[];
+
+function shuffle<T>(a: T[]) {
+  const b = [...a];
+  for (let i = b.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [b[i], b[j]] = [b[j], b[i]];
+  }
+  return b;
+}
+
+export default function Practice() {
+  const results = useCollection<PracticeRecord>("practice");
+  const { sector } = useSector();
+  const [category, setCategory] = useState<Category | null>(null);
+  const [qs, setQs] = useState<Question[]>([]);
+  const [i, setI] = useState(0);
+  const [picked, setPicked] = useState<number | null>(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const [timed, setTimed] = useState(true);
+  const [left, setLeft] = useState(0);
+
+  const info = category ? CATEGORY_INFO[category] : null;
+  const q = qs[i];
+  const total = qs.length;
+
+  function begin(c: Category) {
+    setCategory(c);
+    setQs(shuffle(questionsFor(c)));
+    setI(0);
+    setPicked(null);
+    setScore(0);
+    setDone(false);
+    setLeft(CATEGORY_INFO[c].secondsPerQuestion);
+  }
+
+  function next(finalScore: number) {
+    if (i + 1 >= total) {
+      setDone(true);
+      results.update((p) => [
+        { id: crypto.randomUUID(), date: new Date().toISOString(), category: category!, score: finalScore, total },
+        ...p,
+      ]);
+    } else {
+      setI(i + 1);
+      setPicked(null);
+      setLeft(info!.secondsPerQuestion);
+    }
+  }
+
+  const answered = picked !== null;
+  const timeUp = timed && !answered && left <= 0;
+
+  useEffect(() => {
+    if (!category || done || !timed || answered) return;
+    const id = setInterval(() => setLeft((l) => l - 1), 1000);
+    return () => clearInterval(id);
+  }, [category, done, timed, answered, i]);
+
+  // Options are fixed per question; shuffle once per question so the answer position varies.
+  const order = useMemo(() => (q ? shuffle(q.options.map((_, idx) => idx)) : []), [q]);
+  const keepOrder = category !== "sjt";
+  const display = keepOrder ? q?.options.map((_, idx) => idx) ?? [] : order;
+
+  function choose(idx: number) {
+    if (answered || timeUp) return;
+    setPicked(idx);
+    if (idx === q.answer) setScore((s) => s + 1);
+  }
+
+  if (!category || !info) {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h1 className="page-title">Practice tests</h1>
+          <p className="lead max-w-2xl">
+            Original practice questions in the styles employers often use. They won&apos;t match any real test, but the
+            skills carry over.
+          </p>
+        </div>
+        <label className="inline-flex items-center gap-2 text-sm font-medium">
+          <input type="checkbox" className="accent-brand-600" checked={timed} onChange={(e) => setTimed(e.target.checked)} />
+          Timed (per question)
+        </label>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {CATEGORIES.map((c, n) => (
+            <button
+              key={c}
+              onClick={() => begin(c)}
+              className="card card-hover animate-fade-up p-5 text-left"
+              style={{ animationDelay: `${n * 70}ms` }}
+            >
+              <h2 className="flex items-center gap-2 font-bold">
+                {CATEGORY_INFO[c].label}
+                {sector && SECTOR_BY_ID[sector].tests.includes(c) && (
+                  <span className="rounded-full bg-mint-50 px-2 py-0.5 text-xs font-semibold text-mint-600">
+                    Recommended for {SECTOR_BY_ID[sector].name.toLowerCase()}
+                  </span>
+                )}
+              </h2>
+              <p className="mt-1 text-sm text-muted">{CATEGORY_INFO[c].blurb}</p>
+              <p className="mt-3 inline-block rounded-full bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">
+                {questionsFor(c).length} questions
+              </p>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (done) {
+    return (
+      <div className="mx-auto max-w-md space-y-5 py-8 text-center">
+        <div className="flex justify-center">
+          <ScoreRing value={score} max={total} size={150} label={`of ${total}`} />
+        </div>
+        <h1 className="page-title">{info.label}</h1>
+        <p className="lead">
+          {score / total >= 0.8
+            ? "Excellent. You're well prepared for this format."
+            : score / total >= 0.5
+              ? "Good start. Read the explanations and try again."
+              : "Keep practising. Every attempt helps."}
+        </p>
+        <div className="flex justify-center gap-3">
+          <button onClick={() => begin(category)} className="btn btn-primary">
+            Try again
+          </button>
+          <button onClick={() => setCategory(null)} className="btn btn-secondary">
+            Choose another
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-3xl space-y-5">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm font-semibold text-muted">
+          <p>
+            {info.label}: question {i + 1} of {total}
+          </p>
+          {timed && !answered && (
+            <p
+              className={`rounded-full px-3 py-1 text-base font-semibold tabular-nums ${
+                left <= 10 ? "animate-pulse bg-coral-50 text-coral-600" : "bg-brand-50 text-brand-700"
+              }`}
+            >
+              {Math.max(left, 0)}s
+            </p>
+          )}
+        </div>
+        <Progress value={i} max={total} label="Test progress" />
+      </div>
+      <div key={q.id} className="card animate-pop p-6">
+        <p className="whitespace-pre-line text-lg font-medium leading-relaxed">{q.prompt}</p>
+      </div>
+      <ul className="space-y-2.5">
+        {display.map((idx, n) => {
+          const correct = idx === q.answer;
+          const style = answered
+            ? correct
+              ? "border-mint-600 bg-mint-50"
+              : idx === picked
+                ? "border-coral-600 bg-coral-50"
+                : "border-line bg-white opacity-60"
+            : "border-line bg-white hover:-translate-y-0.5 hover:border-brand-500 hover:shadow-md";
+          return (
+            <li key={idx} className="animate-fade-up" style={{ animationDelay: `${n * 60}ms` }}>
+              <button
+                onClick={() => choose(idx)}
+                disabled={answered || timeUp}
+                className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left text-sm font-medium transition-all ${style}`}
+              >
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-brand-50 text-xs font-bold text-brand-700">
+                  {String.fromCharCode(65 + n)}
+                </span>
+                {q.options[idx]}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {(answered || timeUp) && (
+        <div className="animate-fade-up space-y-3">
+          {timeUp && <p className="text-sm font-semibold text-coral-600">Time&apos;s up.</p>}
+          <p className="callout bg-brand-50">
+            <strong>{picked === q.answer ? "Correct. " : "Answer: " + q.options[q.answer] + ". "}</strong>
+            {q.explanation}
+          </p>
+          <button onClick={() => next(score)} className="btn btn-primary">
+            {i + 1 >= total ? "Finish" : "Next"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

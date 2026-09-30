@@ -1,0 +1,310 @@
+// Original practice questions written for this site. They are not copied from any employer's tests.
+
+export type Category = "sjt" | "numerical" | "verbal" | "logical";
+
+export type Question = {
+  id: string;
+  category: Category;
+  prompt: string;
+  options: string[];
+  answer: number; // index into options
+  explanation: string;
+};
+
+export const CATEGORY_INFO: Record<Category, { label: string; blurb: string; secondsPerQuestion: number }> = {
+  sjt: {
+    label: "Situational judgement",
+    blurb: "Pick the most effective response to a work scenario.",
+    secondsPerQuestion: 60,
+  },
+  numerical: {
+    label: "Numerical reasoning",
+    blurb: "Percentages, ratios and everyday calculations. Calculator allowed in most real tests.",
+    secondsPerQuestion: 60,
+  },
+  verbal: {
+    label: "Verbal reasoning",
+    blurb: "Read a passage, then decide if a statement is true, false, or cannot be said.",
+    secondsPerQuestion: 45,
+  },
+  logical: {
+    label: "Logical reasoning",
+    blurb: "Number patterns and deduction.",
+    secondsPerQuestion: 45,
+  },
+};
+
+const PASSAGE =
+  "Northbrook Engineering's apprentices split their time between the workplace and university. All apprentices must complete a placement in at least two departments during their first year. The company does not require apprentices to have studied maths at A-level, but it does ask for GCSE maths at grade 5 or above.";
+
+const TFC = ["True", "False", "Cannot say"];
+
+export const QUESTIONS: Question[] = [
+  // ---- Situational judgement
+  {
+    id: "sjt-1",
+    category: "sjt",
+    prompt:
+      "You are working on a team project with a deadline in three days. One team member has not completed any of their work and has stopped replying to messages. What is the MOST effective response?",
+    options: [
+      "Do their part yourself so the project is finished on time.",
+      "Speak to them privately to find out what is wrong, offer help, and agree what they will do and by when.",
+      "Tell your manager straight away that they are not pulling their weight.",
+      "Leave their part out and hope nobody notices.",
+    ],
+    answer: 1,
+    explanation:
+      "Talking to them first is fair and often solves the problem. If it doesn't, involving your manager with the facts is the next step. Silently covering for them hides the issue, and jumping straight to a complaint skips the chance to help.",
+  },
+  {
+    id: "sjt-2",
+    category: "sjt",
+    prompt:
+      "You realise a spreadsheet you sent to a client this morning contains a calculation error that changes one of the totals. What is the MOST effective response?",
+    options: [
+      "Wait to see whether the client notices.",
+      "Quietly send a corrected version without mentioning the change.",
+      "Tell your manager immediately, explain what happened, and propose how to correct it with the client.",
+      "Fix your copy and say nothing, since the client hasn't complained.",
+    ],
+    answer: 2,
+    explanation:
+      "Honesty and speed matter. Your manager needs to know before the client acts on the wrong figure, and arriving with a solution shows ownership.",
+  },
+  {
+    id: "sjt-3",
+    category: "sjt",
+    prompt:
+      "Your manager gives you a task due at 3pm. At noon, a different manager asks you for something urgent, also due at 3pm. You cannot do both. What is the MOST effective response?",
+    options: [
+      "Do the second task because that manager asked most recently.",
+      "Explain the clash to both managers and ask them to agree which takes priority.",
+      "Rush both and accept that the quality may drop.",
+      "Say nothing and finish whichever you can.",
+    ],
+    answer: 1,
+    explanation:
+      "You shouldn't decide priorities between managers yourself. Being open about the conflict lets them decide, and nobody is surprised at 3pm.",
+  },
+  {
+    id: "sjt-4",
+    category: "sjt",
+    prompt:
+      "In a meeting, a colleague presents an idea you shared with them last week as if it were their own. What is the MOST effective response?",
+    options: [
+      "Interrupt and correct them in front of everyone.",
+      "Say nothing and stop sharing ideas with them.",
+      "Speak to them calmly afterwards, and if it happens again involve your manager.",
+      "Complain about them to other colleagues.",
+    ],
+    answer: 2,
+    explanation:
+      "A private, calm conversation gives them the chance to put it right and protects the relationship. Escalate only if it continues. Public confrontation and gossip both damage your reputation.",
+  },
+  {
+    id: "sjt-5",
+    category: "sjt",
+    prompt:
+      "You are falling behind on a university assignment because of a busy period at work. The deadline is in a week. What is the MOST effective response?",
+    options: [
+      "Ask a friend on the course for their finished work to use as a guide.",
+      "Contact your tutor and workplace mentor early, explain the pressure, and agree a realistic plan.",
+      "Stay up all night before the deadline and hope for the best.",
+      "Miss the deadline and explain afterwards.",
+    ],
+    answer: 1,
+    explanation:
+      "Both your employer and university want you to succeed. Raising problems early gives them time to help, for example with study time or an extension.",
+  },
+  {
+    id: "sjt-6",
+    category: "sjt",
+    prompt:
+      "You are given instructions for a new task but you are not sure you understand one step. Your manager is busy. What is the MOST effective response?",
+    options: [
+      "Guess the meaning and carry on.",
+      "Ask a colleague to do that step for you.",
+      "Find a good moment to ask your manager a short, specific question and repeat back your understanding.",
+      "Wait until you have finished everything else, then decide.",
+    ],
+    answer: 2,
+    explanation:
+      "Clarifying at the start is quicker than redoing work later. A specific question and a quick recap respects your manager's time.",
+  },
+  {
+    id: "sjt-7",
+    category: "sjt",
+    prompt:
+      "You notice a colleague is not following a safety procedure in the workshop. Nobody else has said anything. What is the MOST effective response?",
+    options: [
+      "Ignore it. It is their responsibility.",
+      "Speak up straight away if it is safe to do so, and report it to your supervisor as the procedure requires.",
+      "Mention it to friends at lunch.",
+      "Wait to see if anything goes wrong first.",
+    ],
+    answer: 1,
+    explanation:
+      "Safety comes first and everyone has a duty to raise concerns. Acting immediately and using the proper reporting route protects people.",
+  },
+  {
+    id: "sjt-8",
+    category: "sjt",
+    prompt:
+      "A customer is angry about a delayed delivery. It was not your fault. What is the MOST effective response?",
+    options: [
+      "Explain that the delay was caused by another team.",
+      "Listen, acknowledge their frustration, explain what you will do next, and follow up when you said you would.",
+      "Refer them to the complaints page and end the call.",
+      "Promise them a refund to calm them down.",
+    ],
+    answer: 1,
+    explanation:
+      "The customer wants to feel heard and to know what happens next. Blaming others doesn't help, and you shouldn't promise things you can't authorise.",
+  },
+
+  // ---- Numerical
+  {
+    id: "num-1",
+    category: "numerical",
+    prompt: "A company's revenue rose from £240,000 to £276,000. What was the percentage increase?",
+    options: ["12%", "15%", "16%", "18%"],
+    answer: 1,
+    explanation: "Increase = £36,000. 36,000 / 240,000 = 0.15, so 15%.",
+  },
+  {
+    id: "num-2",
+    category: "numerical",
+    prompt: "£640 is shared between two people in the ratio 3 : 5. How much does the larger share receive?",
+    options: ["£240", "£320", "£400", "£425"],
+    answer: 2,
+    explanation: "3 + 5 = 8 parts. £640 / 8 = £80 per part. 5 × £80 = £400.",
+  },
+  {
+    id: "num-3",
+    category: "numerical",
+    prompt: "A train travels 180 km in 2.5 hours. What is its average speed?",
+    options: ["64 km/h", "68 km/h", "72 km/h", "76 km/h"],
+    answer: 2,
+    explanation: "Speed = distance / time = 180 / 2.5 = 72 km/h.",
+  },
+  {
+    id: "num-4",
+    category: "numerical",
+    prompt: "After a 20% discount an item costs £80. What was the original price?",
+    options: ["£96", "£100", "£104", "£110"],
+    answer: 1,
+    explanation: "£80 is 80% of the original. 80 / 0.8 = £100.",
+  },
+  {
+    id: "num-5",
+    category: "numerical",
+    prompt: "You buy 5 items at £12.40 each and 3 items at £8.50 each. What is the total cost?",
+    options: ["£82.50", "£85.90", "£87.50", "£89.10"],
+    answer: 2,
+    explanation: "5 × 12.40 = 62.00. 3 × 8.50 = 25.50. Total = £87.50.",
+  },
+  {
+    id: "num-6",
+    category: "numerical",
+    prompt: "£1 = €1.16. How many euros do you get for £250?",
+    options: ["€270", "€280", "€290", "€300"],
+    answer: 2,
+    explanation: "250 × 1.16 = 290.",
+  },
+
+  // ---- Verbal (each question repeats the passage)
+  {
+    id: "ver-1",
+    category: "verbal",
+    prompt: `${PASSAGE}\n\nStatement: Apprentices spend all of their time in the workplace.`,
+    options: TFC,
+    answer: 1,
+    explanation: "The passage says apprentices split their time between the workplace and university, so the statement is false.",
+  },
+  {
+    id: "ver-2",
+    category: "verbal",
+    prompt: `${PASSAGE}\n\nStatement: In their first year, apprentices must spend time in two or more departments.`,
+    options: TFC,
+    answer: 0,
+    explanation: "\"At least two departments\" during the first year matches the statement, so it is true.",
+  },
+  {
+    id: "ver-3",
+    category: "verbal",
+    prompt: `${PASSAGE}\n\nStatement: Applicants with A-level maths are more likely to be selected.`,
+    options: TFC,
+    answer: 2,
+    explanation: "The passage says A-level maths is not required but says nothing about it giving an advantage. You cannot say.",
+  },
+  {
+    id: "ver-4",
+    category: "verbal",
+    prompt: `${PASSAGE}\n\nStatement: Apprentices need A-level maths.`,
+    options: TFC,
+    answer: 1,
+    explanation: "The company does not require A-level maths, so the statement is false.",
+  },
+  {
+    id: "ver-5",
+    category: "verbal",
+    prompt: `${PASSAGE}\n\nStatement: Each placement lasts exactly six months.`,
+    options: TFC,
+    answer: 2,
+    explanation: "The passage gives no length for placements, so you cannot say.",
+  },
+
+  // ---- Logical
+  {
+    id: "log-1",
+    category: "logical",
+    prompt: "What comes next? 2, 6, 12, 20, 30, ?",
+    options: ["40", "42", "44", "46"],
+    answer: 1,
+    explanation: "Differences are 4, 6, 8, 10, so the next difference is 12. 30 + 12 = 42.",
+  },
+  {
+    id: "log-2",
+    category: "logical",
+    prompt: "What comes next? 3, 6, 11, 18, 27, ?",
+    options: ["36", "38", "40", "42"],
+    answer: 1,
+    explanation: "Differences are 3, 5, 7, 9, so the next is 11. 27 + 11 = 38.",
+  },
+  {
+    id: "log-3",
+    category: "logical",
+    prompt: "All engineers at the firm are trained in CAD. Priya is trained in CAD. Is Priya an engineer at the firm?",
+    options: ["Definitely yes", "Not necessarily", "Definitely no"],
+    answer: 1,
+    explanation: "Being trained in CAD doesn't prove someone is an engineer. Other staff might be trained too.",
+  },
+  {
+    id: "log-4",
+    category: "logical",
+    prompt: "If it rains, the match is cancelled. The match was not cancelled. What can you conclude?",
+    options: ["It rained", "It did not rain", "Cannot tell"],
+    answer: 1,
+    explanation: "If rain always causes cancellation, no cancellation means there was no rain.",
+  },
+  {
+    id: "log-5",
+    category: "logical",
+    prompt: "Which is the odd one out? 16, 25, 36, 48, 49",
+    options: ["16", "25", "36", "48"],
+    answer: 3,
+    explanation: "16, 25, 36 and 49 are square numbers. 48 is not.",
+  },
+  {
+    id: "log-6",
+    category: "logical",
+    prompt: "What comes next? 1, 1, 2, 3, 5, 8, ?",
+    options: ["11", "12", "13", "14"],
+    answer: 2,
+    explanation: "Each number is the sum of the previous two (Fibonacci). 5 + 8 = 13.",
+  },
+];
+
+export function questionsFor(category: Category) {
+  return QUESTIONS.filter((q) => q.category === category);
+}
