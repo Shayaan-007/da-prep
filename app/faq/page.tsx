@@ -1,4 +1,4 @@
-export const metadata = { title: "FAQ | DA Prep" };
+export const metadata = { title: "FAQ" };
 
 const faqs = [
   {

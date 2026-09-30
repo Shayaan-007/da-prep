@@ -39,6 +39,9 @@ const PASSAGE =
 
 const TFC = ["True", "False", "Cannot say"];
 
+const PASSAGE2 =
+  "Harlow Digital runs its degree apprenticeship programme over five years. Apprentices attend university one day a week and spend the other four days in client-facing teams. Applications open in October and close once all places are filled. Successful applicants must pass a background check before starting. Salary rises at the start of each year of the programme.";
+
 export const QUESTIONS: Question[] = [
   // ---- Situational judgement
   {
@@ -302,6 +305,242 @@ export const QUESTIONS: Question[] = [
     options: ["11", "12", "13", "14"],
     answer: 2,
     explanation: "Each number is the sum of the previous two (Fibonacci). 5 + 8 = 13.",
+  },
+
+  // ---- More situational judgement
+  {
+    id: "sjt-9",
+    category: "sjt",
+    prompt:
+      "A teammate seems overwhelmed and is falling behind on their tasks. You have some spare time this week. What is the MOST effective response?",
+    options: [
+      "Ignore it. They will ask if they need help.",
+      "Quietly ask how they are doing, offer to help with something specific, and suggest they tell your manager if the workload is too much.",
+      "Take over their tasks without telling anyone.",
+      "Tell the rest of the team they are struggling.",
+    ],
+    answer: 1,
+    explanation:
+      "Offering specific help respects them and supports the team. Workload problems should be visible to the manager, but it should be their choice how it is raised first. Gossip and silent takeovers both cause problems.",
+  },
+  {
+    id: "sjt-10",
+    category: "sjt",
+    prompt:
+      "Your manager criticises part of your work in a team meeting. You think some of the criticism is unfair. What is the MOST effective response?",
+    options: [
+      "Argue your case immediately in front of everyone.",
+      "Stay calm, note the points, then ask for a short one-to-one to understand the detail and share your view.",
+      "Say nothing and stop contributing in meetings.",
+      "Complain about your manager to colleagues afterwards.",
+    ],
+    answer: 1,
+    explanation:
+      "Staying composed and following up privately shows maturity and lets you learn from valid points while calmly raising any you disagree with.",
+  },
+  {
+    id: "sjt-11",
+    category: "sjt",
+    prompt:
+      "You are asked to complete a task using software you have never used. The deadline is tomorrow. What is the MOST effective response?",
+    options: [
+      "Say you can do it and work it out alone, without telling anyone.",
+      "Tell your manager you haven't used it, ask for a quick pointer or a colleague to ask, and start learning straight away.",
+      "Refuse, because it is outside your role.",
+      "Ask a colleague to do the whole task for you.",
+    ],
+    answer: 1,
+    explanation:
+      "Being honest about what you don't know, while showing you'll learn quickly, builds trust. Pretending or refusing are both worse outcomes for the team.",
+  },
+  {
+    id: "sjt-12",
+    category: "sjt",
+    prompt:
+      "A friend who works for a rival company asks you about a product launch your company has not yet announced. What is the MOST effective response?",
+    options: [
+      "Give them a few hints, because they're a friend.",
+      "Politely say you can't discuss internal matters, and change the subject.",
+      "Make up something to mislead them.",
+      "Post about it online instead.",
+    ],
+    answer: 1,
+    explanation:
+      "Confidential information must stay confidential. A polite, friendly refusal protects your employer and your reputation without causing a scene.",
+  },
+  {
+    id: "sjt-13",
+    category: "sjt",
+    prompt:
+      "An unexpected problem means you won't finish an important report by Friday as promised. It is Wednesday. What is the MOST effective response?",
+    options: [
+      "Work quietly and hope to finish in time.",
+      "Tell your manager now, explain the issue, and propose a realistic new plan or what could be delivered by Friday.",
+      "Submit an incomplete report on Friday without explanation.",
+      "Tell your manager on Friday afternoon.",
+    ],
+    answer: 1,
+    explanation:
+      "Early warning with a proposed solution gives people time to adjust. Surprises on the deadline are what damage trust.",
+  },
+  {
+    id: "sjt-14",
+    category: "sjt",
+    prompt:
+      "You have just joined a team and feel left out, as everyone seems to know each other. What is the MOST effective response?",
+    options: [
+      "Wait for people to come to you.",
+      "Introduce yourself, ask colleagues about their work, and join in with team conversations and breaks.",
+      "Only talk to your manager.",
+      "Assume they don't like you and keep your head down.",
+    ],
+    answer: 1,
+    explanation:
+      "Being proactive and curious is the quickest way to build relationships. Most colleagues are glad when a new starter makes the first move.",
+  },
+
+  // ---- More numerical
+  {
+    id: "num-7",
+    category: "numerical",
+    prompt: "A recipe for 4 people uses 300g of flour. How much flour is needed for 10 people?",
+    options: ["650g", "700g", "750g", "800g"],
+    answer: 2,
+    explanation: "300g / 4 = 75g per person. 75g × 10 = 750g.",
+  },
+  {
+    id: "num-8",
+    category: "numerical",
+    prompt: "A project brings in £45,000 of revenue and costs £36,000. What is the profit as a percentage of revenue?",
+    options: ["18%", "20%", "25%", "80%"],
+    answer: 1,
+    explanation: "Profit = £9,000. 9,000 / 45,000 = 0.2, so 20%.",
+  },
+  {
+    id: "num-9",
+    category: "numerical",
+    prompt: "What is the mean of 12, 15, 9, 18 and 21?",
+    options: ["14", "15", "16", "17"],
+    answer: 1,
+    explanation: "12 + 15 + 9 + 18 + 21 = 75. 75 / 5 = 15.",
+  },
+  {
+    id: "num-10",
+    category: "numerical",
+    prompt: "What is 15% of £240?",
+    options: ["£32", "£34", "£36", "£38"],
+    answer: 2,
+    explanation: "10% = £24 and 5% = £12, so 15% = £36.",
+  },
+  {
+    id: "num-11",
+    category: "numerical",
+    prompt: "A phone plan costs £18.50 a month for 12 months, plus a one-off £25 set-up fee. What is the total cost?",
+    options: ["£240", "£247", "£252", "£265"],
+    answer: 1,
+    explanation: "12 × £18.50 = £222. £222 + £25 = £247.",
+  },
+  {
+    id: "num-12",
+    category: "numerical",
+    prompt: "A journey of 135 miles is driven at an average speed of 45 mph. How long does it take?",
+    options: ["2.5 hours", "3 hours", "3.5 hours", "4 hours"],
+    answer: 1,
+    explanation: "Time = distance / speed = 135 / 45 = 3 hours.",
+  },
+
+  // ---- More verbal
+  {
+    id: "ver-6",
+    category: "verbal",
+    prompt: `${PASSAGE2}\n\nStatement: The programme lasts five years.`,
+    options: TFC,
+    answer: 0,
+    explanation: "The passage states the programme runs over five years, so the statement is true.",
+  },
+  {
+    id: "ver-7",
+    category: "verbal",
+    prompt: `${PASSAGE2}\n\nStatement: Apprentices attend university five days a week.`,
+    options: TFC,
+    answer: 1,
+    explanation: "They attend university one day a week, so the statement is false.",
+  },
+  {
+    id: "ver-8",
+    category: "verbal",
+    prompt: `${PASSAGE2}\n\nStatement: Salary stays the same throughout the programme.`,
+    options: TFC,
+    answer: 1,
+    explanation: "Salary rises at the start of each year, so the statement is false.",
+  },
+  {
+    id: "ver-9",
+    category: "verbal",
+    prompt: `${PASSAGE2}\n\nStatement: Harlow Digital pays more than other employers.`,
+    options: TFC,
+    answer: 2,
+    explanation: "The passage never compares salary with other employers, so you cannot say.",
+  },
+  {
+    id: "ver-10",
+    category: "verbal",
+    prompt: `${PASSAGE2}\n\nStatement: Apprentices spend most of the week working in client-facing teams.`,
+    options: TFC,
+    answer: 0,
+    explanation: "Four of the five days are spent in client-facing teams, which is most of the week, so it is true.",
+  },
+
+  // ---- More logical
+  {
+    id: "log-7",
+    category: "logical",
+    prompt: "What comes next? 5, 10, 20, 40, 80, ?",
+    options: ["120", "140", "160", "200"],
+    answer: 2,
+    explanation: "Each number doubles. 80 × 2 = 160.",
+  },
+  {
+    id: "log-8",
+    category: "logical",
+    prompt: "What comes next? 100, 93, 86, 79, ?",
+    options: ["70", "72", "74", "76"],
+    answer: 1,
+    explanation: "Each number falls by 7. 79 − 7 = 72.",
+  },
+  {
+    id: "log-9",
+    category: "logical",
+    prompt: "What comes next? 2, 3, 5, 7, 11, ?",
+    options: ["12", "13", "14", "15"],
+    answer: 1,
+    explanation: "These are the prime numbers. The next prime after 11 is 13.",
+  },
+  {
+    id: "log-10",
+    category: "logical",
+    prompt: "All managers attend the Monday meeting. Sam does not attend the Monday meeting. Is Sam a manager?",
+    options: ["Definitely yes", "Definitely no", "Cannot tell"],
+    answer: 1,
+    explanation: "If every manager attends, anyone who doesn't attend cannot be a manager.",
+  },
+  {
+    id: "log-11",
+    category: "logical",
+    prompt:
+      "Some apprentices study law. Everyone who studies law has a mentor. Which statement MUST be true?",
+    options: ["All apprentices have a mentor", "Some apprentices have a mentor", "No apprentices have a mentor"],
+    answer: 1,
+    explanation:
+      "The apprentices who study law all have a mentor, so at least some apprentices have one. You can't conclude all do.",
+  },
+  {
+    id: "log-12",
+    category: "logical",
+    prompt: "Which is the odd one out? 9, 27, 81, 100",
+    options: ["9", "27", "81", "100"],
+    answer: 3,
+    explanation: "9, 27 and 81 are powers of 3 (3², 3³, 3⁴). 100 is not.",
   },
 ];
 

@@ -1,4 +1,5 @@
 import { askJson } from "@/lib/claude";
+import { mockStar } from "@/lib/mocks";
 import { rateLimit } from "@/lib/rateLimit";
 import { starInput, starOutput, starSystem, starUser } from "@/lib/writing";
 
@@ -15,6 +16,7 @@ export async function POST(req: Request) {
       starUser(parsed.data.notes, parsed.data.competency),
       starOutput,
       800,
+      mockStar,
     );
     return Response.json(out);
   } catch (e) {

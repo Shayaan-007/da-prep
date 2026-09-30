@@ -5,6 +5,7 @@ import {
   nextQuestionSystem,
   nextQuestionUser,
 } from "@/lib/interview";
+import { mockQuestion } from "@/lib/mocks";
 import { rateLimit } from "@/lib/rateLimit";
 import { consumeInterview } from "@/lib/server/usage";
 
@@ -29,6 +30,7 @@ export async function POST(req: Request) {
       nextQuestionUser(jobAd, cv, history),
       nextOutput,
       300,
+      () => mockQuestion(history),
     );
     return Response.json(out);
   } catch (e) {

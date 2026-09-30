@@ -1,4 +1,6 @@
-export const metadata = { title: "Process guide | DA Prep" };
+import Link from "next/link";
+
+export const metadata = { title: "Process guide" };
 
 const stages = [
   {
@@ -44,6 +46,19 @@ export default function Guide() {
         </a>{" "}
         and their own sites. Typical entry is Level 3 (A-levels, T-levels or similar), often with a
         minimum UCAS tariff that varies by employer.
+      </p>
+      <p className="text-sm">
+        <Link href="/tips" className="font-semibold text-brand-700 underline">
+          Tips for each stage
+        </Link>{" "}
+        ·{" "}
+        <Link href="/timeline" className="font-semibold text-brand-700 underline">
+          Suggested timeline
+        </Link>{" "}
+        ·{" "}
+        <Link href="/sectors" className="font-semibold text-brand-700 underline">
+          Sector guides
+        </Link>
       </p>
       <ol className="relative space-y-5 border-l-2 border-brand-100 pl-8">
         {stages.map((s, i) => (

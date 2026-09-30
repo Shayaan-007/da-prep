@@ -121,7 +121,15 @@ export default function InterviewPage() {
             overall: Math.round(r.overall),
             summary: r.summary,
             jobSnippet: jobAd.trim().slice(0, 80),
-            turns: h.map((t, i) => ({ ...t, score: r.turns[i].score })),
+            turns: h.map((t, i) => ({
+              ...t,
+              score: r.turns[i].score,
+              feedback: r.turns[i].feedback,
+              betterAnswer: r.turns[i].betterAnswer,
+              star: r.turns[i].star,
+            })),
+            strengths: r.strengths,
+            improvements: r.improvements,
           },
           ...prev,
         ]);

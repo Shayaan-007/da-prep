@@ -2,7 +2,7 @@ import Link from "next/link";
 import Icon from "@/components/Icon";
 import { SECTORS, SHARED } from "@/lib/sectors";
 
-export const metadata = { title: "Sectors | DA Prep" };
+export const metadata = { title: "Sectors" };
 
 const DIFFERENT = [
   "The technical or commercial questions in interviews.",

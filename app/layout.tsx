@@ -3,6 +3,7 @@ import Link from "next/link";
 import AuthProvider from "@/components/AuthProvider";
 import BottomNav from "@/components/BottomNav";
 import Nav from "@/components/Nav";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { Figtree } from "next/font/google";
 import "./globals.css";
 
@@ -12,9 +13,17 @@ const body = Figtree({
 });
 
 export const metadata: Metadata = {
-  title: "DA Prep",
-  description:
-    "AI mock interviews, practice tests and an application tracker for UK degree apprenticeships.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: "DA Prep: prepare for your degree apprenticeship", template: "%s | DA Prep" },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: "DA Prep: prepare for your degree apprenticeship",
+    description: SITE_DESCRIPTION,
+    locale: "en_GB",
+  },
+  twitter: { card: "summary" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -34,11 +43,25 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <BottomNav />
         </AuthProvider>
-        <footer className="border-t border-line bg-white py-6 text-center text-xs text-muted">
-          Guidance only. Always check the employer&apos;s own process and dates. ·{" "}
-          <Link href="/pricing" className="hover:text-ink hover:underline">Plans</Link> ·{" "}
-          <Link href="/faq" className="hover:text-ink hover:underline">FAQ</Link> ·{" "}
-          <Link href="/privacy" className="hover:text-ink hover:underline">Privacy</Link>
+        <footer className="border-t border-line bg-white py-6 text-xs text-muted">
+          <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 sm:flex-row sm:items-center sm:justify-between">
+            <p>Guidance only. Always check the employer&apos;s own process and dates.</p>
+            <nav aria-label="Footer" className="flex flex-wrap gap-x-4 gap-y-1">
+              {[
+                ["/guide", "Guide"],
+                ["/tips", "Tips"],
+                ["/timeline", "Timeline"],
+                ["/faq", "FAQ"],
+                ["/pricing", "Plans"],
+                ["/privacy", "Privacy"],
+                ["/terms", "Terms"],
+              ].map(([href, label]) => (
+                <Link key={href} href={href} className="hover:text-ink hover:underline">
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </footer>
       </body>
     </html>

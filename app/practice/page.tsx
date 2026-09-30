@@ -31,6 +31,7 @@ export default function Practice() {
   const [done, setDone] = useState(false);
   const [timed, setTimed] = useState(true);
   const [left, setLeft] = useState(0);
+  const [log, setLog] = useState<{ q: Question; picked: number | null }[]>([]);
 
   const info = category ? CATEGORY_INFO[category] : null;
   const q = qs[i];
@@ -43,10 +44,13 @@ export default function Practice() {
     setPicked(null);
     setScore(0);
     setDone(false);
+    setLog([]);
     setLeft(CATEGORY_INFO[c].secondsPerQuestion);
   }
 
   function next(finalScore: number) {
+    // Timed out without choosing: record it so it shows up in the review.
+    if (picked === null) setLog((l) => [...l, { q, picked: null }]);
     if (i + 1 >= total) {
       setDone(true);
       results.update((p) => [
@@ -77,6 +81,7 @@ export default function Practice() {
   function choose(idx: number) {
     if (answered || timeUp) return;
     setPicked(idx);
+    setLog((l) => [...l, { q, picked: idx }]);
     if (idx === q.answer) setScore((s) => s + 1);
   }
 
@@ -121,27 +126,54 @@ export default function Practice() {
   }
 
   if (done) {
+    const missed = log.filter((l) => l.picked !== l.q.answer);
     return (
-      <div className="mx-auto max-w-md space-y-5 py-8 text-center">
-        <div className="flex justify-center">
-          <ScoreRing value={score} max={total} size={150} label={`of ${total}`} />
+      <div className="mx-auto max-w-3xl space-y-8 py-4">
+        <div className="space-y-5 text-center">
+          <div className="flex justify-center">
+            <ScoreRing value={score} max={total} size={150} label={`of ${total}`} />
+          </div>
+          <h1 className="page-title">{info.label}</h1>
+          <p className="lead">
+            {score / total >= 0.8
+              ? "Excellent. You're well prepared for this format."
+              : score / total >= 0.5
+                ? "Good start. Review the ones you missed below and try again."
+                : "Keep practising. Every attempt helps."}
+          </p>
+          <div className="flex justify-center gap-3">
+            <button onClick={() => begin(category)} className="btn btn-primary">
+              Try again
+            </button>
+            <button onClick={() => setCategory(null)} className="btn btn-secondary">
+              Choose another
+            </button>
+          </div>
         </div>
-        <h1 className="page-title">{info.label}</h1>
-        <p className="lead">
-          {score / total >= 0.8
-            ? "Excellent. You're well prepared for this format."
-            : score / total >= 0.5
-              ? "Good start. Read the explanations and try again."
-              : "Keep practising. Every attempt helps."}
-        </p>
-        <div className="flex justify-center gap-3">
-          <button onClick={() => begin(category)} className="btn btn-primary">
-            Try again
-          </button>
-          <button onClick={() => setCategory(null)} className="btn btn-secondary">
-            Choose another
-          </button>
-        </div>
+
+        {missed.length > 0 ? (
+          <section className="space-y-3">
+            <h2 className="font-bold">
+              Review: {missed.length} to revisit
+            </h2>
+            <ul className="space-y-3">
+              {missed.map(({ q: mq, picked: p }) => (
+                <li key={mq.id} className="card space-y-2 p-4 text-sm">
+                  <p className="whitespace-pre-line font-medium">{mq.prompt}</p>
+                  <p className="text-coral-600">
+                    <strong>Your answer:</strong> {p === null ? "No answer (time ran out)" : mq.options[p]}
+                  </p>
+                  <p className="text-mint-600">
+                    <strong>Correct answer:</strong> {mq.options[mq.answer]}
+                  </p>
+                  <p className="callout bg-brand-50">{mq.explanation}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : (
+          <p className="callout bg-mint-50 text-center font-medium text-mint-600">Full marks. Nothing to review.</p>
+        )}
       </div>
     );
   }

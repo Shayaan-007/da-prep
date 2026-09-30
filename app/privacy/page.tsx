@@ -1,4 +1,4 @@
-export const metadata = { title: "Privacy | DA Prep" };
+export const metadata = { title: "Privacy" };
 
 export default function Privacy() {
   return (

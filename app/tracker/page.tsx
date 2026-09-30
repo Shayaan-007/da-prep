@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { EMPLOYERS } from "@/lib/employers";
+import { applicationsToIcs, hasDeadlines } from "@/lib/ics";
 import { useCollection } from "@/lib/store";
 import { STATUSES, type Application, type Status } from "@/lib/types";
 
@@ -34,7 +35,16 @@ export default function Tracker() {
   const patch = (id: string, p: Partial<Application>) =>
     update((prev) => prev.map((a) => (a.id === id ? { ...a, ...p } : a)));
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toLocaleDateString("en-CA"); // local YYYY-MM-DD (toISOString would be UTC)
+
+  function downloadCalendar() {
+    const url = URL.createObjectURL(new Blob([applicationsToIcs(apps)], { type: "text/calendar" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "da-prep-deadlines.ics";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
   const active = (a: Application) => a.status !== "Offer" && a.status !== "Rejected";
   const sorted = [...apps]
     .filter((a) => filter === "All" || a.status === filter)
@@ -47,12 +57,21 @@ export default function Tracker() {
 
   return (
     <div className="space-y-6">
-      <h1 className="page-title">Application tracker</h1>
-      <p className="text-xs text-muted">
-        {enabled && user
-          ? "Synced to your account."
-          : "Saved in this browser only. Clearing site data deletes it. Sign in to sync across devices."}
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h1 className="page-title">Application tracker</h1>
+          <p className="text-xs text-muted">
+            {enabled && user
+              ? "Synced to your account."
+              : "Saved in this browser only. Clearing site data deletes it. Download a backup from your account page, or sign in to sync."}
+          </p>
+        </div>
+        {hasDeadlines(apps) && (
+          <button onClick={downloadCalendar} className="btn btn-secondary">
+            Add deadlines to calendar
+          </button>
+        )}
+      </div>
 
       {closingSoon.length > 0 && (
         <div className="callout bg-sun-50 text-sun-600">

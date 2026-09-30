@@ -1,4 +1,4 @@
-export const metadata = { title: "Timeline | DA Prep" };
+export const metadata = { title: "Timeline" };
 
 const steps = [
   {

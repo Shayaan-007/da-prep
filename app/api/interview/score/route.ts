@@ -1,5 +1,6 @@
 import { askJson } from "@/lib/claude";
 import { scoreInput, scoreOutput, scoreSystem, scoreUser } from "@/lib/interview";
+import { mockScore } from "@/lib/mocks";
 import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
@@ -13,7 +14,7 @@ export async function POST(req: Request) {
   }
   const { jobAd, stage, turns } = parsed.data;
   try {
-    const out = await askJson(scoreSystem(), scoreUser(jobAd, turns), scoreOutput, 3500);
+    const out = await askJson(scoreSystem(), scoreUser(jobAd, turns), scoreOutput, 3500, () => mockScore(turns));
     if (out.turns.length !== turns.length) throw new Error("Turn count mismatch");
     return Response.json(out);
   } catch (e) {

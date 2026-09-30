@@ -11,13 +11,22 @@ function getClient() {
   return (client ??= new Anthropic());
 }
 
-/** Ask Claude for JSON and validate it against a zod schema. */
+/** Dev/testing only: serve canned responses so the UI can be exercised without an API key. */
+export const mockEnabled = () => process.env.MOCK_AI === "1" && process.env.NODE_ENV !== "production";
+
+/**
+ * Ask Claude for JSON and validate it against a zod schema.
+ * `mock` supplies a canned response when MOCK_AI=1 (ignored in production).
+ */
 export async function askJson<T extends z.ZodTypeAny>(
   system: string,
   user: string,
   schema: T,
   maxTokens = 1200,
+  mock?: () => unknown,
 ): Promise<z.infer<T>> {
+  if (mock && mockEnabled()) return schema.parse(mock());
+
   const res = await getClient().messages.create({
     model: MODEL,
     max_tokens: maxTokens,

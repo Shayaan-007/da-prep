@@ -48,7 +48,17 @@ export type SessionRecord = {
   overall: number;
   summary: string;
   jobSnippet: string;
-  turns: { question: string; answer: string; score: number }[];
+  turns: {
+    question: string;
+    answer: string;
+    score: number;
+    // Full feedback is optional so sessions saved by older versions still load.
+    feedback?: string;
+    betterAnswer?: string;
+    star?: { situation: boolean; task: boolean; action: boolean; result: boolean };
+  }[];
+  strengths?: string[];
+  improvements?: string[];
 };
 
 export type PracticeRecord = {

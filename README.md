@@ -1,23 +1,29 @@
 # DA Prep
 
-AI mock interviews, practice tests, application tracker and guides for UK degree apprenticeships.
+AI mock interviews, practice tests, an application tracker and guides for UK degree apprenticeship applicants.
 
 ## Features
-- **Mock interview** (`/interview`): questions tailored to a pasted job advert; text or timed video style (60s, one attempt); optional read-aloud, dictation and camera self-view; STAR feedback, score and stronger sample answers.
-- **Practice tests** (`/practice`): original SJT, numerical, verbal and logical questions with explanations and timers.
-- **Statement review** (`/review`) and **stories bank** with AI STAR builder (`/stories`).
-- **Tracker** (`/tracker`), **progress** (`/progress`), **employers**, **guide**, **timeline**, **FAQ**.
-- Optional **accounts + cloud sync** (Supabase), **free-tier limits and Pro subscription** (Stripe).
+- **Mock interview** (`/interview`): questions built from a pasted job advert and a chosen sector; text or timed video style (60s, one attempt); optional read-aloud, dictation and camera self-view; STAR feedback, score and stronger sample answers.
+- **Practice tests** (`/practice`): 48 original SJT, numerical, verbal and logical questions with explanations, timers and a review of the ones you missed.
+- **Statement review** (`/review`), **stories bank** with AI STAR builder (`/stories`).
+- **Tracker** (`/tracker`) with closing-date warnings and calendar (.ics) export.
+- **Progress** (`/progress`): score trend, STAR coverage, and every past interview with full feedback.
+- **Sectors** (`/sectors`): what is shared by every degree apprenticeship and what differs for seven sector groups.
+- **Content**: process guide, tips (tests, video interviews, assessment centres), timeline, employers, FAQ.
+- **Data**: backup/restore as JSON and clear local data from the account page.
+- Optional **accounts + cloud sync** (Supabase) and **free-tier limits + Pro subscription** (Stripe).
 
 ## Run
 ```
-cp .env.example .env.local   # add ANTHROPIC_API_KEY
+cp .env.example .env.local   # add ANTHROPIC_API_KEY, or set MOCK_AI=1 to develop without one
 npm install
 npm run dev                  # http://localhost:3000
 npm test                     # vitest
-npm run lint && npm run build
+npm run lint && npx tsc --noEmit && npm run build
 ```
-Without Supabase env vars the app is local-only (data in the browser). Without Stripe/`ENFORCE_LIMITS`, everything is free.
+Without Supabase env vars the app is local-only (data in the browser). Without Stripe / `ENFORCE_LIMITS`, everything is free.
+
+`MOCK_AI=1` serves canned AI responses so every screen can be developed and tested offline. It is ignored in production builds.
 
 ## Enabling accounts
 1. Create a Supabase project and run `supabase/schema.sql` in the SQL editor.
@@ -29,11 +35,14 @@ Without Supabase env vars the app is local-only (data in the browser). Without S
 2. Point a webhook at `/api/stripe/webhook` for `checkout.session.completed` and `customer.subscription.deleted`; set `STRIPE_WEBHOOK_SECRET`.
 3. Set `ENFORCE_LIMITS=true`. Free users get 2 interviews/month (`FREE_INTERVIEWS` in `lib/server/usage.ts`).
 
+## Deploying
+Any Node host works (Vercel is the simplest). Set the environment variables above, including `NEXT_PUBLIC_SITE_URL`. CI (`.github/workflows/ci.yml`) runs lint, typecheck, tests and a build on every push and pull request.
+
 ## Layout
-- `app/` pages and API routes (`app/api/*`), `lib/` prompts, schemas, question bank, store; `lib/server/` service-role helpers (never import from client code); `supabase/schema.sql`.
-- Claude model: `lib/claude.ts` (`MODEL`).
+- `app/` pages and API routes (`app/api/*`); `components/` shared UI; `lib/` prompts, schemas, question bank, sector packs, store, backup and calendar helpers; `lib/server/` service-role helpers (never import from client code); `supabase/schema.sql`; `tests/`.
+- Claude model: `lib/claude.ts` (`MODEL`). Canned dev responses: `lib/mocks.ts`.
 
 ## Before going public
 - The in-memory rate limiter (`lib/rateLimit.ts`) is per-instance: replace with Redis/Upstash on serverless.
-- Have the privacy notice reviewed; check employer data in `lib/employers.ts` and guide content, and keep the "last updated" dates current.
-- Supabase, Stripe and Google sign-in code paths are written but were not exercised against live services.
+- Privacy notice and terms are drafts: have them reviewed. Check employer data in `lib/employers.ts`, sector content in `lib/sectors.ts` and the guide content, and keep the "last updated" dates current.
+- Supabase, Stripe and Google sign-in code paths are written but were not exercised against live services. The Claude prompts were only exercised through mocks and tests, not a live key.
