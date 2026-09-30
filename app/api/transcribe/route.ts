@@ -1,5 +1,10 @@
-import { transcribeAudio } from "@/lib/ai";
+import { mockEnabled, transcribeAudio, transcribeModel } from "@/lib/ai";
 import { rateLimit } from "@/lib/rateLimit";
+
+/** Lets the setup screen warn up front if voice transcription isn't available on this server. */
+export function GET() {
+  return Response.json({ configured: Boolean(process.env.OPENAI_API_KEY) || mockEnabled(), model: transcribeModel() });
+}
 
 // A 60-second answer is well under 1 MB; this leaves room for slower codecs without inviting abuse.
 const MAX_BYTES = 8 * 1024 * 1024;

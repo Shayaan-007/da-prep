@@ -16,12 +16,51 @@ export function pickMimeType(isSupported: (t: string) => boolean): string | unde
   return MIME_CANDIDATES.find((t) => isSupported(t));
 }
 
+/**
+ * Why this page can't use a microphone at all, or null if it can. Browsers only allow microphone access on https or
+ * on localhost, so opening the dev server by its network address (e.g. http://192.168.x.x:3000) silently fails.
+ */
+export function micSupportProblem(env?: {
+  isSecureContext: boolean;
+  origin: string;
+  hasGetUserMedia: boolean;
+  hasMediaRecorder: boolean;
+}): string | null {
+  const e =
+    env ??
+    (typeof window === "undefined"
+      ? null
+      : {
+          isSecureContext: window.isSecureContext,
+          origin: window.location.origin,
+          hasGetUserMedia: Boolean(navigator.mediaDevices?.getUserMedia),
+          hasMediaRecorder: typeof MediaRecorder !== "undefined",
+        });
+  if (!e) return null;
+  if (!e.isSecureContext) {
+    let port = "";
+    try {
+      port = new URL(e.origin).port;
+    } catch {
+      /* keep the plain localhost address */
+    }
+    return `Browsers only allow microphone access on https or on localhost, and you're on ${e.origin}. Open the site at http://localhost${port ? `:${port}` : ""} (or its https address) instead.`;
+  }
+  if (!e.hasGetUserMedia || !e.hasMediaRecorder) {
+    return "This browser can't record audio. Use a recent version of Chrome, Edge, Firefox or Safari.";
+  }
+  return null;
+}
+
 export function describeMicError(e: unknown): string {
   const name = (e as { name?: string })?.name;
   if (name === "NotAllowedError" || name === "SecurityError") {
     return "Microphone access is blocked. Click the camera or lock icon in your browser's address bar, allow the microphone, then try again.";
   }
-  if (name === "NotFoundError" || name === "OverconstrainedError") {
+  if (name === "OverconstrainedError") {
+    return "That microphone isn't available any more. Choose another one, or pick the default.";
+  }
+  if (name === "NotFoundError") {
     return "No microphone was found. Plug one in or check your system sound settings.";
   }
   if (name === "NotReadableError") {
@@ -38,6 +77,7 @@ export function useRecorder() {
   const [state, setState] = useState<RecorderState>("idle");
   const [level, setLevel] = useState(0);
   const [error, setError] = useState("");
+  const [deviceLabel, setDeviceLabel] = useState("");
 
   const recorder = useRef<MediaRecorder | null>(null);
   const stream = useRef<MediaStream | null>(null);
@@ -59,17 +99,26 @@ export function useRecorder() {
 
   useEffect(() => cleanup, [cleanup]);
 
-  const start = useCallback(async (): Promise<boolean> => {
+  /** `deviceId` picks a specific microphone; leave it out to use the system default. */
+  const start = useCallback(async (deviceId?: string): Promise<boolean> => {
     setError("");
-    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
-      setError("This browser can't record audio. Try Chrome, Edge, Firefox or Safari, or type your answer instead.");
+    setDeviceLabel("");
+    const problem = micSupportProblem();
+    if (problem) {
+      setError(problem);
       return false;
     }
     setState("starting");
     try {
       const s = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
+        audio: {
+          ...(deviceId ? { deviceId: { exact: deviceId } } : {}),
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
       });
+      setDeviceLabel(s.getAudioTracks()[0]?.label ?? "");
       stream.current = s;
       chunks.current = [];
       peak.current = 0;
@@ -133,5 +182,5 @@ export function useRecorder() {
     });
   }, [cleanup]);
 
-  return { state, level, error, start, stop };
+  return { state, level, error, deviceLabel, start, stop };
 }

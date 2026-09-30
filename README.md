@@ -3,7 +3,7 @@
 AI mock interviews, practice tests, an application tracker and guides for UK degree apprenticeship applicants.
 
 ## Features
-- **Mock interview** (`/interview`): questions built from a pasted job advert and a chosen sector, one planned theme per question so none repeat; text, or timed video style (60s, one attempt) where your voice is recorded with a live level meter, transcribed, and shown for you to check before marking; optional read-aloud, text-mode dictation and camera self-view; STAR feedback, score and stronger sample answers.
+- **Mock interview** (`/interview`): questions built from a pasted job advert and a chosen sector, one planned theme per question so none repeat; text, or timed video style (60s) that is spoken only, with no typing: a microphone picker and test, a live level meter, live captions where the browser supports them, your voice recorded and transcribed, and the transcript shown read-only before marking (video style needs `https` or `http://localhost`: browsers block the microphone on network addresses such as `http://192.168.x.x`); optional read-aloud, text-mode dictation and camera self-view; STAR feedback, score and stronger sample answers.
 - **Practice tests** (`/practice`): 48 original SJT, numerical, verbal and logical questions with explanations, timers and a review of the ones you missed.
 - **Statement review** (`/review`), **stories bank** with AI STAR builder (`/stories`).
 - **Tracker** (`/tracker`) with closing-date warnings and calendar (.ics) export.

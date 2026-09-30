@@ -7,7 +7,8 @@ import LevelMeter from "@/components/LevelMeter";
 import Progress from "@/components/Progress";
 import ScoreRing from "@/components/ScoreRing";
 import { speak, stopSpeaking, useDictation } from "@/components/speech";
-import { SILENCE_PEAK, useRecorder } from "@/components/useRecorder";
+import MicPicker from "@/components/MicPicker";
+import { micSupportProblem, SILENCE_PEAK, useRecorder } from "@/components/useRecorder";
 import { postJson, transcribeBlob } from "@/lib/api";
 import { MAX_QUESTIONS, STAGES, type ScoreResult, type Stage, type Turn } from "@/lib/interview";
 import { useSector } from "@/lib/prefs";
@@ -17,8 +18,9 @@ import type { SessionRecord } from "@/lib/types";
 
 type Phase = "setup" | "asking" | "scoring" | "done";
 type Mode = "text" | "video";
-// Video-style answer flow: idle -> starting mic -> recording (or typing if no mic) -> transcribing -> review.
-type VState = "idle" | "starting" | "recording" | "typing" | "transcribing" | "review";
+// Video-style answers are spoken only (no typing): idle -> starting -> recording -> transcribing -> review.
+// "problem" = the microphone couldn't be used at all; "failed" = recorded fine but transcription failed (retryable).
+type VState = "idle" | "starting" | "recording" | "transcribing" | "review" | "problem" | "failed";
 
 const VIDEO_SECONDS = 60;
 
@@ -44,12 +46,36 @@ export default function InterviewPage() {
   const [heard, setHeard] = useState(false);
   const [silent, setSilent] = useState(false);
   const [quiet, setQuiet] = useState(false);
+  const [micId, setMicId] = useState("");
+  const [micRefresh, setMicRefresh] = useState(0);
+  const [voiceReady, setVoiceReady] = useState<boolean | null>(null);
+  const [supportProblem, setSupportProblem] = useState<string | null>(null);
+  const [captionFinal, setCaptionFinal] = useState("");
+  const [captionInterim, setCaptionInterim] = useState("");
 
   const answerRef = useRef("");
+  const blobRef = useRef<Blob | null>(null);
   const finishRef = useRef<() => void>(() => {});
   const dictation = useDictation((t) => setAnswer((a) => (a ? `${a} ${t}` : t)));
+  // Live on-screen captions while speaking (browser speech recognition). Cosmetic: the marked transcript comes from
+  // the recording. Skipped on phones and when a specific microphone is chosen, since it can only use the default.
+  const captions = useDictation(
+    (t) => setCaptionFinal((c) => (c ? `${c} ${t}` : t)),
+    (t) => setCaptionInterim(t),
+  );
   const recorder = useRecorder();
   const micTest = useRecorder();
+
+  // Video style needs a secure page (https or localhost) and a server that can transcribe. Check both up front.
+  useEffect(() => {
+    if (mode !== "video") return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSupportProblem(micSupportProblem());
+    fetch("/api/transcribe")
+      .then((r) => r.json())
+      .then((d: { configured?: boolean }) => setVoiceReady(Boolean(d.configured)))
+      .catch(() => setVoiceReady(null));
+  }, [mode]);
 
   useEffect(() => {
     answerRef.current = answer;
@@ -99,6 +125,9 @@ export default function InterviewPage() {
     setHeard(false);
     setSilent(false);
     setQuiet(false);
+    setCaptionFinal("");
+    setCaptionInterim("");
+    blobRef.current = null;
   }
 
   async function start() {
@@ -173,44 +202,79 @@ export default function InterviewPage() {
     setError("");
     setHeard(false);
     setSilent(false);
+    setQuiet(false);
+    setAnswer("");
+    setCaptionFinal("");
+    setCaptionInterim("");
+    blobRef.current = null;
     stopSpeaking(); // don't let the read-aloud question bleed into the recording
     setVstate("starting");
-    const ok = await recorder.start();
-    setLeft(VIDEO_SECONDS);
-    setRunning(true);
-    // No microphone? Keep the clock running and let them type the answer instead.
-    setVstate(ok ? "recording" : "typing");
-  }
-
-  /** End the video-style answer: stop recording, transcribe, and let the candidate check the text. */
-  async function finishVideoAnswer() {
-    setRunning(false);
-    if (vstate === "typing") {
-      await submitAnswer();
+    const ok = await recorder.start(micId || undefined);
+    if (!ok) {
+      // Voice-only: if the microphone can't start, say why and how to fix it. There is no typing route.
+      setVstate("problem");
       return;
     }
+    setMicRefresh((n) => n + 1); // device names are available now that permission is granted
+    setLeft(VIDEO_SECONDS);
+    setRunning(true);
+    setVstate("recording");
+    const phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (captions.supported && !micId && !phone) captions.start();
+  }
+
+  /** Send a finished recording for transcription. A failure keeps the recording so it can be retried. */
+  async function transcribeRecording() {
+    const blob = blobRef.current;
+    setError("");
+    if (!blob || blob.size === 0) {
+      setAnswer("");
+      setSilent(true);
+      setVstate("review");
+      return;
+    }
+    setVstate("transcribing");
+    try {
+      const text = await transcribeBlob(blob);
+      setAnswer(text);
+      // "Heard" means we got words back. The meter only words the message, since it can't run in a background tab.
+      setSilent(!text.trim());
+      setVstate("review");
+    } catch (e) {
+      setError((e as Error).message);
+      setVstate("failed");
+    }
+  }
+
+  /** End the video-style answer: stop recording, then transcribe it. */
+  async function finishVideoAnswer() {
     if (vstate !== "recording") return;
+    setRunning(false);
+    captions.stop();
     setVstate("transcribing");
     const { blob, peak } = await recorder.stop();
-    let text = "";
-    if (blob && blob.size > 0) {
-      try {
-        text = await transcribeBlob(blob);
-      } catch (e) {
-        setError(`${(e as Error).message} You can type your answer below instead.`);
-      }
-    }
-    setAnswer(text);
-    // "Heard" means we got words back. The meter only decides how to word the message, since it can't run
-    // while the tab is in the background.
-    setSilent(!text.trim());
+    blobRef.current = blob;
     setQuiet(peak < SILENCE_PEAK);
-    setVstate("review");
+    await transcribeRecording();
   }
 
   useEffect(() => {
     finishRef.current = () => void finishVideoAnswer();
   });
+
+  /** Nothing usable was heard, so let them have another go at the same question. */
+  function recordAgain() {
+    setError("");
+    setAnswer("");
+    resetTimer();
+  }
+
+  function switchToText() {
+    setError("");
+    setAnswer("");
+    resetTimer();
+    setMode("text");
+  }
 
   function reset() {
     setPhase("setup");
@@ -342,25 +406,50 @@ export default function InterviewPage() {
           </div>
 
           {mode === "video" && (
-            <div className="space-y-3 rounded-lg border border-line p-4">
+            <div className="space-y-4 rounded-lg border border-line p-4">
               <p className="label">Microphone check</p>
               <p className="text-sm text-muted">
-                Video style records your voice while you answer, then transcribes it so it can be marked. Test your
-                microphone first so you know it is being heard. Your recording is sent to OpenAI to be transcribed and
-                is not stored by this site.
+                Video style is spoken only, like a real recorded interview. Your voice is recorded while you answer and
+                transcribed so it can be marked. Your recording is sent to OpenAI to be transcribed and is not stored by
+                this site.
               </p>
+              {supportProblem && (
+                <p role="alert" className="callout bg-coral-50 text-coral-600">
+                  {supportProblem}
+                </p>
+              )}
+              {voiceReady === false && (
+                <p role="alert" className="callout bg-coral-50 text-coral-600">
+                  Voice transcription isn&apos;t set up on this server (no OpenAI key found), so video style can&apos;t mark
+                  spoken answers yet.
+                </p>
+              )}
+              <MicPicker value={micId} onChange={setMicId} refreshKey={micRefresh} />
               <div className="flex flex-wrap items-center gap-4">
                 <button
                   type="button"
                   className="btn btn-secondary"
-                  onClick={() => (micTest.state === "recording" ? void micTest.stop() : void micTest.start())}
+                  onClick={async () => {
+                    if (micTest.state === "recording") {
+                      void micTest.stop();
+                    } else if (await micTest.start(micId || undefined)) {
+                      setMicRefresh((n) => n + 1);
+                    }
+                  }}
                 >
                   {micTest.state === "recording" ? "Stop test" : "Test microphone"}
                 </button>
                 <LevelMeter level={micTest.level} active={micTest.state === "recording"} />
               </div>
               {micTest.state === "recording" && (
-                <p className="text-sm text-muted">Say a sentence. The bars should move as you speak.</p>
+                <div className="space-y-1 text-sm text-muted">
+                  {micTest.deviceLabel && (
+                    <p>
+                      Using: <strong className="text-ink">{micTest.deviceLabel}</strong>
+                    </p>
+                  )}
+                  <p>Say a sentence. The bars should move as you speak. If they don&apos;t, pick a different microphone above.</p>
+                </div>
               )}
               {micTest.error && (
                 <p role="alert" className="text-sm text-coral-600">
@@ -491,15 +580,10 @@ export default function InterviewPage() {
   }
 
   const video = mode === "video";
-  const timing = vstate === "recording" || vstate === "typing";
+  const timing = vstate === "recording";
   const isLast = history.length + 1 >= MAX_QUESTIONS;
-  const continueLabel = busy
-    ? "Thinking..."
-    : answer.trim()
-      ? isLast
-        ? "Finish and get feedback"
-        : "Continue"
-      : "Continue without an answer";
+  const continueLabel = busy ? "Thinking..." : isLast ? "Finish and get feedback" : "Continue";
+  const liveCaption = `${captionFinal} ${captionInterim}`.trim();
 
   return (
     <div className="mx-auto max-w-3xl space-y-5">
@@ -529,15 +613,15 @@ export default function InterviewPage() {
       {video ? (
         <>
           {vstate === "idle" && (
-            <div className="card space-y-3 p-5">
+            <div className="card space-y-4 p-5">
               <p className="text-sm text-muted">
-                You get one attempt and {VIDEO_SECONDS} seconds, like a recorded video interview. Read the question,
-                then press start and speak your answer. Your microphone records while the clock runs, and afterwards
-                you can check the transcript before it is marked.
+                You get {VIDEO_SECONDS} seconds to speak your answer, like a recorded video interview. Your microphone
+                records while the clock runs, then your answer is transcribed and marked.
               </p>
-              {recorder.error && (
+              <MicPicker value={micId} onChange={setMicId} refreshKey={micRefresh} />
+              {supportProblem && (
                 <p role="alert" className="callout bg-coral-50 text-coral-600">
-                  {recorder.error}
+                  {supportProblem}
                 </p>
               )}
               {errorBox}
@@ -547,7 +631,28 @@ export default function InterviewPage() {
             </div>
           )}
 
-          {vstate === "starting" && <p className="card p-5 text-sm text-muted">Starting your microphone…</p>}
+          {vstate === "starting" && (
+            <p className="card p-5 text-sm text-muted" aria-live="polite">
+              Starting your microphone… if your browser asks, choose Allow.
+            </p>
+          )}
+
+          {vstate === "problem" && (
+            <div className="card space-y-4 p-5">
+              <p role="alert" className="callout bg-coral-50 text-coral-600">
+                {recorder.error || "We couldn't start your microphone."}
+              </p>
+              <MicPicker value={micId} onChange={setMicId} refreshKey={micRefresh} />
+              <div className="flex flex-wrap gap-3">
+                <button onClick={() => void beginTimed()} className="btn btn-primary">
+                  Try again
+                </button>
+                <button onClick={switchToText} className="btn btn-secondary">
+                  Switch to a text interview instead
+                </button>
+              </div>
+            </div>
+          )}
 
           {vstate === "recording" && (
             <div className="card space-y-4 p-5" aria-live="polite">
@@ -558,9 +663,23 @@ export default function InterviewPage() {
                 </span>
                 <LevelMeter level={recorder.level} active />
               </div>
+              {recorder.deviceLabel && (
+                <p className="text-xs text-muted">
+                  Using: <strong className="text-ink">{recorder.deviceLabel}</strong>
+                </p>
+              )}
+              {liveCaption && (
+                <p className="rounded-md bg-soft p-3 text-sm leading-relaxed text-ink/80" aria-hidden>
+                  <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted">
+                    Live captions (approximate)
+                  </span>
+                  {liveCaption}
+                </p>
+              )}
               {!heard && left <= VIDEO_SECONDS - 5 && (
                 <p role="alert" className="callout bg-sun-50 text-sun-600">
-                  We can&apos;t hear you yet. Check your microphone is on and not muted, and speak a little louder.
+                  We can&apos;t hear you yet. Check your microphone is on and not muted, speak a little louder, or pick a
+                  different microphone after this answer.
                 </p>
               )}
               <button onClick={() => void finishVideoAnswer()} className="btn btn-primary">
@@ -576,43 +695,58 @@ export default function InterviewPage() {
             </div>
           )}
 
-          {(vstate === "review" || vstate === "typing") && (
-            <div className="space-y-3">
-              {vstate === "review" &&
-                (silent ? (
+          {vstate === "failed" && (
+            <div className="card space-y-4 p-5">
+              <p role="alert" className="callout bg-coral-50 text-coral-600">
+                {error || "We couldn't transcribe your answer."} Your recording is still here, so you can try again
+                without re-recording.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <button onClick={() => void transcribeRecording()} className="btn btn-primary">
+                  Try transcribing again
+                </button>
+                <button onClick={recordAgain} className="btn btn-secondary">
+                  Record again
+                </button>
+              </div>
+            </div>
+          )}
+
+          {vstate === "review" && (
+            <div className="card space-y-4 p-5">
+              {silent ? (
+                <>
                   <p role="alert" className="callout bg-sun-50 text-sun-600">
                     {quiet
-                      ? "We couldn't hear anything. Check your microphone is on, not muted, and the right one is selected, then type your answer below, or continue without one."
-                      : "We couldn't make out what you said. You can type your answer below, or continue without one."}
+                      ? "We couldn't hear anything. Check your microphone is on, not muted, and that the right one is selected, then record again."
+                      : "We couldn't make out what you said. Try again, speaking clearly and a little closer to the microphone."}
                   </p>
-                ) : (
-                  <p className="callout bg-brand-50">
-                    Here&apos;s what we heard. Fix any words that were transcribed wrongly, then continue.
-                  </p>
-                ))}
-              {vstate === "typing" && (
-                <p role="alert" className="callout bg-sun-50 text-sun-600">
-                  {recorder.error || "We couldn't use your microphone."} You can type your answer instead. The clock is
-                  still running.
-                </p>
-              )}
-              <textarea
-                className="input h-44"
-                aria-label="Your answer"
-                placeholder="Type your answer here."
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                maxLength={4000}
-              />
-              {errorBox}
-              {vstate === "review" ? (
-                <button onClick={submitAnswer} disabled={busy} className="btn btn-primary">
-                  {continueLabel}
-                </button>
+                  <MicPicker value={micId} onChange={setMicId} refreshKey={micRefresh} />
+                  <div className="flex flex-wrap gap-3">
+                    <button onClick={recordAgain} className="btn btn-primary">
+                      Record again
+                    </button>
+                    <button onClick={submitAnswer} disabled={busy} className="btn btn-secondary">
+                      {busy ? "Thinking..." : "Skip this question"}
+                    </button>
+                  </div>
+                </>
               ) : (
-                <button onClick={() => void finishVideoAnswer()} className="btn btn-primary">
-                  Finish answer
-                </button>
+                <>
+                  <div className="space-y-1.5">
+                    <p className="eyebrow">What we heard</p>
+                    <p className="whitespace-pre-line text-[15px] leading-relaxed">{answer}</p>
+                  </div>
+                  {errorBox}
+                  <div className="flex flex-wrap items-center gap-4">
+                    <button onClick={submitAnswer} disabled={busy} className="btn btn-primary">
+                      {continueLabel}
+                    </button>
+                    <button onClick={recordAgain} disabled={busy} className="text-sm font-semibold text-brand-700 underline">
+                      That&apos;s not right, record again
+                    </button>
+                  </div>
+                </>
               )}
             </div>
           )}

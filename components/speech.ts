@@ -22,15 +22,20 @@ function getCtor(): RecognitionCtor | null {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
-/** Browser dictation (Chrome/Edge/Safari). Calls onText with each finalised phrase. */
-export function useDictation(onText: (text: string) => void) {
+/**
+ * Browser dictation (Chrome/Edge/Safari). Calls onText with each finalised phrase. If `onInterim` is given, it
+ * also receives the words still being recognised, so they can be shown live as someone speaks.
+ */
+export function useDictation(onText: (text: string) => void, onInterim?: (text: string) => void) {
   const [supported, setSupported] = useState(false);
   const [listening, setListening] = useState(false);
   const rec = useRef<Recognition | null>(null);
   const cb = useRef(onText);
+  const interimCb = useRef(onInterim);
 
   useEffect(() => {
     cb.current = onText;
+    interimCb.current = onInterim;
   });
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -44,11 +49,15 @@ export function useDictation(onText: (text: string) => void) {
     const r = new Ctor();
     r.lang = "en-GB";
     r.continuous = true;
-    r.interimResults = false;
+    r.interimResults = Boolean(interimCb.current);
     r.onresult = (e) => {
+      let interim = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) cb.current(e.results[i][0].transcript.trim());
+        const text = e.results[i][0].transcript.trim();
+        if (e.results[i].isFinal) cb.current(text);
+        else interim += `${text} `;
       }
+      interimCb.current?.(interim.trim());
     };
     const done = () => {
       rec.current = null;

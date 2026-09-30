@@ -6,12 +6,13 @@ const transcribeAudio = vi.fn();
 vi.mock("@/lib/ai", () => ({
   askJson: (...a: unknown[]) => askJson(...a),
   transcribeAudio: (...a: unknown[]) => transcribeAudio(...a),
+  transcribeModel: () => "gpt-transcribe",
   mockEnabled: () => false,
 }));
 vi.mock("@/lib/server/usage", () => ({ consumeInterview: async () => ({ ok: true }) }));
 
 import { POST as next } from "@/app/api/interview/next/route";
-import { POST as transcribe } from "@/app/api/transcribe/route";
+import { GET as transcribeReady, POST as transcribe } from "@/app/api/transcribe/route";
 import { THEMES } from "@/lib/interview";
 
 let n = 100;
@@ -90,6 +91,16 @@ describe("question planning", () => {
       asked.push({ question, answer: "(no answer given)" });
     }
     expect(new Set(asked.map((a) => a.question)).size).toBe(5);
+  });
+});
+
+describe("GET /api/transcribe (readiness check)", () => {
+  it("reports whether voice transcription is configured on this server", async () => {
+    vi.stubEnv("OPENAI_API_KEY", "sk-test");
+    expect(await transcribeReady().json()).toEqual({ configured: true, model: "gpt-transcribe" });
+    vi.stubEnv("OPENAI_API_KEY", "");
+    expect(await transcribeReady().json()).toEqual({ configured: false, model: "gpt-transcribe" });
+    vi.unstubAllEnvs();
   });
 });
 
