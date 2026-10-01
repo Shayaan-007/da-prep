@@ -1,0 +1,38 @@
+// Registry of researched firm profiles. Add a file to lib/firms/ and list it here.
+import type { FirmProfile } from "./types";
+import { airbus } from "./airbus";
+import { amazon } from "./amazon";
+import { arup } from "./arup";
+import { atkinsrealis } from "./atkinsrealis";
+import { aviva } from "./aviva";
+import { baeSystems } from "./bae-systems";
+import { barclays } from "./barclays";
+import { bdo } from "./bdo";
+import { bmwGroup } from "./bmw-group";
+import { bt } from "./bt";
+import { capgemini } from "./capgemini";
+import { cisco } from "./cisco";
+import { civilServiceFastTrack } from "./civil-service-fast-track";
+import { deloitte } from "./deloitte";
+import { experian } from "./experian";
+import { ey } from "./ey";
+import { goldmanSachs } from "./goldman-sachs";
+import { google } from "./google";
+import { grantThornton } from "./grant-thornton";
+import { hsbc } from "./hsbc";
+import { ibm } from "./ibm";
+import { jlr } from "./jlr";
+import { jpMorgan } from "./jp-morgan";
+import { kpmg } from "./kpmg";
+import { lloyds } from "./lloyds";
+import { forvisMazars } from "./mazars";
+import { metropolitanPolice } from "./metropolitan-police";
+import { microsoft } from "./microsoft";
+import { natwest } from "./natwest";
+import { pwc } from "./pwc";
+import { rollsRoyce } from "./rolls-royce";
+import { santander } from "./santander";
+
+export const FIRMS: FirmProfile[] = [airbus, amazon, arup, atkinsrealis, aviva, baeSystems, barclays, bdo, bmwGroup, bt, capgemini, cisco, civilServiceFastTrack, deloitte, experian, ey, goldmanSachs, google, grantThornton, hsbc, ibm, jlr, jpMorgan, kpmg, lloyds, forvisMazars, metropolitanPolice, microsoft, natwest, pwc, rollsRoyce, santander].sort((a, b) => a.name.localeCompare(b.name));
+
+export const getFirm = (slug: string) => FIRMS.find((f) => f.slug === slug);
