@@ -9,7 +9,7 @@ import { SECTORS } from "@/lib/sectors";
 const stages = [
   ["Application", "An online form, often with a CV or short answers"],
   ["Online tests", "Situational judgement and reasoning tests"],
-  ["Video interview", "Recorded answers, typically 30 to 60 seconds each"],
+  ["Video interview", "Recorded answers, with limits that vary by employer"],
   ["Assessment centre", "Group exercise, role-play and a further interview"],
   ["Offer", "Usually conditional on your final grades"],
 ];
@@ -96,8 +96,8 @@ export default function Home() {
           <div className="max-w-2xl space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">The process you are preparing for</h2>
             <p className="lead">
-              There is no UCAS deadline and no central system. You apply to each employer directly, and each one runs
-              some or all of these stages.
+              There is no single national deadline or central system. You usually apply to each employer directly, and each one runs
+              some or all of these stages. A few, such as PwC&apos;s Flying Start, also involve a UCAS application.
             </p>
           </div>
           <ol className="grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-5">

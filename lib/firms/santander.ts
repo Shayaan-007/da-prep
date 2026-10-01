@@ -32,7 +32,7 @@ export const santander: FirmProfile = {
     source: S_APPS,
   },
   timeline: {
-    opens: "2025 cycle opened early February 2025 after repeated postponements (initially December, then end of 2024, then end of January). Applications are a rolling window.",
+    opens: "2025 cycle opened in early February 2025, later than first announced. Applications are a rolling window.",
     closes: "Rolling; the role page may show 'applications closed' once full (reported in 2025).",
     rolling: true,
     notes:
@@ -128,7 +128,7 @@ export const santander: FirmProfile = {
   ],
   questions: [],
   specificAdvice: [
-    "Be ready the day applications open: in 2025 the window opened late after repeated delays, then filled quickly.",
+    "Be ready the day applications open: in 2025 the window opened later than first announced, then filled quickly.",
     "Treat the games as a filter: you get about 72 hours from the email, and a wrong rejection can be fixed by emailing Santander.",
     "Prepare TEAMS examples (Think Customer, Embrace Change, Act Now, Move Together, Speak Up) for the video and the AC.",
     "The Level 6 CCB apprenticeship is degree-equivalent, not a named BSc: decide whether that matches your goal.",

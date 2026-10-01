@@ -8,14 +8,12 @@ import {
   nextQuestionUser,
 } from "@/lib/interview";
 import { mockQuestion } from "@/lib/mocks";
-import { rateLimit } from "@/lib/rateLimit";
 import { consumeInterview } from "@/lib/server/usage";
+import { guardAi } from "@/lib/server/guard";
 
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for") ?? "local";
-  if (!rateLimit(`next:${ip}`)) {
-    return Response.json({ error: "Too many requests, slow down." }, { status: 429 });
-  }
+  const gate = await guardAi(req, "next");
+  if (!gate.ok) return gate.response;
   const parsed = nextInput.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return Response.json({ error: "Invalid input" }, { status: 400 });

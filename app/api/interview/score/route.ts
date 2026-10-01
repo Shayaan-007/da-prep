@@ -1,13 +1,11 @@
 import { askJson } from "@/lib/ai";
 import { scoreInput, scoreOutput, scoreSystem, scoreUser } from "@/lib/interview";
 import { mockScore } from "@/lib/mocks";
-import { rateLimit } from "@/lib/rateLimit";
+import { guardAi } from "@/lib/server/guard";
 
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for") ?? "local";
-  if (!rateLimit(`score:${ip}`, 6)) {
-    return Response.json({ error: "Too many requests, slow down." }, { status: 429 });
-  }
+  const gate = await guardAi(req, "score", 6);
+  if (!gate.ok) return gate.response;
   const parsed = scoreInput.safeParse(await req.json().catch(() => null));
   if (!parsed.success) {
     return Response.json({ error: "Invalid input" }, { status: 400 });

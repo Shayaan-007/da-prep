@@ -1,13 +1,11 @@
 import { askJson } from "@/lib/ai";
 import { mockStar } from "@/lib/mocks";
-import { rateLimit } from "@/lib/rateLimit";
 import { starInput, starOutput, starSystem, starUser } from "@/lib/writing";
+import { guardAi } from "@/lib/server/guard";
 
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for") ?? "local";
-  if (!rateLimit(`star:${ip}`, 10)) {
-    return Response.json({ error: "Too many requests, slow down." }, { status: 429 });
-  }
+  const gate = await guardAi(req, "star", 10);
+  if (!gate.ok) return gate.response;
   const parsed = starInput.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: "Invalid input" }, { status: 400 });
   try {

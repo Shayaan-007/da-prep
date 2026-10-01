@@ -131,7 +131,7 @@ export const SECTORS: Sector[] = [
     id: "public",
     name: "Public sector and policing",
     blurb: "Civil Service, police and other public service roles.",
-    examples: ["Civil Service Fast Track Apprenticeship", "Police constable degree apprenticeship"],
+    examples: ["Metropolitan Police", "Police constable degree apprenticeship"],
     differs: [
       "Assessment often follows a published framework of behaviours and strengths: read it and match your examples.",
       "Situational judgement tests are very common.",
