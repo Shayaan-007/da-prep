@@ -1,14 +1,15 @@
--- Run in the Supabase SQL editor.
+-- DA Prep initial schema. Safe to re-run.
 
 -- Per-user JSON collections (applications, stories, sessions, practice)
 create table if not exists user_data (
   user_id uuid not null references auth.users on delete cascade,
-  key text not null,
-  value jsonb not null default '[]',
+  key text not null check (key in ('applications', 'stories', 'sessions', 'practice')),
+  value jsonb not null default '[]' check (octet_length(value::text) <= 1000000),
   updated_at timestamptz not null default now(),
   primary key (user_id, key)
 );
 alter table user_data enable row level security;
+drop policy if exists "own rows" on user_data;
 create policy "own rows" on user_data for all
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
 
@@ -20,6 +21,7 @@ create table if not exists profiles (
   created_at timestamptz not null default now()
 );
 alter table profiles enable row level security;
+drop policy if exists "read own profile" on profiles;
 create policy "read own profile" on profiles for select using (auth.uid() = id);
 
 create or replace function handle_new_user() returns trigger
@@ -40,6 +42,7 @@ create table if not exists usage (
   primary key (user_id, period)
 );
 alter table usage enable row level security;
+drop policy if exists "read own usage" on usage;
 create policy "read own usage" on usage for select using (auth.uid() = user_id);
 
 -- Atomically consume one interview; returns false when the free limit is reached.
@@ -58,7 +61,7 @@ begin
 end $$;
 revoke execute on function consume_interview(uuid, text, int) from public, anon, authenticated;
 
--- Daily AI-call budget (cost ceiling, applies to Pro too). period holds 'YYYY-MM-DD'.
+-- Daily AI-call budget (cost ceiling, applies to Pro too). day holds 'YYYY-MM-DD'.
 create table if not exists ai_usage (
   user_id uuid not null references auth.users on delete cascade,
   day text not null,
