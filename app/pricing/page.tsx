@@ -45,6 +45,16 @@ export default function Pricing() {
     }
   }
 
+  async function manage() {
+    setError("");
+    try {
+      const { url } = await postJson<{ url: string }>("/api/stripe/portal");
+      window.location.href = url;
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
+
   const label = process.env.NEXT_PUBLIC_PRO_PRICE_LABEL;
 
   return (
@@ -60,7 +70,12 @@ export default function Pricing() {
           <h2 className="font-semibold">Pro {label && <span className="font-normal text-muted">· {label}</span>}</h2>
           <ul className="list-disc pl-5 text-sm">{PRO.map((f) => <li key={f}>{f}</li>)}</ul>
           {plan === "pro" ? (
-            <p className="text-sm font-medium text-mint-600">You&apos;re on Pro.</p>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-mint-600">You&apos;re on Pro.</p>
+              <button onClick={manage} className="btn">
+                Manage or cancel subscription
+              </button>
+            </div>
           ) : enabled && user ? (
             <button onClick={upgrade} className="btn btn-primary">
               Upgrade
