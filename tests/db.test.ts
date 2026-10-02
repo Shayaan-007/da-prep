@@ -124,6 +124,17 @@ describe("plans and quotas (server-side functions)", () => {
     expect((until.getTime() - Date.now()) / (30.4 * 86_400_000)).toBeGreaterThan(5.8);
   });
 
+  it("takes a refunded pass back off the end date, never earlier than now", async () => {
+    await db.exec(`update profiles set pro_until = now() + interval '6 months' where id='${A}'`);
+    const until = (await one(`select shorten_pro_pass('${A}', 3) as u`)).u as Date;
+    const months = (until.getTime() - Date.now()) / (30.4 * 86_400_000);
+    expect(months).toBeGreaterThan(2.8);
+    expect(months).toBeLessThan(3.2);
+    const now = (await one(`select shorten_pro_pass('${A}', 12) as u`)).u as Date;
+    expect(Math.abs(now.getTime() - Date.now())).toBeLessThan(60_000);
+    expect((await as(A, `select shorten_pro_pass('${A}', 1)`)).err).toBeTruthy();
+  });
+
   it("treats the monthly subscription as Pro", async () => {
     await db.exec(`update profiles set plan='pro', pro_until=null where id='${B}'`);
     expect((await one(`select is_pro('${B}') as p`)).p).toBe(true);

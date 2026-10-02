@@ -131,6 +131,26 @@ describe("stripe webhook", () => {
     expect((await hook()).status).toBe(500);
   });
 
+  it("takes the 3 months back once when a pass is fully refunded", async () => {
+    event = { type: "charge.refunded", data: { object: { refunded: true, payment_intent: "pi_1" } } };
+    piRetrieve.mockResolvedValueOnce({ id: "pi_1", metadata: { user_id: "u1", plan: "pass", pass_applied: "yes" } });
+    expect((await hook()).status).toBe(200);
+    expect(rpc).toHaveBeenCalledWith("shorten_pro_pass", { p_uid: "u1", p_months: 3 });
+    piRetrieve.mockResolvedValueOnce({ id: "pi_1", metadata: { user_id: "u1", plan: "pass", pass_applied: "yes", pass_refunded: "yes" } });
+    await hook();
+    expect(rpc).toHaveBeenCalledTimes(1);
+  });
+
+  it("ignores partial refunds and refunds of other payments", async () => {
+    event = { type: "charge.refunded", data: { object: { refunded: false, payment_intent: "pi_1" } } };
+    piRetrieve.mockResolvedValue({ id: "pi_1", metadata: { user_id: "u1", plan: "pass", pass_applied: "yes" } });
+    await hook();
+    event = { type: "charge.refunded", data: { object: { refunded: true, payment_intent: "pi_3" } } };
+    piRetrieve.mockResolvedValue({ id: "pi_3", metadata: { user_id: "u1", plan: "monthly" } });
+    await hook();
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
   it("finds the user from subscription metadata when present", async () => {
     event = { type: "customer.subscription.updated", data: { object: { customer: "cus_1", status: "canceled", metadata: { user_id: "u9" } } } };
     await hook();
@@ -199,6 +219,14 @@ describe("checkout", () => {
   it("sells monthly as a subscription", async () => {
     await buy({ plan: "monthly", ...ok });
     expect(sessionCreate.mock.calls[0][0]).toMatchObject({ mode: "subscription", line_items: [{ price: "price_month", quantity: 1 }] });
+  });
+
+  it("asks Stripe for live subscriptions before selling another", async () => {
+    profileRow = { plan: "free", pro_until: null, stripe_customer_id: "cus_1" };
+    subsList.mockResolvedValueOnce({ data: [{ id: "sub_1", status: "active" }] });
+    expect((await buy({ plan: "monthly", ...ok })).status).toBe(409);
+    subsList.mockResolvedValueOnce({ data: [{ id: "sub_1", status: "canceled" }] });
+    expect((await buy({ plan: "monthly", ...ok })).status).toBe(200);
   });
 
   it("blocks overlapping purchases", async () => {

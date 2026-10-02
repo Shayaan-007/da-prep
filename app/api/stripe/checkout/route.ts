@@ -30,6 +30,15 @@ export async function POST(req: Request) {
     return Response.json({ error: `Your 3-month pass runs until ${until}. You can subscribe after it ends.` }, { status: 409 });
   }
 
+  // Two checkout tabs could both complete before the webhook marks the first; ask Stripe directly as well.
+  const stripe = new Stripe(key);
+  if (plan === "monthly" && profile?.stripe_customer_id) {
+    const subs = await stripe.subscriptions.list({ customer: profile.stripe_customer_id, status: "all", limit: 10 });
+    if (subs.data.some((s) => ["active", "trialing", "past_due", "incomplete"].includes(s.status))) {
+      return Response.json({ error: "You already have a Pro subscription. Manage it from this page." }, { status: 409 });
+    }
+  }
+
   // The buyer's confirmations travel with the payment as a record of consent.
   const consent = {
     user_id: user.id,
@@ -39,7 +48,6 @@ export async function POST(req: Request) {
     terms_accepted: "yes",
     confirmed_at: new Date().toISOString(),
   };
-  const stripe = new Stripe(key);
   const customer = profile?.stripe_customer_id ? { customer: profile.stripe_customer_id } : { customer_email: user.email ?? undefined };
   const common = {
     line_items: [{ price, quantity: 1 }],

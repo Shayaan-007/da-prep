@@ -46,6 +46,17 @@ export async function POST(req: Request) {
         ({ error } = await db.from("profiles").upsert({ id: uid, plan: "pro", stripe_customer_id: customer }));
       }
     }
+  } else if (event.type === "charge.refunded") {
+    // A fully refunded pass gives its 3 months back (only once, tracked on the payment intent).
+    const charge = event.data.object as Stripe.Charge;
+    const piId = idOf(charge.payment_intent);
+    const pi = piId ? await stripe.paymentIntents.retrieve(piId) : null;
+    const uid = pi?.metadata?.user_id;
+    if (charge.refunded && pi && uid && pi.metadata.plan === "pass" && pi.metadata.pass_applied === "yes" && !pi.metadata.pass_refunded) {
+      const res = await db.rpc("shorten_pro_pass", { p_uid: uid, p_months: PLANS.pass.months ?? 3 });
+      error = res.error;
+      if (!error) await stripe.paymentIntents.update(pi.id, { metadata: { ...pi.metadata, pass_refunded: "yes" } });
+    }
   } else if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
     const sub = event.data.object as Stripe.Subscription;
     const customer = idOf(sub.customer);

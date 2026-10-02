@@ -50,3 +50,16 @@ begin
   return v_until;
 end $$;
 revoke execute on function extend_pro_pass(uuid, int) from public, anon, authenticated;
+
+-- Take months back off a pass when its payment is refunded (never earlier than now). Service role only.
+create or replace function shorten_pro_pass(p_uid uuid, p_months int)
+returns timestamptz language plpgsql security definer set search_path = public as $$
+declare v_until timestamptz;
+begin
+  update profiles
+    set pro_until = case when pro_until is null then null else greatest(now(), pro_until - make_interval(months => p_months)) end
+    where id = p_uid
+    returning pro_until into v_until;
+  return v_until;
+end $$;
+revoke execute on function shorten_pro_pass(uuid, int) from public, anon, authenticated;
