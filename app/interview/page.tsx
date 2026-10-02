@@ -13,6 +13,7 @@ import MutedNotice from "@/components/MutedNotice";
 import { micSupportProblem, SILENCE_PEAK, useRecorder } from "@/components/useRecorder";
 import { postJson, transcribeBlob } from "@/lib/api";
 import { diag } from "@/lib/diag";
+import { VIDEO_PRESETS, getPreset, mmss, spoken } from "@/lib/hirevue";
 import { MAX_QUESTIONS, STAGES, type ScoreResult, type Stage, type Turn } from "@/lib/interview";
 import { useSector } from "@/lib/prefs";
 import { SECTOR_BY_ID, SECTORS } from "@/lib/sectors";
@@ -21,11 +22,13 @@ import type { SessionRecord } from "@/lib/types";
 
 type Phase = "setup" | "asking" | "scoring" | "done";
 type Mode = "text" | "video";
-// Video-style answers are spoken only (no typing): idle -> starting -> recording -> transcribing -> review.
+// Video-style answers are spoken only (no typing), timed like a one-way video interview:
+// idle -> thinking (countdown) -> starting -> recording (countdown) -> transcribing -> review.
 // "problem" = the microphone couldn't be used at all; "failed" = recorded fine but transcription failed (retryable).
-type VState = "idle" | "starting" | "recording" | "transcribing" | "review" | "problem" | "failed";
+type VState = "idle" | "thinking" | "starting" | "recording" | "transcribing" | "review" | "problem" | "failed";
 
-const VIDEO_SECONDS = 60;
+// Not marked and never sent anywhere: the recording is played back in the browser only.
+const PRACTICE_QUESTION = "Practice question: tell us about something you enjoy doing outside school, and why.";
 
 export default function InterviewPage() {
   const sessions = useCollection<SessionRecord>("sessions");
@@ -43,8 +46,15 @@ export default function InterviewPage() {
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [presetId, setPresetId] = useState("typical");
+  const preset = getPreset(presetId);
+  // Video interviews follow the chosen employer's question count; text interviews always have the maximum.
+  const total = mode === "video" ? preset.questions : MAX_QUESTIONS;
+  const [practice, setPractice] = useState(false);
+  const [practiceUrl, setPracticeUrl] = useState("");
+  const [retakesLeft, setRetakesLeft] = useState(0);
   const [running, setRunning] = useState(false);
-  const [left, setLeft] = useState(VIDEO_SECONDS);
+  const [left, setLeft] = useState(0);
   const [vstate, setVstate] = useState<VState>("idle");
   const [heard, setHeard] = useState(false);
   const [silent, setSilent] = useState(false);
@@ -60,7 +70,7 @@ export default function InterviewPage() {
 
   const answerRef = useRef("");
   const blobRef = useRef<Blob | null>(null);
-  const finishRef = useRef<() => void>(() => {});
+  const timeUpRef = useRef<() => void>(() => {});
   const dictation = useDictation((t) => setAnswer((a) => (a ? `${a} ${t}` : t)));
   // Live on-screen captions while speaking (browser speech recognition). Cosmetic: the marked transcript comes from
   // the recording. Skipped on phones and when a specific microphone is chosen, since it can only use the default.
@@ -92,7 +102,7 @@ export default function InterviewPage() {
     return () => stopSpeaking();
   }, [phase, readAloud, question]);
 
-  // Video-style countdown.
+  // Video-style countdowns: thinking time, then answer time. When either runs out, move on automatically.
   useEffect(() => {
     if (!running) return;
     const id = setInterval(() => setLeft((l) => l - 1), 1000);
@@ -102,9 +112,18 @@ export default function InterviewPage() {
     if (running && left <= 0) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setRunning(false);
-      finishRef.current();
+      timeUpRef.current();
     }
   }, [running, left]);
+
+  // Each new video question (and each re-record) starts with the thinking countdown, as in a real one-way interview.
+  useEffect(() => {
+    if (phase !== "asking" || mode !== "video" || vstate !== "idle" || !question) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVstate("thinking");
+    setLeft(preset.thinkSeconds);
+    setRunning(true);
+  }, [phase, mode, vstate, question, preset.thinkSeconds]);
 
   // Note once the microphone has picked up real sound, so we can warn if it never does.
   useEffect(() => {
@@ -125,7 +144,7 @@ export default function InterviewPage() {
 
   function resetTimer() {
     setRunning(false);
-    setLeft(VIDEO_SECONDS);
+    setLeft(0);
     setVstate("idle");
     setHeard(false);
     setSilent(false);
@@ -135,15 +154,32 @@ export default function InterviewPage() {
     blobRef.current = null;
   }
 
+  /** Video style opens with an unmarked practice question, as HireVue does. */
+  function beginPractice() {
+    void micTest.stop();
+    setError("");
+    setPractice(true);
+    setPracticeUrl("");
+    setHistory([]);
+    setQuestion(PRACTICE_QUESTION);
+    setAnswer("");
+    resetTimer();
+    setPhase("asking");
+  }
+
   async function start() {
     void micTest.stop();
+    void recorder.stop();
     setBusy(true);
     setError("");
     try {
       const q = await fetchQuestion([]);
+      setPractice(false);
+      setPracticeUrl("");
       setHistory([]);
       setQuestion(q);
       setAnswer("");
+      setRetakesLeft(preset.retakes);
       resetTimer();
       setPhase("asking");
     } catch (e) {
@@ -161,7 +197,7 @@ export default function InterviewPage() {
     setBusy(true);
     setError("");
     try {
-      if (h.length >= MAX_QUESTIONS) {
+      if (h.length >= total) {
         setPhase("scoring");
         const r = await postJson<ScoreResult>("/api/interview/score", { jobAd, stage, turns: h });
         setResult(r);
@@ -193,6 +229,7 @@ export default function InterviewPage() {
         setHistory(h);
         setQuestion(q);
         setAnswer("");
+        setRetakesLeft(preset.retakes);
         resetTimer();
       }
     } catch (e) {
@@ -222,7 +259,7 @@ export default function InterviewPage() {
       return;
     }
     setMicRefresh((n) => n + 1); // device names are available now that permission is granted
-    setLeft(VIDEO_SECONDS);
+    setLeft(preset.answerSeconds);
     setRunning(true);
     setVstate("recording");
     const phone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -264,15 +301,30 @@ export default function InterviewPage() {
     const { blob, peak } = await recorder.stop();
     blobRef.current = blob;
     setQuiet(peak < SILENCE_PEAK);
+    if (practice) {
+      // Practice answers are only played back here, never transcribed or marked.
+      if (practiceUrl) URL.revokeObjectURL(practiceUrl);
+      setPracticeUrl(blob && blob.size ? URL.createObjectURL(blob) : "");
+      setSilent(!blob || blob.size === 0 || peak < SILENCE_PEAK);
+      setVstate("review");
+      return;
+    }
     await transcribeRecording();
   }
 
   useEffect(() => {
-    finishRef.current = () => void finishVideoAnswer();
+    timeUpRef.current = () => {
+      if (vstate === "thinking") void beginTimed();
+      else void finishVideoAnswer();
+    };
   });
 
-  /** Nothing usable was heard, so let them have another go at the same question. */
-  function recordAgain() {
+  /**
+   * Another go at the same question. `technical` is for when nothing usable was captured (mic problem, silence,
+   * failed upload): that never uses up one of the employer's re-records. Otherwise it spends one.
+   */
+  function recordAgain(technical = true) {
+    if (!technical && !practice) setRetakesLeft((n) => Math.max(0, n - 1));
     setError("");
     setAnswer("");
     resetTimer();
@@ -286,6 +338,9 @@ export default function InterviewPage() {
   }
 
   function reset() {
+    setPractice(false);
+    if (practiceUrl) URL.revokeObjectURL(practiceUrl);
+    setPracticeUrl("");
     setPhase("setup");
     setHistory([]);
     setResult(null);
@@ -393,7 +448,7 @@ export default function InterviewPage() {
               {(
                 [
                   ["text", "Text", "Take your time and edit as you go."],
-                  ["video", "Video style", `Speak your answer: ${VIDEO_SECONDS} seconds, one attempt, like the real thing.`],
+                  ["video", "Video style", "Speak your answers with timed thinking and answer time, like a real recorded (HireVue-style) interview."],
                 ] as const
               ).map(([m, title, blurb]) => (
                 <button
@@ -416,6 +471,26 @@ export default function InterviewPage() {
 
           {mode === "video" && (
             <div className="space-y-4 rounded-lg border border-line p-4">
+              <label className="label block">
+                Interview settings
+                <select className="input mt-1.5 font-normal" value={presetId} onChange={(e) => setPresetId(e.target.value)}>
+                  {VIDEO_PRESETS.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.label}: {p.questions} questions, {mmss(p.thinkSeconds)} to think, {mmss(p.answerSeconds)} to answer
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <p className="text-sm text-muted">
+                {preset.note}{" "}
+                {preset.retakes > 0 ? `${preset.retakes} re-record${preset.retakes > 1 ? "s" : ""} per question.` : "No re-records on the marked questions."}{" "}
+                You start with an unmarked practice question you can repeat as often as you like.{" "}
+                <a href={preset.source} target="_blank" rel="noreferrer" className="underline">
+                  Source
+                </a>{" "}
+                ({preset.confidence === "official" ? "official" : preset.confidence === "single-report" ? "single report" : "candidate reports"}). Employers set
+                these themselves, so check your own invitation.
+              </p>
               <p className="label">Microphone check</p>
               <p className="text-sm text-muted">
                 Video style is spoken only, like a real recorded interview. Your voice is recorded while you answer and
@@ -505,7 +580,7 @@ export default function InterviewPage() {
           </div>
           {errorBox}
           <button
-            onClick={start}
+            onClick={mode === "video" ? beginPractice : start}
             disabled={busy || jobAd.trim().length < 20}
             className="btn btn-primary !px-6 !py-3"
           >
@@ -605,7 +680,7 @@ export default function InterviewPage() {
 
   const video = mode === "video";
   const timing = vstate === "recording";
-  const isLast = history.length + 1 >= MAX_QUESTIONS;
+  const isLast = history.length + 1 >= total;
   const continueLabel = busy ? "Thinking..." : isLast ? "Finish and get feedback" : "Continue";
   const liveCaption = `${captionFinal} ${captionInterim}`.trim();
 
@@ -613,21 +688,22 @@ export default function InterviewPage() {
     <div className="mx-auto max-w-3xl space-y-5">
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm font-semibold text-muted">
-          <p>
-            Question {history.length + 1} of {MAX_QUESTIONS}
-          </p>
-          {video && timing && (
+          <p>{practice ? "Practice question (not marked)" : `Question ${history.length + 1} of ${total}`}</p>
+          {video && (timing || vstate === "thinking") && (
             <p
+              role="timer"
+              aria-label={vstate === "thinking" ? "Thinking time left" : "Answer time left"}
               className={`rounded-md px-3 py-1 text-base font-semibold tabular-nums ${
                 left <= 10 ? "animate-pulse bg-coral-50 text-coral-600" : "bg-brand-50 text-brand-700"
               }`}
               aria-live="off"
             >
-              0:{String(Math.max(left, 0)).padStart(2, "0")}
+              {vstate === "thinking" ? "Think " : ""}
+              {mmss(left)}
             </p>
           )}
         </div>
-        <Progress value={history.length} max={MAX_QUESTIONS} label="Interview progress" />
+        {!practice && <Progress value={history.length} max={total} label="Interview progress" />}
       </div>
       <div key={question} className="card animate-pop p-6">
         <p className="mb-2 text-xs font-bold uppercase tracking-wide text-brand-600">Interviewer</p>
@@ -637,11 +713,14 @@ export default function InterviewPage() {
       {video && <DiagPanel />}
       {video ? (
         <>
-          {vstate === "idle" && (
+          {vstate === "thinking" && (
             <div className="card space-y-4 p-5">
               <p className="text-sm text-muted">
-                You get {VIDEO_SECONDS} seconds to speak your answer, like a recorded video interview. Your microphone
-                records while the clock runs, then your answer is transcribed and marked.
+                Thinking time: {spoken(preset.thinkSeconds)}. Recording starts automatically when it runs out, then you have{" "}
+                {spoken(preset.answerSeconds)} to answer.{" "}
+                {practice
+                  ? "This practice answer is only played back to you here; it isn't sent anywhere or marked."
+                  : "Your answer is transcribed and marked."}
               </p>
               <MicPicker value={micId} onChange={setMicId} refreshKey={micRefresh} />
               {supportProblem && (
@@ -650,9 +729,16 @@ export default function InterviewPage() {
                 </p>
               )}
               {errorBox}
-              <button onClick={() => void beginTimed()} className="btn btn-primary">
-                Start answering
-              </button>
+              <div className="flex flex-wrap items-center gap-4">
+                <button onClick={() => { setRunning(false); void beginTimed(); }} className="btn btn-primary">
+                  Start answering now
+                </button>
+                {practice && (
+                  <button onClick={() => void start()} disabled={busy} className="text-sm font-semibold text-brand-700 underline">
+                    {busy ? "Preparing your first question..." : "Skip practice and start the interview"}
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
@@ -702,7 +788,7 @@ export default function InterviewPage() {
                 </p>
               )}
               {recorder.muted && <MutedNotice />}
-              {!heard && !recorder.muted && left <= VIDEO_SECONDS - 5 && (
+              {!heard && !recorder.muted && left <= preset.answerSeconds - 5 && (
                 <p role="alert" className="callout bg-sun-50 text-sun-600">
                   We can&apos;t hear you yet. Check your microphone is on and not muted, speak a little louder, or pick a
                   different microphone after this answer.
@@ -731,14 +817,44 @@ export default function InterviewPage() {
                 <button onClick={() => void transcribeRecording()} className="btn btn-primary">
                   Try transcribing again
                 </button>
-                <button onClick={recordAgain} className="btn btn-secondary">
+                <button onClick={() => recordAgain(true)} className="btn btn-secondary">
                   Record again
                 </button>
               </div>
             </div>
           )}
 
-          {vstate === "review" && (
+          {vstate === "review" && practice && (
+            <div className="card space-y-4 p-5">
+              {practiceUrl ? (
+                <div className="space-y-2">
+                  <p className="eyebrow">Your practice answer</p>
+                  <audio controls src={practiceUrl} className="w-full" aria-label="Your practice answer" />
+                  <p className="text-sm text-muted">
+                    Listen back: did you answer the question, give an example, and finish before the time ran out?
+                  </p>
+                </div>
+              ) : (
+                <p role="alert" className="callout bg-sun-50 text-sun-600">
+                  Nothing was recorded. Check your microphone is on and not muted, then try the practice again.
+                </p>
+              )}
+              {silent && practiceUrl && (
+                <p className="callout bg-sun-50 text-sun-600 text-sm">It sounded very quiet. Check your microphone before you start.</p>
+              )}
+              {errorBox}
+              <div className="flex flex-wrap items-center gap-4">
+                <button onClick={() => void start()} disabled={busy} className="btn btn-primary">
+                  {busy ? "Preparing your first question..." : "Start the real interview"}
+                </button>
+                <button onClick={() => recordAgain(true)} disabled={busy} className="btn btn-secondary">
+                  Try the practice again
+                </button>
+              </div>
+            </div>
+          )}
+
+          {vstate === "review" && !practice && (
             <div className="card space-y-4 p-5">
               {silent ? (
                 <>
@@ -752,8 +868,9 @@ export default function InterviewPage() {
                     </p>
                   )}
                   <MicPicker value={micId} onChange={setMicId} refreshKey={micRefresh} />
+                  <p className="text-sm text-muted">Nothing usable was captured, so recording again doesn&apos;t count as a re-record.</p>
                   <div className="flex flex-wrap gap-3">
-                    <button onClick={recordAgain} className="btn btn-primary">
+                    <button onClick={() => recordAgain(true)} className="btn btn-primary">
                       Record again
                     </button>
                     <button onClick={submitAnswer} disabled={busy} className="btn btn-secondary">
@@ -772,9 +889,16 @@ export default function InterviewPage() {
                     <button onClick={submitAnswer} disabled={busy} className="btn btn-primary">
                       {continueLabel}
                     </button>
-                    <button onClick={recordAgain} disabled={busy} className="text-sm font-semibold text-brand-700 underline">
-                      That&apos;s not right, record again
-                    </button>
+                    {retakesLeft > 0 ? (
+                      <button onClick={() => recordAgain(false)} disabled={busy} className="text-sm font-semibold text-brand-700 underline">
+                        Re-record ({retakesLeft} left)
+                      </button>
+                    ) : (
+                      <span className="text-xs text-muted">
+                        No re-records on these settings, as in the real interview. Small transcription slips won&apos;t matter
+                        much for your feedback.
+                      </span>
+                    )}
                   </div>
                 </>
               )}
