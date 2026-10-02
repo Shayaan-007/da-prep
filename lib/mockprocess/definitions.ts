@@ -148,6 +148,7 @@ export const MOCKS: MockProcess[] = [
       { kind: "test", name: "Immersive assessment: ranking actions", testId: "sjt-ranking", stageOrder: 3, note: "Deloitte says you rank the most and least likely actions in workplace scenarios. Timings are not published." },
       { kind: "test", name: "Immersive assessment: numerical reasoning", testId: "capp-numerical", stageOrder: 3, note: "Deloitte includes numerical and verbal reasoning. Prep sites report Cappfinity runs it, so this uses a Cappfinity-style, time-recorded replica." },
       { kind: "test", name: "Immersive assessment: verbal reasoning", testId: "capp-verbal", stageOrder: 3 },
+      { kind: "test", name: "Job simulation: inbox tasks", testId: "job-sim-audit", stageOrder: 4, note: "Deloitte's job simulation includes written and email tasks. This replica is an original audit inbox; Deloitte publishes no timings." },
       {
         kind: "qa",
         name: "Job simulation: recorded answers",
@@ -767,7 +768,7 @@ export const MOCKS: MockProcess[] = [
       APPLICATION(1, "About 10 to 15 minutes: eligibility questions and possibly a CV. Applicants report one application per cycle.", [
         "Pick your division deliberately: Commercial Banking, Wealth or Digital.",
       ]),
-      { kind: "test", name: "Simulate: ranking workplace actions", testId: "sjt-ranking", stageOrder: 2, note: "HSBC's Simulate assessment (built with Cappfinity) uses work scenarios with ranked responses; this replica uses written ranking scenarios." },
+      { kind: "test", name: "Simulate: a day in the job", testId: "job-sim-banking", stageOrder: 2, note: "HSBC's Simulate assessment (built with Cappfinity) is a fictional working day with emails, data and ranked responses. This replica uses an original commercial-banking inbox; the real one also uses videos." },
       { kind: "test", name: "Simulate: data interpretation", testId: "capp-numerical", stageOrder: 2, note: "Prep sites describe data-monitoring tasks with tables and graphs in HSBC's Cappfinity simulation; this uses a Cappfinity-style, time-recorded replica." },
       {
         kind: "qa",

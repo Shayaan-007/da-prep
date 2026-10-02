@@ -14,7 +14,9 @@ export type Stimulus =
       labels: string[];
       series: { name: string; values: number[] }[];
       unit?: string;
-    };
+    }
+  /** A message in a job simulation's inbox, optionally with a small table attached. */
+  | { type: "email"; title?: string; from: string; subject: string; time?: string; body: string; table?: { columns: string[]; rows: (string | number)[][] } };
 
 type Base = {
   id: string;
@@ -40,6 +42,8 @@ export type Item =
   | (Base & { kind: "numeric"; answer: number; tolerance?: number; unit?: string })
   /** Put the options in order, best first. `order` lists option indexes in the correct order. */
   | (Base & { kind: "rank"; options: string[]; order: number[]; /** e.g. "smallest first"; default "best first". */ orderLabel?: string })
+  /** A typed reply (for example an email). Not auto-marked: the review shows a checklist to compare against. */
+  | (Base & { kind: "written"; checklist: string[]; minWords?: number })
   /** Agreement 1-5 with a statement, feeding one trait. No right answer. */
   | (Base & { kind: "likert"; trait: string; reverse?: boolean })
   /** Pick the statement most like you and the one least like you. Each statement feeds a trait. */
@@ -55,6 +59,7 @@ export type Response =
   | { kind: "rate-each"; ratings: (number | null)[] }
   | { kind: "rank"; order: number[] | null }
   | { kind: "numeric"; value: string | null }
+  | { kind: "written"; text: string | null }
   | { kind: "likert"; value: number | null }
   | { kind: "forced-choice"; most: number | null; least: number | null };
 

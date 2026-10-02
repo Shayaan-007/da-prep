@@ -134,3 +134,34 @@ describe("Cappfinity-style banks", () => {
     for (const style of ["lc", "brd", "arg", "tf", "as"]) expect(CAPP_CRITICAL.filter((i) => i.id.startsWith(`capp-cr-${style}`)), style).toHaveLength(4);
   });
 });
+
+describe("job simulations", () => {
+  it("are valid, cover mixed response types and include a written reply", async () => {
+    const { AUDIT_SIM, BANKING_SIM } = await import("@/lib/assess/banks/job-sim");
+    for (const sim of [BANKING_SIM, AUDIT_SIM]) {
+      for (const item of sim.items) {
+        expect(validateItem(item), item.id).toEqual([]);
+        expect(sim.stimuli[item.stimulus!]?.type, item.id).toBe("email");
+        if (item.kind === "rank") expect(item.order, item.id).not.toEqual(item.order.map((_, k) => k));
+        if (item.kind === "rate-each") expect([...item.ratings].sort(), item.id).toEqual([0, 1, 2, 3]);
+      }
+      const kinds = new Set(sim.items.map((i) => i.kind));
+      for (const k of ["rank", "mcq", "most-least", "numeric", "written", "rate-each"]) expect(kinds.has(k as never), k).toBe(true);
+    }
+  });
+
+  it("does not mark written replies but records that they were answered", async () => {
+    const { BANKING_SIM } = await import("@/lib/assess/banks/job-sim");
+    const { scoreItem } = await import("@/lib/assess/score");
+    const w = BANKING_SIM.items.find((i) => i.kind === "written")!;
+    expect(scoreItem(w, { kind: "written", text: "Hi Dana" })).toEqual({ points: 0, max: 0, answered: true });
+    expect(scoreItem(w, { kind: "written", text: "  " }).answered).toBe(false);
+  });
+
+  it("is linked from firms reported to use simulations", async () => {
+    const { practiceLinks } = await import("@/lib/firms/glance");
+    const { getFirm } = await import("@/lib/firms");
+    expect(practiceLinks(getFirm("hsbc")!).map((l) => l.href)).toContain("/tests/job-sim-banking");
+    expect(practiceLinks(getFirm("deloitte")!).map((l) => l.href)).toContain("/tests/job-sim-audit");
+  });
+});

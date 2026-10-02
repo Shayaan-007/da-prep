@@ -15,6 +15,8 @@ export function describeKey(item: Item): string {
       return item.actions.map((a, i) => `${a} (${RATING_LABELS[item.ratings[i]]})`).join("\n");
     case "rank":
       return item.order.map((o, i) => `${i + 1}. ${item.options[o]}`).join("\n");
+    case "written":
+      return item.checklist.map((c) => `• ${c}`).join("\n");
     case "numeric":
       return `${item.answer.toLocaleString("en-GB")}${item.unit ? ` ${item.unit}` : ""}${item.tolerance ? ` (answers within ${item.tolerance} accepted)` : ""}`;
     default:
@@ -47,6 +49,10 @@ export function describeResponse(item: Item, r: Response): string {
     case "rank": {
       const x = r as Extract<Response, { kind: "rank" }>;
       return x.order ? x.order.map((o, i) => `${i + 1}. ${item.options[o]}`).join("\n") : NONE;
+    }
+    case "written": {
+      const t = (r as Extract<Response, { kind: "written" }>).text;
+      return t && t.trim() ? t.trim() : NONE;
     }
     case "numeric": {
       const v = (r as Extract<Response, { kind: "numeric" }>).value;

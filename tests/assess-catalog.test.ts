@@ -20,6 +20,8 @@ function perfect(item: Item): Response {
       return { kind: "rank", order: item.order };
     case "numeric":
       return { kind: "numeric", value: String(item.answer) };
+    case "written":
+      return { kind: "written", text: "A reply." };
     case "likert":
       return { kind: "likert", value: 5 };
     case "forced-choice":

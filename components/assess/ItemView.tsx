@@ -139,6 +139,25 @@ export default function ItemView({ item, response, onChange, locked }: Props) {
         </div>
       );
     }
+    case "written": {
+      const r = response as Extract<Response, { kind: "written" }>;
+      const words = (r.text ?? "").trim().split(/\s+/).filter(Boolean).length;
+      return (
+        <label className="block space-y-1 text-sm">
+          <span className="font-semibold">Your reply</span>
+          <textarea
+            className="input h-48 font-normal"
+            value={r.text ?? ""}
+            disabled={locked}
+            maxLength={4000}
+            onChange={(e) => onChange({ kind: "written", text: e.target.value === "" ? null : e.target.value })}
+          />
+          <span className="block text-xs text-muted">
+            {words} words{item.minWords ? ` (aim for at least ${item.minWords})` : ""}. Not marked automatically: you will see a checklist to compare against at the end.
+          </span>
+        </label>
+      );
+    }
     case "numeric": {
       const r = response as Extract<Response, { kind: "numeric" }>;
       return (

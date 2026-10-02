@@ -5,6 +5,7 @@
 import { CAPP_NUMERICAL } from "@/lib/assess/banks/capp-numerical";
 import { CAPP_CRITICAL, CAPP_CRITICAL_STIMULI, CAPP_VERBAL, CAPP_VERBAL_STIMULI } from "@/lib/assess/banks/capp-verbal";
 import { DEDUCTIVE } from "@/lib/assess/banks/deductive";
+import { AUDIT_SIM, BANKING_SIM } from "@/lib/assess/banks/job-sim";
 import { INDUCTIVE } from "@/lib/assess/banks/inductive";
 import { NUMERICAL } from "@/lib/assess/banks/numerical";
 import { NUMERICAL_TF } from "@/lib/assess/banks/numerical-tf";
@@ -23,6 +24,11 @@ const CS_SJT = "https://www.gov.uk/guidance/preparing-for-the-new-civil-service-
 const GF_CAPP = "https://www.graduatesfirst.com/aptitude-tests-publishers/cappfinity";
 const PAT_CAPP = "https://www.practiceaptitudetests.com/testing-publishers/cappfinity/";
 const HEY_CR = "https://heycademy.com/en/cappfinity-critical-reasoning-test/";
+const GF_HSBC_SIM = "https://www.graduatesfirst.com/hsbc-job-simulation";
+const SIM_NOTES = [
+  "Reported format: a fictional working day delivered through emails, documents and data, mixing situational judgement, numerical and verbal tasks, and sometimes a typed email reply (prep-site reports of Cappfinity simulations at HSBC, Deloitte, KPMG and EY). Real versions also use videos and voicemails, which this replica does not.",
+  "Time-recorded here, and you cannot go back, as in a real day. Typed replies are not auto-marked: the results show a checklist and an example to compare against.",
+];
 
 const section = (s: Partial<Section> & Pick<Section, "id" | "title" | "instructions" | "items" | "timing">): Section => ({
   allowBack: false,
@@ -304,6 +310,50 @@ export const TESTS: Test[] = [
         stimuli: CAPP_CRITICAL_STIMULI,
         timing: { mode: "recorded" },
         sample: { count: 12, byStimulus: true },
+      }),
+    ],
+  },
+  {
+    id: "job-sim-banking",
+    name: "Job simulation: a day in commercial banking",
+    replicates: "Immersive job simulation (Cappfinity style), banking",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: SIM_NOTES,
+    sources: [GF_HSBC_SIM, GF_CAPP],
+    sections: [
+      section({
+        id: "simbk",
+        title: "Your day at Northfield Bank",
+        instructions:
+          "You're an apprentice supporting Sam, a relationship manager who looks after business clients. Work through your inbox in order and respond to each message. Your time is recorded and you can't go back.",
+        items: BANKING_SIM.items,
+        stimuli: BANKING_SIM.stimuli,
+        timing: { mode: "recorded" },
+        calculator: true,
+      }),
+    ],
+  },
+  {
+    id: "job-sim-audit",
+    name: "Job simulation: a day on an audit",
+    replicates: "Immersive job simulation (Cappfinity style), audit and professional services",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: SIM_NOTES,
+    sources: [GF_CAPP],
+    sections: [
+      section({
+        id: "simau",
+        title: "Your day on the Brightwater audit",
+        instructions:
+          "You're an audit apprentice working for Aisha, an audit senior, on the audit of a logistics company. Work through your inbox in order and respond to each message. Your time is recorded and you can't go back.",
+        items: AUDIT_SIM.items,
+        stimuli: AUDIT_SIM.stimuli,
+        timing: { mode: "recorded" },
+        calculator: true,
       }),
     ],
   },

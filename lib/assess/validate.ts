@@ -12,6 +12,9 @@ function validateStimulus(id: string, s: Stimulus): string[] {
   } else if (s.type === "chart") {
     if (!s.labels.length || !s.series.length) p.push(`stimulus ${id}: chart needs labels and a series`);
     s.series.forEach((ser) => ser.values.length !== s.labels.length && p.push(`stimulus ${id}: series ${ser.name} has ${ser.values.length} values for ${s.labels.length} labels`));
+  } else if (s.type === "email") {
+    if (!s.from.trim() || !s.subject.trim() || !s.body.trim()) p.push(`stimulus ${id}: email needs a sender, subject and body`);
+    s.table?.rows.forEach((r, i) => r.length !== s.table!.columns.length && p.push(`stimulus ${id}: table row ${i} has ${r.length} cells for ${s.table!.columns.length} columns`));
   } else if (!s.body.trim()) p.push(`stimulus ${id}: empty text`);
   return p;
 }
@@ -50,6 +53,9 @@ export function validateItem(item: Item): string[] {
     case "numeric":
       if (!Number.isFinite(item.answer)) p.push(`${tag}: answer must be a number`);
       if (item.tolerance !== undefined && !(item.tolerance >= 0)) p.push(`${tag}: tolerance must be zero or more`);
+      break;
+    case "written":
+      if (item.checklist.length < 2) p.push(`${tag}: needs a checklist of at least two points`);
       break;
     case "likert":
       if (!item.trait.trim()) p.push(`${tag}: missing trait`);

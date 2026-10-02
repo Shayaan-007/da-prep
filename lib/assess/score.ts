@@ -18,6 +18,8 @@ export function blankResponse(item: Item): Response {
       return { kind: "rank", order: null };
     case "numeric":
       return { kind: "numeric", value: null };
+    case "written":
+      return { kind: "written", text: null };
     case "likert":
       return { kind: "likert", value: null };
   }
@@ -89,6 +91,10 @@ export function scoreItem(item: Item, r: Response): ItemScore {
       const v = parseNumber((r as Extract<Response, { kind: "numeric" }>).value);
       const ok = v !== null && Math.abs(v - item.answer) <= (item.tolerance ?? 0) + 1e-9;
       return { points: ok ? 1 : 0, max: 1, answered: v !== null };
+    }
+    case "written": {
+      const t = (r as Extract<Response, { kind: "written" }>).text;
+      return { points: 0, max: 0, answered: Boolean(t && t.trim()) };
     }
     case "likert": {
       const x = r as Extract<Response, { kind: "likert" }>;
