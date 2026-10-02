@@ -53,7 +53,7 @@ Practice tools for UK degree apprenticeship applications: AI mock interviews (te
 
 | Risk | Likelihood | Impact | Controls in place | Remaining risk |
 |---|---|---|---|---|
-| A child types personal details about themselves or others into AI features | Medium | Medium | Notices asking users not to; content not stored by us; OpenAI told not to train on API data | Medium: C5 (stripping phone numbers and emails before sending) is planned |
+| A child types personal details about themselves or others into AI features | Medium | Medium | Notices asking users not to; emails, UK phone numbers, postcodes and NI numbers are removed automatically before sending (`lib/redact.ts`); content not stored by us; OpenAI told not to train on API data | Low-Medium: names and street addresses can't be detected reliably |
 | Text reveals self-harm or risk | Low | High | OpenAI moderation runs first; self-harm content returns Childline, Samaritans, SHOUT and 999 instead of feedback | Moderation fails open if unavailable; see the safeguarding policy |
 | Inaccurate AI feedback harms an application | Medium | Medium | Feedback labelled as AI and possibly wrong; employer facts limited to sourced research; evaluation set ready (evals/) | Low-Medium; run the evaluations with a real key before launch |
 | Account takeover | Low | Medium | Supabase magic link or Google sign-in; no passwords stored by us | Enable Supabase CAPTCHA and custom email sending |
