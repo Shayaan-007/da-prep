@@ -3,24 +3,27 @@
 AI mock interviews, practice tests, an application tracker and guides for UK degree apprenticeship applicants.
 
 ## Features
-- **Mock interview** (`/interview`): questions built from a pasted job advert and a chosen sector, one planned theme per question so none repeat; text, or timed video style (60s) that is spoken only, with no typing: a microphone picker and test, a live level meter, live captions where the browser supports them, your voice recorded and transcribed, and the transcript shown read-only before marking (video style needs `https` or `http://localhost`: browsers block the microphone on network addresses such as `http://192.168.x.x`); optional read-aloud, text-mode dictation and camera self-view; STAR feedback, score and stronger sample answers.
+- **Mock interview** (`/interview`): pick an employer and programme from the researched guides (or paste a job advert) and an interview type (motivation, competency, strengths, commercial awareness, technical, ethics); questions use the firm's process, values and reported questions, and marking rates six skills with three next steps. Each question has its own planned theme so none repeat; text, or timed video style (60s) that is spoken only, with no typing: a microphone picker and test, a live level meter, live captions where the browser supports them, your voice recorded and transcribed, and the transcript shown read-only before marking (video style needs `https` or `http://localhost`: browsers block the microphone on network addresses such as `http://192.168.x.x`); optional read-aloud, text-mode dictation and camera self-view; STAR feedback, score and stronger sample answers.
 - **Practice tests** (`/practice`): 48 original SJT, numerical, verbal and logical questions with explanations, timers and a review of the ones you missed.
-- **Assessment replicas** (`/tests`): ten tests that follow the published format of real employer assessments (SHL Verify Interactive numerical, inductive and deductive at 10/15/12 questions in 18 minutes; Aon-style true/false/cannot-say statements; three situational judgement formats; two work-style questionnaires) with original questions. Each shows what is confirmed and what is approximated. Engine in `lib/assess/` (item kinds, scoring, adaptive approximation, validation), banks in `lib/assess/banks/`, catalogue in `lib/assess/tests.ts`.
-- **Firm mock processes** (`/mock`): PwC, Deloitte, KPMG, EY, Barclays, Rolls-Royce, BAE Systems and Lloyds, stage by stage in the firm's real order, with replica tests, video-style questions, exercises and interviews marked against the firm's own values (`lib/mockprocess/`). Research behind both is in `docs/research/02` and `03`.
-- **Statement review** (`/review`), **stories bank** with AI STAR builder (`/stories`).
-- **Tracker** (`/tracker`) with closing-date warnings and calendar (.ics) export.
+- **Assessment replicas** (`/tests`): 19 tests that follow the published format of real employer assessments (SHL Verify Interactive numerical, inductive and deductive; Aon-style statements in short and full length; switch puzzles; Cappfinity-style numerical, verbal and critical reasoning, time-recorded; two inbox job simulations; four situational judgement formats including finance scenarios and SHL work scenarios; two work-style questionnaires) with original questions. Larger pools rotate between attempts. Each shows what is confirmed and what is approximated. Engine in `lib/assess/` (item kinds, scoring, adaptive approximation, validation), banks in `lib/assess/banks/`, catalogue in `lib/assess/tests.ts`.
+- **Firm mock processes** (`/mock`): Goldman Sachs, J.P. Morgan, Morgan Stanley, Bank of America, HSBC, PwC, Deloitte, KPMG, EY, Barclays, Rolls-Royce, BAE Systems and Lloyds, stage by stage in the firm's real order, with replica tests, video-style questions, exercises and interviews marked against the firm's own values (`lib/mockprocess/`). Research behind both is in `docs/research/02` and `03`.
+- **Statement review** (`/review`): choose the employer and the application question (with its word limit where known); feedback on five criteria, plus what employers say about AI. **Stories bank** with AI STAR builder (`/stories`).
+- **Tracker** (`/tracker`): add a programme from the employer guides with its stages as a checklist and last cycle's dates; closing-date warnings and calendar (.ics) export.
+- **Employers** (`/employers`): 42 sourced guides with an at-a-glance box, what you'd actually do, why-this-firm talking points and links to matching practice; plus finance firms without a degree route.
+- **Finance hub** (`/finance`): who hires, a month-by-month application calendar and myths checked against sources.
 - **Progress** (`/progress`): score trend, STAR coverage, and every past interview with full feedback.
 - **Sectors** (`/sectors`): what is shared by every degree apprenticeship and what differs for seven sector groups.
 - **Content**: process guide, tips (tests, video interviews, assessment centres), timeline, employers, FAQ.
 - **Data**: backup/restore as JSON and clear local data from the account page.
-- Optional **accounts + cloud sync** (Supabase) and **free-tier limits + Pro subscription** (Stripe).
+- Optional **accounts + cloud sync** (Supabase) and **free-tier limits + Pro** (Stripe): £17 a month, or a £30 one-off 3-month pass.
 
 ## Run
 ```
 cp .env.example .env.local   # add OPENAI_API_KEY, or set MOCK_AI=1 to develop without one
 npm install
 npm run dev                  # http://localhost:3000
-npm test                     # vitest
+npm test                     # vitest (unit, integration, database security with PGlite)
+npm run test:e2e             # Playwright journeys on desktop and phone sizes
 npm run lint && npx tsc --noEmit && npm run build
 ```
 Without Supabase env vars the app is local-only (data in the browser). Without Stripe / `ENFORCE_LIMITS`, everything is free.
@@ -46,4 +49,4 @@ Any Node host works (Vercel is the simplest). Set the environment variables abov
 - AI provider: OpenAI Responses API in `lib/ai.ts`. Two tiers, set by `OPENAI_MODEL` (marking and feedback, default `gpt-6.1-sol`) and `OPENAI_MODEL_FAST` (questions and STAR drafts, default `gpt-6-luna`), and `OPENAI_TRANSCRIBE_MODEL` (video-style voice answers, default `gpt-transcribe`). Requests use `store: false`. Canned dev responses: `lib/mocks.ts`.
 
 ## Before going public
-See `docs/launch-checklist.md` for what is done and what still needs an account, a key or a decision. In short: the privacy notice and terms need a lawyer's review; Stripe and Google sign-in are untested against live services; Supabase's built-in email is capped at 2 per hour, so add an SMTP provider; employer data in `lib/firms/*` and `lib/employers.ts` needs ongoing re-verification.
+See `docs/LAUNCH.md` for the launch blockers, set-up steps and verdict, and `docs/testing/phase4-report.md` for test results. In short: the privacy notice and terms need a lawyer's review; Stripe and Google sign-in are untested against live services; Supabase's built-in email is capped at 2 per hour, so add an SMTP provider; employer data in `lib/firms/*` and `lib/employers.ts` needs ongoing re-verification.
