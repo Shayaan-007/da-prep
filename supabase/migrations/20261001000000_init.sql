@@ -1,4 +1,4 @@
--- DA Prep initial schema. Safe to re-run.
+-- Level6 initial schema. Safe to re-run.
 
 -- Per-user JSON collections (applications, stories, sessions, practice)
 create table if not exists user_data (

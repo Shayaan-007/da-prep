@@ -12,7 +12,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const s = SECTOR_BY_ID[slug as SectorId];
-  return { title: s ? `${s.name} | DA Prep` : "Sector" };
+  return { title: s ? `${s.name} | Level6` : "Sector" };
 }
 
 export default async function SectorPage({ params }: { params: Promise<{ slug: string }> }) {

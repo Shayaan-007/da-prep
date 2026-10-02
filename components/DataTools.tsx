@@ -16,7 +16,7 @@ export default function DataTools() {
     const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `da-prep-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `level6-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     setMsg("Backup downloaded.");

@@ -36,7 +36,7 @@ export default function Nav() {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-white">
       <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3" aria-label="Main">
-        <Link href="/" aria-label="DA Prep home" className="shrink-0">
+        <Link href="/" aria-label="Level6 home" className="shrink-0">
           <Logo />
         </Link>
 
