@@ -168,18 +168,18 @@ export default function Runner({ test, onComplete, onExit }: { test: Test; onCom
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now, st]);
 
-  if (!st) return <p role="status" className="py-12 text-center text-muted">Loading…</p>;
-
-  const section = test.sections[st.sectionIdx];
-
-  if (st.phase === "intro") {
+  // Until the saved run has been read (first paint), show the first section's intro with Start disabled,
+  // so the page doesn't jump when the browser state arrives.
+  if (!st || st.phase === "intro") {
+    const idx = st?.sectionIdx ?? 0;
+    const section = test.sections[idx];
     return (
       <div className="mx-auto max-w-2xl space-y-4">
         <p className="text-sm font-semibold text-muted">
-          {test.name}: section {st.sectionIdx + 1} of {test.sections.length}
+          {test.name}: section {idx + 1} of {test.sections.length}
         </p>
         <h1 className="page-title">{section.title}</h1>
-        {st.sectionIdx === 0 && test.approximate && (
+        {idx === 0 && test.approximate && (
           <p className="callout bg-brand-50 text-sm">
             This replicates the published format of {test.replicates}, with original questions. Some details are not
             published by the provider, so timing and difficulty are approximate.
@@ -193,7 +193,7 @@ export default function Runner({ test, onComplete, onExit }: { test: Test; onCom
           <li>{section.calculator ? "A calculator is provided" : "No calculator"}</li>
         </ul>
         <div className="flex gap-3">
-          <button className="btn btn-primary" onClick={() => setSt(startSection(st, section, Date.now()))}>
+          <button className="btn btn-primary" disabled={!st} onClick={() => st && setSt(startSection(st, section, Date.now()))}>
             Start
           </button>
           {onExit && (
@@ -206,6 +206,7 @@ export default function Runner({ test, onComplete, onExit }: { test: Test; onCom
     );
   }
 
+  const section = test.sections[st.sectionIdx];
   const item = section.items.find((i) => i.id === st.served[st.itemIdx]);
   if (!item) return null;
   const total = section.adaptive ? Math.min(section.adaptive.count, section.items.length) : section.items.length;
