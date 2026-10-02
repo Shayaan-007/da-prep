@@ -150,6 +150,13 @@ export const barclays: FirmProfile = {
     "Excellence: set high standards, champion innovation",
     "Stewardship: leave things better than you found them",
   ],
+  pay: { text: "£25,200 from day one (Barclays apprenticeship-programmes page; check the degree role's own advert).", source: B_PROGS, confidence: "official" },
+  dayToDay: [
+    "Business and Corporate Banking apprentices support relationship managers who look after company clients: researching businesses, preparing lending and account information, and helping clients with payments and borrowing.",
+  ],
+  whyThisFirm: [
+    { text: "Barclays UK Corporate Bank's first-half 2026 profit before tax rose 30% to £566 million, and its UK corporate lending grew 12% year on year.", source: "https://home.barclays/content/dam/home-barclays/documents/investor-relations/ResultAnnouncements/H12026Results/Q226-BPLC-Results-RA.pdf", confidence: "official" },
+  ],
   questions: [
     {
       stage: "Interview / assessment centre",

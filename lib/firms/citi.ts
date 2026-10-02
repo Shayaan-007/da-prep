@@ -66,6 +66,13 @@ export const citi: FirmProfile = {
     confidence: "single-report",
   },
   values: ["Leadership Principles: We take ownership", "We deliver with pride", "We succeed together"],
+  dayToDay: [
+    "Markets COO apprentices help run the trading business: tracking revenue, controls and projects.",
+    "Operations apprentices check, settle and fix trades and payments.",
+  ],
+  whyThisFirm: [
+    { text: "Under CEO Jane Fraser, Citi has simplified into five core businesses, exited 12 of 14 overseas consumer banking franchises and cut management layers from 13 to 8.", source: "https://fortune.com/2026/05/27/citi-ceo-jane-fraser-turnaround-fortune-mpw/", confidence: "multiple-candidate-reports" },
+  ],
   questions: [],
   specificAdvice: [
     "Belfast is Citi's main degree apprenticeship hub; many London apprenticeships are Level 3 or 4, so check the level before applying.",

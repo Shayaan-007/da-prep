@@ -69,6 +69,13 @@ export const deutscheBank: FirmProfile = {
     confidence: "official",
   },
   values: ["Integrity", "Sustainable performance", "Client centricity", "Innovation", "Discipline", "Partnership"],
+  dayToDay: [
+    "IBCM apprentices help bankers raise money for companies through bonds (Debt Capital Markets) and shares (Equity Capital Markets): building pitch books, tracking markets and preparing deal materials.",
+    "TDI apprentices build and run the bank's systems.",
+  ],
+  whyThisFirm: [
+    { text: "Deutsche Bank reported a record first-half 2026 profit after tax of €4.1 billion, with second-quarter investment banking (IBCM) revenue up 36%.", source: "https://investor-relations.db.com/files/documents/quarterly-results/2026/Q2-2026-Media-Release.pdf?language_id=1", confidence: "official" },
+  ],
   questions: [],
   specificAdvice: [
     "Know the difference between Debt Capital Markets (helping companies borrow by issuing bonds) and Equity Capital Markets (helping them sell shares), because IBCM apprentices rotate through both.",

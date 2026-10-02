@@ -104,6 +104,14 @@ export const morganStanley: FirmProfile = {
     confidence: "multiple-candidate-reports",
   },
   values: ["Do the right thing", "Put clients first", "Lead with exceptional ideas", "Commit to diversity and inclusion", "Give back"],
+  dayToDay: [
+    "Technology apprentices build and support the software that traders, operations teams and wealth advisers use, rotating between teams.",
+    "Operations apprentices make sure trades settle correctly and on time, fix breaks and work with clients' back offices.",
+  ],
+  whyThisFirm: [
+    { text: "Morgan Stanley reported record 2025 revenue of $70.6 billion, and client assets in Wealth & Investment Management reached about $10 trillion in 2026.", source: "https://www.morganstanley.com/about-us-ir/shareholder/2q2026.pdf", confidence: "official" },
+    { text: "Its strategy is an 'integrated firm': a large wealth management business alongside investment banking and trading.", source: "https://www.benzinga.com/news/financing/26/06/53185052/morgan-stanley-ceo-10-trillion-wealth-management-record-q1-revenue", confidence: "multiple-candidate-reports" },
+  ],
   questions: [
     { stage: "HireVue video interview", question: "Why Morgan Stanley?", type: "motivation", source: IG, confidence: "multiple-candidate-reports" },
     { stage: "HireVue video interview", question: "Tell me about a time something went wrong.", type: "competency", competency: "Resilience", source: IG, confidence: "multiple-candidate-reports" },

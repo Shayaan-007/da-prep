@@ -64,6 +64,9 @@ export const rothschild: FirmProfile = {
     confidence: "official",
   },
   values: ["Values wording not found; the firm presents itself as an independent, family-controlled adviser"],
+  dayToDay: [
+    "Global Advisory apprentices support bankers who advise companies on buying, selling or merging: researching companies, building spreadsheets of financials and preparing presentation slides.",
+  ],
   questions: [
     { stage: "First-round interview", question: "Why Rothschild & Co?", type: "motivation", source: FINBOUND, confidence: "multiple-candidate-reports" },
     { stage: "First-round interview", question: "Why independent advisory?", type: "motivation", source: FINBOUND, confidence: "multiple-candidate-reports" },

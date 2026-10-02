@@ -80,6 +80,14 @@ export const bankOfAmerica: FirmProfile = {
     confidence: "single-report",
   },
   values: ["Deliver together", "Act responsibly", "Realize the power of our people", "Trust the team", "Strategy: Responsible Growth"],
+  dayToDay: [
+    "Global Markets apprentices support sales and trading desks: pricing, booking trades, preparing market updates and client data.",
+    "Chief Operating Office apprentices track the desk's revenue, costs and controls.",
+  ],
+  whyThisFirm: [
+    { text: "Press reported first-quarter 2026 sales and trading revenue of $6.4 billion, the 16th straight quarter of year-on-year growth, and the best equities trading quarter in 15 years.", source: "https://www.cnbc.com/2026/04/15/bank-of-america-bac-earnings-q1-2026.html", confidence: "multiple-candidate-reports" },
+    { text: "Bank of America describes its strategy as 'Responsible Growth'.", source: CODE, confidence: "official" },
+  ],
   questions: [],
   specificAdvice: [
     "Check the GCSE bar before applying: Global Markets asked for GCSE Maths grade 7, higher than most banks.",

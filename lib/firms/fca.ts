@@ -30,6 +30,10 @@ export const fca: FirmProfile = {
     { order: 2, name: "Assessment centre", format: "Assessment centres in April and May; format not described in the summaries we saw.", tips: ["Be ready to talk about why fair treatment of customers matters."], source: FCA, confidence: "official" },
   ],
   values: ["Values wording not found; the FCA's role is to make financial markets work well for consumers and firms"],
+  pay: { text: "£25,700 in London; £23,500 in Leeds and Edinburgh (2026 entry).", source: FCA, confidence: "official" },
+  dayToDay: [
+    "Apprentices join teams across the regulator, for example supervising firms, handling consumer issues, data or technology.",
+  ],
   questions: [],
   specificAdvice: [
     "Know what the FCA does: it regulates how financial firms treat customers (for example through the Consumer Duty) and works to keep markets fair and honest.",

@@ -144,6 +144,14 @@ export const hsbc: FirmProfile = {
     "We take responsibility",
     "We get it done",
   ],
+  dayToDay: [
+    "Commercial Banking apprentices support relationship managers who look after business clients: preparing information on clients, helping with lending and payments, and answering client queries.",
+    "Wealth and Personal Banking apprentices help individual customers with savings, investments and everyday banking.",
+    "Digital apprentices work on data, cyber security or software engineering.",
+  ],
+  whyThisFirm: [
+    { text: "HSBC's first-half 2026 profit after tax was $15.3 billion, 23% higher than a year earlier. CEO Georges Elhedery says the bank is simplifying into four businesses and using AI in around 50 processes.", source: "https://www.hsbc.com/news-and-views/news/media-releases/2026/hsbc-holdings-plc-interim-results-2026", confidence: "official" },
+  ],
   questions: [
     {
       stage: "Simulate online assessment (video and behavioural simulation)",

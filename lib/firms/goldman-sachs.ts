@@ -119,6 +119,15 @@ export const goldmanSachs: FirmProfile = {
     "Integrity",
     "Excellence",
   ],
+  dayToDay: [
+    "FICC and Equities apprentices support traders and salespeople: preparing market updates, pricing data and client information, and checking trades.",
+    "Engineering apprentices build and run the software and systems the firm's businesses use.",
+    "Operations apprentices make sure trades are confirmed, settled and recorded correctly, and fix problems when they are not.",
+  ],
+  whyThisFirm: [
+    { text: "In October 2025 Goldman Sachs announced its first degree apprenticeship outside London: an Engineering programme in Birmingham with Warwick (WMG). Its London programme has run for about ten years.", source: GS_BHAM, confidence: "official" },
+    { text: "Net revenues were $20.34 billion in the second quarter of 2026, 39% higher than a year earlier, led by Global Banking & Markets.", source: "https://www.goldmansachs.com/pressroom/press-releases/2026/2026-07-14-q2-results", confidence: "official" },
+  ],
   questions: [
     {
       stage: "HireVue video interview",

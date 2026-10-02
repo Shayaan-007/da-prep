@@ -42,6 +42,13 @@ export const bny: FirmProfile = {
     },
   ],
   values: ["Values wording not found; check BNY's careers pages"],
+  dayToDay: [
+    "BNY looks after investors' assets (custody), processes trades and payments and administers funds. Apprentices typically join operations, technology or client service teams.",
+  ],
+  whyThisFirm: [
+    { text: "BNY is the world's largest custodian, with about $60 trillion of assets under custody, and is moving to a 'platform operating model'.", source: "https://www.americanbanker.com/news/bny-tops-estimates-reports-revenue-upswing", confidence: "multiple-candidate-reports" },
+    { text: "Its in-house AI platform, Eliza, supported about 220 AI solutions by early 2026; CEO Robin Vince also sits on OpenAI's board.", source: "https://www.axios.com/2026/08/12/bny-ceo-robin-vince-openai-board-how-he-uses-ai", confidence: "multiple-candidate-reports" },
+  ],
   questions: [],
   specificAdvice: [
     "Know what BNY is: the world's largest custodian, looking after about $60 trillion of investors' assets. It isn't a high-street bank.",

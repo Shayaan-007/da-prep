@@ -63,6 +63,10 @@ export const bankOfEngland: FirmProfile = {
   },
   assessmentCentre: { text: "Virtual assessment centre with group exercises and interviews.", source: HOW, confidence: "multiple-candidate-reports" },
   values: ["Values wording not found; the Bank's mission is to promote the good of the people of the UK by maintaining monetary and financial stability"],
+  pay: { text: "£25,270 plus benefits (Leeds, 2026 entry).", source: ADVERT, confidence: "official" },
+  dayToDay: [
+    "Digital & Technology Solutions apprentices build and support the systems and data tools the Bank uses to set interest rates, supervise banks and keep the financial system stable.",
+  ],
   questions: [],
   specificAdvice: [
     "Learn the basics: the Bank sets Bank Rate through the Monetary Policy Committee to hit the 2% inflation target, regulates banks through the Prudential Regulation Authority, keeps the financial system stable and issues banknotes.",

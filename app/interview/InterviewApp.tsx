@@ -31,16 +31,24 @@ type VState = "idle" | "thinking" | "starting" | "recording" | "transcribing" | 
 // Not marked and never sent anywhere: the recording is played back in the browser only.
 const PRACTICE_QUESTION = "Practice question: tell us about something you enjoy doing outside school, and why.";
 
-export default function InterviewApp({ firms }: { firms: FirmOption[] }) {
+export default function InterviewApp({
+  firms,
+  initialFirm,
+  initialMode = "text",
+}: {
+  firms: FirmOption[];
+  initialFirm?: string;
+  initialMode?: Mode;
+}) {
   const sessions = useCollection<SessionRecord>("sessions");
   const { sector, setSector } = useSector();
   const [phase, setPhase] = useState<Phase>("setup");
-  const [mode, setMode] = useState<Mode>("text");
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [readAloud, setReadAloud] = useState(false);
   const [dictate, setDictate] = useState(false);
   const [jobAd, setJobAd] = useState("");
   const [cv, setCv] = useState("");
-  const [firmSlug, setFirmSlug] = useState("");
+  const [firmSlug, setFirmSlug] = useState(initialFirm ?? "");
   const [programme, setProgramme] = useState(0);
   const firm = firms.find((f) => f.slug === firmSlug);
   const firmFields = firm ? { firm: firm.slug, programme } : {};
@@ -52,7 +60,7 @@ export default function InterviewApp({ firms }: { firms: FirmOption[] }) {
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [presetId, setPresetId] = useState("typical");
+  const [presetId, setPresetId] = useState(() => VIDEO_PRESETS.find((p) => p.id === initialFirm)?.id ?? "typical");
   const preset = getPreset(presetId);
   // Video interviews follow the chosen employer's question count; text interviews always have the maximum.
   const total = mode === "video" ? preset.questions : MAX_QUESTIONS;
@@ -420,6 +428,7 @@ export default function InterviewApp({ firms }: { firms: FirmOption[] }) {
                 onChange={(e) => {
                   setFirmSlug(e.target.value);
                   setProgramme(0);
+                  if (VIDEO_PRESETS.some((p) => p.id === e.target.value)) setPresetId(e.target.value);
                 }}
               >
                 <option value="">No specific employer (use the advert)</option>

@@ -33,6 +33,9 @@ export const cibc: FirmProfile = {
     },
   ],
   values: ["Values wording not found; check CIBC's careers pages"],
+  dayToDay: [
+    "Investment Banking apprentices support sales and trading desks that buy and sell financial products for clients.",
+  ],
   questions: [],
   specificAdvice: [
     "CIBC is a large Canadian bank with a London investment banking arm. Be ready to explain why a smaller London team appeals to you.",
