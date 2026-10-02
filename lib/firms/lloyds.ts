@@ -21,7 +21,7 @@ export const lloyds: FirmProfile = {
     source: L_AA,
   },
   timeline: {
-    opens: "Lloyds' apprenticeships page says opportunities open for applications on 3 November (the year is not stated; presumably 2026)",
+    opens: "Sources disagree for 2027 entry: Lloyds' apprenticeships page says opportunities open on 3 November (year not stated), while job boards report applications opening in October 2026 for September 2027 starts. Register interest so you are told when your programme opens.",
     notes: "If a programme is closed you can register interest. Closing dates not verified.",
     source: L_PROC,
   },
