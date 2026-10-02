@@ -88,7 +88,7 @@ describe("POST /api/interview/next", () => {
     for (let i = 0; i < 22; i++) statuses.push((await next(req(body, "9.9.9.9"))).status);
     expect(statuses.slice(0, 20).every((s) => s === 200)).toBe(true);
     expect(statuses.slice(20)).toEqual([429, 429]);
-  });
+  }, 20_000); // 22 sequential route calls; slow when the database test runs alongside
 });
 
 describe("POST /api/interview/score", () => {
@@ -186,7 +186,8 @@ describe("billing and account endpoints without configuration", () => {
   it("checkout reports payments aren't configured", async () => {
     vi.stubEnv("STRIPE_SECRET_KEY", "");
     vi.stubEnv("STRIPE_PRICE_ID", "");
-    expect((await checkout(req({}))).status).toBe(503);
+    vi.stubEnv("STRIPE_PRICE_PASS", "");
+    expect((await checkout(req({ plan: "pass", payerAdult: true, startNow: true, acceptTerms: true }))).status).toBe(503);
     vi.unstubAllEnvs();
   });
 
