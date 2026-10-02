@@ -1,3 +1,4 @@
+import { servedCount } from "@/lib/assess/sample";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TestPlayer from "@/components/assess/TestPlayer";
@@ -10,7 +11,7 @@ export const generateStaticParams = () => TESTS.map((t) => ({ id: t.id }));
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const test = getTest((await params).id);
   if (!test) return { title: "Test not found" };
-  const items = test.sections.reduce((n, s) => n + (s.adaptive ? s.adaptive.count : s.items.length), 0);
+  const items = test.sections.reduce((n, s) => n + servedCount(s), 0);
   const secs = totalSeconds(test);
   return pageMeta({
     title: `${test.name}: free practice test`,

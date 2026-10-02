@@ -5,9 +5,11 @@ import { NUMERICAL_TF, buildNumericalTf } from "@/lib/assess/banks/numerical-tf"
 import { validateItem } from "@/lib/assess/validate";
 
 describe("numerical true/false/cannot say bank", () => {
-  it("has 18 valid statements in 3 groups sharing a table", () => {
-    expect(NUMERICAL_TF.items).toHaveLength(18);
-    expect(Object.keys(NUMERICAL_TF.stimuli)).toHaveLength(3);
+  it("has 72 valid statements in 12 groups sharing a table, across four themes", () => {
+    expect(NUMERICAL_TF.items).toHaveLength(72);
+    expect(Object.keys(NUMERICAL_TF.stimuli)).toHaveLength(12);
+    const titles = new Set(Object.values(NUMERICAL_TF.stimuli).map((s) => (s.type === "table" ? s.title : "")));
+    expect(titles.size).toBe(4);
     for (const item of NUMERICAL_TF.items) {
       expect(validateItem(item), item.id).toEqual([]);
       expect(NUMERICAL_TF.stimuli[item.stimulus!], item.id).toBeDefined();
@@ -18,6 +20,13 @@ describe("numerical true/false/cannot say bank", () => {
     for (const item of NUMERICAL_TF.items) {
       if (item.kind !== "tf-cannot-say") throw new Error("expected tf");
       expect(NUMERICAL_TF.checks[item.id](NUMERICAL_TF.stimuli[item.stimulus!]), item.id).toBe(item.answer);
+    }
+  });
+
+  it("never repeats a statement within a table", () => {
+    for (const id of Object.keys(NUMERICAL_TF.stimuli)) {
+      const texts = NUMERICAL_TF.items.filter((i) => i.stimulus === id).map((i) => i.prompt);
+      expect(new Set(texts).size, id).toBe(texts.length);
     }
   });
 

@@ -113,6 +113,7 @@ export const TESTS: Test[] = [
       "Reported format: 18 true / false / cannot say statements on data in 6 minutes for the short form (prep-site reports; no official Aon guide found). The full test reports 37 items in 12 minutes.",
       "Aon does not publish its calculator or going-back rules. Here a calculator is provided and you can go back.",
       "Very fast: about 20 seconds per statement. Expect not to finish everything.",
+      "Each attempt serves 3 of 12 tables (retail, fee income, trading desks and branch deposits), so repeat attempts differ.",
     ],
     sources: [AD_CUTE],
     sections: [
@@ -125,6 +126,7 @@ export const TESTS: Test[] = [
         timing: { mode: "section", seconds: 6 * 60 },
         calculator: true,
         allowBack: true,
+        sample: { count: 18, byStimulus: true },
       }),
     ],
   },
@@ -138,6 +140,7 @@ export const TESTS: Test[] = [
     formatNotes: [
       "Reported format: 49 true / false / cannot say statements in 12 minutes (prep-site reports). This replica keeps the same pace (about 15 seconds per statement) over 18 statements, so 265 seconds.",
       "No official Aon guide found; going-back rule is not published, so you can go back here.",
+      "Each attempt serves 3 of 8 passages, so repeat attempts differ.",
     ],
     sources: [AD_CUTE],
     sections: [
@@ -149,6 +152,7 @@ export const TESTS: Test[] = [
         stimuli: VERBAL_TF_STIMULI,
         timing: { mode: "section", seconds: 265 },
         allowBack: true,
+        sample: { count: 18, byStimulus: true },
       }),
     ],
   },
@@ -161,7 +165,7 @@ export const TESTS: Test[] = [
     approximate: true,
     formatNotes: [
       "Reported format: choose the most effective and the least effective response from 4 or 5 options (prep-site reports). Partial credit is reported when only one pick is right, and that is how this replica scores it.",
-      "Item counts and time limits vary by employer and are not published. This replica is untimed with 10 scenarios.",
+      "Item counts and time limits vary by employer and are not published. This replica is untimed with 10 scenarios per attempt, drawn from 24 (including 14 set in banking and finance).",
     ],
     sources: [PAT_SJT],
     sections: [
@@ -172,6 +176,7 @@ export const TESTS: Test[] = [
         items: SJT.mostLeast,
         timing: { mode: "untimed" },
         allowBack: true,
+        sample: { count: 10 },
       }),
     ],
   },
@@ -184,7 +189,7 @@ export const TESTS: Test[] = [
     approximate: true,
     formatNotes: [
       "Official format: each scenario has 4 actions and you rate each as Counterproductive, Ineffective, Fairly effective or Effective. The real test is untimed, with 3 scenarios per behaviour (Civil Service guidance).",
-      "This replica has 6 scenarios, not the full set. The real test also has a self-assessment part worth 15%, which is not included. The Civil Service does not publish its scoring key, so half credit for a rating one step away is our approximation.",
+      "This replica serves 6 scenarios per attempt from a pool of 12 (half set in finance), not the full set. The real test also has a self-assessment part worth 15%, which is not included. The Civil Service does not publish its scoring key, so half credit for a rating one step away is our approximation.",
     ],
     sources: [CS_SJT],
     sections: [
@@ -195,6 +200,7 @@ export const TESTS: Test[] = [
         items: SJT.rateEach,
         timing: { mode: "untimed" },
         allowBack: true,
+        sample: { count: 6 },
       }),
     ],
   },
@@ -207,7 +213,7 @@ export const TESTS: Test[] = [
     approximate: true,
     formatNotes: [
       "Some employers (for example Deloitte's immersive assessment) ask candidates to rank the most and least likely actions in workplace scenarios. Timings are not published.",
-      "This replica asks you to rank four to five responses from best to worst and scores the fraction of pairs in the right order. It is untimed.",
+      "This replica asks you to rank four to five responses from best to worst and scores the fraction of pairs in the right order. It is untimed and serves 4 scenarios per attempt from a pool of 10.",
     ],
     sources: ["https://www.deloitte.com/uk/en/careers/early-careers/early-careers-assessment.html"],
     sections: [
@@ -218,6 +224,7 @@ export const TESTS: Test[] = [
         items: SJT.rank,
         timing: { mode: "untimed" },
         allowBack: true,
+        sample: { count: 4 },
       }),
     ],
   },

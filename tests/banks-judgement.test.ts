@@ -5,9 +5,9 @@ import { VERBAL_TF, VERBAL_TF_STIMULI } from "@/lib/assess/banks/verbal-tf";
 import { validateItem } from "@/lib/assess/validate";
 
 describe("verbal true/false/cannot say bank", () => {
-  it("has 18 valid statements over 3 passages", () => {
-    expect(VERBAL_TF).toHaveLength(18);
-    expect(Object.keys(VERBAL_TF_STIMULI)).toHaveLength(3);
+  it("has 48 valid statements over 8 passages", () => {
+    expect(VERBAL_TF).toHaveLength(48);
+    expect(Object.keys(VERBAL_TF_STIMULI)).toHaveLength(8);
     for (const item of VERBAL_TF) {
       expect(validateItem(item), item.id).toEqual([]);
       expect(VERBAL_TF_STIMULI[item.stimulus!], item.id).toBeDefined();
@@ -31,10 +31,10 @@ describe("verbal true/false/cannot say bank", () => {
 });
 
 describe("situational judgement bank", () => {
-  it("has 10 most/least, 6 rate-each and 4 ranking items, all valid", () => {
-    expect(SJT.mostLeast).toHaveLength(10);
-    expect(SJT.rateEach).toHaveLength(6);
-    expect(SJT.rank).toHaveLength(4);
+  it("has 24 most/least, 12 rate-each and 10 ranking items, all valid", () => {
+    expect(SJT.mostLeast).toHaveLength(24);
+    expect(SJT.rateEach).toHaveLength(12);
+    expect(SJT.rank).toHaveLength(10);
     for (const item of [...SJT.mostLeast, ...SJT.rateEach, ...SJT.rank]) expect(validateItem(item), item.id).toEqual([]);
   });
 
@@ -54,6 +54,18 @@ describe("situational judgement bank", () => {
     for (const item of SJT.rank) {
       if (item.kind !== "rank") throw new Error("expected rank");
       expect(item.order, item.id).not.toEqual(item.order.map((_, k) => k));
+    }
+  });
+
+  it("has no duplicate scenarios or options within a scenario", () => {
+    const all = [...SJT.mostLeast, ...SJT.rateEach, ...SJT.rank];
+    for (const i of all) {
+      const opts = i.kind === "rate-each" ? i.actions : i.kind === "most-least" || i.kind === "rank" ? i.options : [];
+      expect(new Set(opts).size, i.id).toBe(opts.length);
+    }
+    for (const pool of [SJT.mostLeast, SJT.rateEach]) {
+      const prompts = pool.map((i) => i.prompt);
+      expect(new Set(prompts).size).toBe(prompts.length);
     }
   });
 

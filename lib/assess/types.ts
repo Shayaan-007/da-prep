@@ -73,6 +73,11 @@ export type Section = {
   showFeedback: boolean;
   /** Pool of items; the runner serves `count` of them, steering difficulty from the previous answer. */
   adaptive?: { count: number };
+  /**
+   * Pool of items; each attempt serves a fresh random selection of `count` items. With `byStimulus`, whole groups
+   * that share a passage or table are served together, in their original order.
+   */
+  sample?: { count: number; byStimulus?: boolean };
 };
 
 export type Test = {
