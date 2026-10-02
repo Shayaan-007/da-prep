@@ -58,3 +58,10 @@ Costs and limits: a mock process counts as one interview against the free monthl
 - The free-interview allowance is counted when an interview starts; a client that fakes history can start extra questions, but is still bounded by the daily budget.
 - The CSP allows inline scripts (a per-request nonce would make every page dynamic).
 - No automated browser tests; accessibility has had one targeted pass, not a full audit.
+
+## Domain and Stripe status (2 October 2026)
+
+- **Canonical domain is `https://www.level6.uk`.** Vercel redirects the bare domain `level6.uk` to `www` with a 308. Set `NEXT_PUBLIC_SITE_URL=https://www.level6.uk` in Vercel (Production) and use `www` in Supabase's Site URL. **The Stripe webhook URL must be `https://www.level6.uk/api/stripe/webhook`: Stripe does not follow redirects, so the bare domain would silently fail.**
+- **Vercel needs its environment variables.** The live site responds, but `/api/health` showed ai, accounts and payments all false, meaning the Production variables were not set when it last built. Set them and redeploy (`NEXT_PUBLIC_*` values are baked in at build time).
+- **Stripe, test mode: done and verified against the local app.** A test product (Level6 Pro, £9.99 a month), price and billing-portal configuration exist in the sandbox account, and `STRIPE_PRICE_ID` and `NEXT_PUBLIC_PRO_PRICE_LABEL` are in the local `.env.local`. Verified with a temporary user: checkout requires sign-in and creates a subscription session for the Pro price tied to the user; the billing portal opens; signed webhooks upgrade and downgrade the plan; a bad signature is rejected; a Pro user cannot buy twice; deleting an account cancels the Stripe subscription first. Not tested: a card entered on Stripe's hosted page, and real Stripe-delivered webhooks (the handler was exercised with correctly signed events).
+- **Stripe, live mode: not done.** Needs the activated account, a restricted live key, then a live product, price, portal configuration and webhook endpoint (live objects are separate from the test ones), and the three live values in Vercel: `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_SECRET_KEY`.
