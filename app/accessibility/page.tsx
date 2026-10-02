@@ -4,7 +4,7 @@ import { pageMeta } from "@/lib/site";
 
 export const metadata = pageMeta({
   title: "Accessibility statement",
-  description: "How accessible DA Prep is, what we have tested, known limitations and how to tell us about a problem.",
+  description: "How accessible Level6 is, what we have tested, known limitations and how to tell us about a problem.",
   path: "/accessibility",
 });
 
@@ -14,7 +14,7 @@ export default function Accessibility() {
       <h1 className="page-title">Accessibility statement</h1>
       <p className="text-muted">Last reviewed 2 October 2026.</p>
       <p>
-        {OPERATOR_NAME} wants everyone to be able to prepare for degree apprenticeship applications on DA Prep,
+        {OPERATOR_NAME} wants everyone to be able to prepare for degree apprenticeship applications on Level6,
         including people who use a screen reader, keyboard, magnification or voice control. We aim to meet the Web
         Content Accessibility Guidelines (WCAG) 2.2 at level AA.
       </p>
@@ -38,7 +38,7 @@ export default function Accessibility() {
 
       <h2 className="text-base font-semibold">Tell us about a problem</h2>
       <p>
-        If something on DA Prep is hard to use,{" "}
+        If something on Level6 is hard to use,{" "}
         {CONTACT_EMAIL ? (
           <>
             email <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>

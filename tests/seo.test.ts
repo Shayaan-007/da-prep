@@ -19,7 +19,7 @@ describe("page metadata", () => {
   it("pageMeta repeats the site-wide share fields and sets a canonical path", () => {
     const m = pageMeta({ title: "X", description: "Y", path: "/x" });
     expect(m.alternates?.canonical).toBe("/x");
-    expect(m.openGraph).toMatchObject({ siteName: "DA Prep", locale: "en_GB", title: "X | DA Prep", description: "Y", url: "/x" });
+    expect(m.openGraph).toMatchObject({ siteName: "Level6", locale: "en_GB", title: "X | Level6", description: "Y", url: "/x" });
   });
 
   it.each([
@@ -34,7 +34,7 @@ describe("page metadata", () => {
     expect(new Set(titles).size).toBe(metas.length);
     expect(new Set(descriptions).size).toBe(metas.length);
     for (const m of metas) {
-      expect(String(m.title)).not.toMatch(/DA Prep/); // the root template adds the site name
+      expect(String(m.title)).not.toMatch(/Level6/); // the root template adds the site name
       expect(String(m.description).length).toBeGreaterThan(50);
       expect(String(m.description).length).toBeLessThanOrEqual(300);
       expect(m.alternates?.canonical).toMatch(/^\//);

@@ -5,7 +5,7 @@
 **Review date:** before public launch, then every 12 months or when processing changes.
 
 ## 1. Why a DPIA
-DA Prep is an online service likely to be used by children (most users are 16 to 18). The ICO's Age Appropriate Design Code (Children's Code) expects a DPIA for such services. The service also sends user-written text and voice recordings to an AI provider in the United States.
+Level6 is an online service likely to be used by children (most users are 16 to 18). The ICO's Age Appropriate Design Code (Children's Code) expects a DPIA for such services. The service also sends user-written text and voice recordings to an AI provider in the United States.
 
 ## 2. What the service does
 Practice tools for UK degree apprenticeship applications: AI mock interviews (text or recorded voice), practice tests, mock application processes, statement and answer review, an application tracker and a stories bank. A free tier and paid Pro plans (£17 a month subscription, or a £30 one-off 3-month pass).
@@ -20,8 +20,8 @@ Practice tools for UK degree apprenticeship applications: AI mock interviews (te
 | Plan, pass end date, Stripe customer ID | Stripe webhook | Supabase (EU) | Provide Pro | Contract | Account life; payment records as the law requires |
 | Usage counts (interviews, reviews, AI calls a day) | Server | Supabase (EU) | Free limits, fair use and cost control | Legitimate interests | Deleted with the account |
 | IP address | Request | In memory or Upstash (rate limiting) for minutes | Abuse prevention | Legitimate interests | Minutes; not linked to the profile |
-| Job adverts, CV or statement text, interview answers, STAR notes | User | Sent to OpenAI (US) per request; not stored by DA Prep's servers | Generate questions and feedback | Contract / legitimate interests | OpenAI API retention for abuse monitoring (up to 30 days per OpenAI's policy; [confirm current terms]) |
-| Voice recordings (video-style interviews only) | User | Sent to OpenAI (US) for transcription; not stored by DA Prep | Transcribe spoken answers | Contract / consent via the browser permission | As above |
+| Job adverts, CV or statement text, interview answers, STAR notes | User | Sent to OpenAI (US) per request; not stored by Level6's servers | Generate questions and feedback | Contract / legitimate interests | OpenAI API retention for abuse monitoring (up to 30 days per OpenAI's policy; [confirm current terms]) |
+| Voice recordings (video-style interviews only) | User | Sent to OpenAI (US) for transcription; not stored by Level6 | Transcribe spoken answers | Contract / consent via the browser permission | As above |
 | Payment details | User | Stripe (EU and US) only | Take payment | Contract | Stripe's retention |
 | Consent record for a purchase (adult payer, immediate start, terms) | User | Stripe payment metadata | Evidence of consumer-law consent | Legal obligation / legitimate interests | With the payment record |
 

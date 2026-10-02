@@ -32,12 +32,12 @@ export function buildBackup(storage: Pick<Storage, "getItem">, now = new Date())
 
 /**
  * Merge a backup into storage. Items are matched by id; existing items win, so importing is never destructive.
- * Returns how many new items were added, or throws if the file isn't a DA Prep backup.
+ * Returns how many new items were added, or throws if the file isn't a Level6 backup.
  */
 export function applyBackup(storage: Pick<Storage, "getItem" | "setItem">, json: unknown): number {
   const b = json as Partial<Backup> | null;
   if (!b || b.app !== "da-prep" || typeof b.data !== "object" || b.data === null) {
-    throw new Error("This doesn't look like a DA Prep backup file.");
+    throw new Error("This doesn't look like a Level6 backup file.");
   }
   let added = 0;
   for (const name of COLLECTIONS) {

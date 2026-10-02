@@ -1,6 +1,6 @@
 # Launch guide
 
-Written 2 October 2026 for branch `shayaan`. Plain-English steps to take DA Prep live, what must happen first, how to run it once it's live, and an honest verdict. Replaces `docs/launch-checklist.md`.
+Written 2 October 2026 for branch `shayaan`. Plain-English steps to take Level6 live, what must happen first, how to run it once it's live, and an honest verdict. Replaces `docs/launch-checklist.md`.
 
 ## Verdict: not ready for public launch yet, but close
 
@@ -26,6 +26,12 @@ Written 2 October 2026 for branch `shayaan`. Plain-English steps to take DA Prep
 | 6 | Stripe test-mode run: buy monthly, cancel; buy the pass, refund it; resend a webhook; delete an account with a live subscription | You + me | Free in test mode |
 | 7 | Supabase custom email (SMTP), e.g. Resend | You | Free tier is enough to start |
 | 8 | Name a designated safeguarding lead and finish `docs/legal/safeguarding-policy.md` with an adviser | You | Adviser's time |
+
+## Live site status (from Saroop's notes, 2 October 2026)
+- The site is live at **https://www.level6.uk** (the bare `level6.uk` redirects there). Use the `www` address everywhere: `NEXT_PUBLIC_SITE_URL=https://www.level6.uk`, Supabase's Site URL, and especially the **Stripe webhook URL `https://www.level6.uk/api/stripe/webhook`** (Stripe doesn't follow redirects).
+- When last checked, the live `/api/health` showed AI, accounts and payments all off: the Vercel Production environment variables weren't set. Set them and redeploy (`NEXT_PUBLIC_*` values are fixed at build time).
+- The live site runs Saroop's `master` branch. None of the work on `shayaan` is live until it is merged there and redeployed.
+- **Stripe test mode was set up with a £9.99 a month price.** That doesn't match the agreed £17 a month and £30 3-month pass. Create the two new prices (monthly recurring and one-off) and set `STRIPE_PRICE_MONTHLY` and `STRIPE_PRICE_PASS`; `NEXT_PUBLIC_PRO_PRICE_LABEL` is no longer used.
 
 ## 2. Set-up steps, in order
 1. **Supabase** (accounts and sync). Apply every file in `supabase/migrations/` in order, including the new `20261003000000_pro_pass.sql` (the 3-month pass). Under Authentication: Site URL = your domain; Redirect URLs = `https://<domain>/**`; magic-link expiry 15 minutes; turn on CAPTCHA; set custom SMTP. Make sure `NEXT_PUBLIC_SUPABASE_URL` is just `https://<project>.supabase.co` (the app now copes with a pasted `/rest/v1/`, but fix the setting anyway).

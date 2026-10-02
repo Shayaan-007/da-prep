@@ -31,7 +31,7 @@ export function applicationsToIcs(apps: Application[], now = new Date()): string
       "END:VALARM",
       "END:VEVENT",
     ]);
-  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//DA Prep//Deadlines//EN", "CALSCALE:GREGORIAN", ...events, "END:VCALENDAR", ""].join("\r\n");
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Level6//Deadlines//EN", "CALSCALE:GREGORIAN", ...events, "END:VCALENDAR", ""].join("\r\n");
 }
 
 export const hasDeadlines = (apps: Application[]) => apps.some((a) => /^\d{4}-\d{2}-\d{2}$/.test(a.deadline));

@@ -1,7 +1,7 @@
 import { pageMeta } from "@/lib/site";
 export const metadata = pageMeta({
   title: "Plans",
-  description: "What is free on DA Prep and what Pro adds.",
+  description: "What is free on Level6 and what Pro adds.",
   path: "/pricing",
 });
 

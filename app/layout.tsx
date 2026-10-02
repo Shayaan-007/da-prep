@@ -14,12 +14,12 @@ const body = Figtree({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "DA Prep: prepare for your degree apprenticeship", template: "%s | DA Prep" },
+  title: { default: "Level6: prepare for your degree apprenticeship", template: "%s | Level6" },
   description: SITE_DESCRIPTION,
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
-    title: "DA Prep: prepare for your degree apprenticeship",
+    title: "Level6: prepare for your degree apprenticeship",
     description: SITE_DESCRIPTION,
     locale: "en_GB",
   },
