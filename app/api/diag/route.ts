@@ -11,7 +11,7 @@ const MAX_FILE = 1_000_000;
 export async function POST(req: Request) {
   if (process.env.NODE_ENV === "production") return new Response(null, { status: 404 });
   const ip = req.headers.get("x-forwarded-for") ?? "local";
-  if (!rateLimit(`diag:${ip}`, 300)) return new Response(null, { status: 429 });
+  if (!(await rateLimit(`diag:${ip}`, 300))) return new Response(null, { status: 429 });
 
   const text = await req.text();
   if (text.length > 4000) return new Response(null, { status: 413 });

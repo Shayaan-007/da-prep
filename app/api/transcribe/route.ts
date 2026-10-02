@@ -7,6 +7,8 @@ export function GET() {
 }
 
 // A 60-second answer is well under 1 MB; this leaves room for slower codecs without inviting abuse.
+export const maxDuration = 60;
+
 const MAX_BYTES = 8 * 1024 * 1024;
 
 export async function POST(req: Request) {

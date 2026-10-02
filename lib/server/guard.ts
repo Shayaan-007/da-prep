@@ -40,6 +40,6 @@ export async function guardAi(req: Request, name: string, perMinute = 20): Promi
     }
     if (!data) return deny("You've reached today's practice limit. Try again tomorrow.", 429);
   }
-  if (!rateLimit(`${name}:${who}`, perMinute)) return deny("Too many requests, slow down.", 429);
+  if (!(await rateLimit(`${name}:${who}`, perMinute))) return deny("Too many requests, slow down.", 429);
   return { ok: true };
 }

@@ -10,6 +10,9 @@ import {
 import { mockQuestion } from "@/lib/mocks";
 import { consumeInterview } from "@/lib/server/usage";
 import { guardAi } from "@/lib/server/guard";
+import { screenText } from "@/lib/server/safety";
+
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   const gate = await guardAi(req, "next");
@@ -19,6 +22,8 @@ export async function POST(req: Request) {
     return Response.json({ error: "Invalid input" }, { status: 400 });
   }
   const { jobAd, cv, stage, sector, history } = parsed.data;
+  const blocked = await screenText(jobAd, cv, ...history.map((t) => t.answer));
+  if (blocked) return blocked;
   // The first question of an interview counts against the free allowance.
   if (history.length === 0) {
     const usage = await consumeInterview(req);
