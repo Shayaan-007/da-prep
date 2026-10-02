@@ -38,6 +38,7 @@ export const mockReview = () => ({
   summary: "Enthusiastic and readable, but it reads generally. Tie your experience to this specific role and employer.",
   strengths: ["Genuine motivation", "Clear structure"],
   improvements: ["Name the employer and role", "Replace claims like 'hard-working' with an example", "Finish with what you will contribute"],
+  criteria: { answersQuestion: 3, evidence: 2, tailoring: 2, values: 2, structure: 4 },
   rewrittenOpening:
     "I want to combine real engineering work with a degree, which is why the Mechanical Engineering Degree Apprenticeship at your company is my first choice [add detail: why this employer?].",
 });

@@ -166,6 +166,20 @@ describe("writing helpers", () => {
     askJson.mockResolvedValue({ score: 6, summary: "s", strengths: [], improvements: [], rewrittenOpening: "o" });
     expect((await review(req({ kind: "statement", text: "x".repeat(80) }))).status).toBe(200);
   });
+
+  it("statement review uses the employer, question and word limit", async () => {
+    askJson.mockResolvedValue({ score: 6, summary: "s", strengths: [], improvements: [], rewrittenOpening: "o", criteria: { answersQuestion: 3, evidence: 2, tailoring: 2, values: 2, structure: 4 } });
+    const text = Array(40).fill("word").join(" ");
+    const res = await review(req({ kind: "answer", text, firm: "jp-morgan", question: "What one trait makes you a unique candidate?", wordLimit: 30 }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body).toMatchObject({ wordCount: 40, wordLimit: 30 });
+    const call = askJson.mock.calls.at(-1)![0] as { user: string; system: string };
+    expect(call.user).toContain("<employer_profile>");
+    expect(call.user).toContain("<question>");
+    expect(call.system).toMatch(/over the limit/);
+    expect(call.system).toContain("tailoring");
+  });
 });
 
 describe("billing and account endpoints without configuration", () => {
