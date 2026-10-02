@@ -26,23 +26,22 @@ Without Supabase env vars the app is local-only (data in the browser). Without S
 `MOCK_AI=1` serves canned AI responses so every screen can be developed and tested offline. It is ignored in production builds.
 
 ## Enabling accounts
-1. Create a Supabase project and run `supabase/schema.sql` in the SQL editor.
+1. Create a Supabase project and apply `supabase/migrations/*.sql` (SQL editor or `supabase db push`). The migration is safe to re-run.
 2. Enable Email (magic link) and, optionally, Google in Auth providers; add your site URL to the redirect list.
 3. Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`.
 
 ## Enabling limits and payments
 1. Create a Stripe subscription Product/Price; set `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`.
-2. Point a webhook at `/api/stripe/webhook` for `checkout.session.completed` and `customer.subscription.deleted`; set `STRIPE_WEBHOOK_SECRET`.
-3. Set `ENFORCE_LIMITS=true`. Free users get 2 interviews/month (`FREE_INTERVIEWS` in `lib/server/usage.ts`).
+2. Point a webhook at `/api/stripe/webhook` for `checkout.session.completed`, `customer.subscription.updated` and `customer.subscription.deleted`; set `STRIPE_WEBHOOK_SECRET`. Enable the customer portal in the Stripe dashboard (Settings, Billing, Customer portal) so "Manage or cancel" works.
+3. Set `ENFORCE_LIMITS=true`. All AI routes then require sign-in, share a 150-calls-a-day budget per user (`DAILY_AI_CALLS` in `lib/server/guard.ts`), and free users get 2 interviews/month (`FREE_INTERVIEWS` in `lib/server/usage.ts`).
+4. Production: set `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` so rate limits are shared across serverless instances, and `NEXT_PUBLIC_OPERATOR_NAME` / `NEXT_PUBLIC_CONTACT_EMAIL` for the legal pages.
 
 ## Deploying
 Any Node host works (Vercel is the simplest). Set the environment variables above, including `NEXT_PUBLIC_SITE_URL`. CI (`.github/workflows/ci.yml`) runs lint, typecheck, tests and a build on every push and pull request.
 
 ## Layout
-- `app/` pages and API routes (`app/api/*`); `components/` shared UI; `lib/` prompts, schemas, question bank, sector packs, store, backup and calendar helpers; `lib/server/` service-role helpers (never import from client code); `supabase/schema.sql`; `tests/`.
+- `app/` pages and API routes (`app/api/*`); `components/` shared UI; `lib/` prompts, schemas, question bank, sector packs, store, backup and calendar helpers; `lib/server/` service-role helpers (never import from client code); `supabase/migrations/`; `tests/`.
 - AI provider: OpenAI Responses API in `lib/ai.ts`. Two tiers, set by `OPENAI_MODEL` (marking and feedback, default `gpt-6.1-sol`) and `OPENAI_MODEL_FAST` (questions and STAR drafts, default `gpt-6-luna`), and `OPENAI_TRANSCRIBE_MODEL` (video-style voice answers, default `gpt-transcribe`). Requests use `store: false`. Canned dev responses: `lib/mocks.ts`.
 
 ## Before going public
-- The in-memory rate limiter (`lib/rateLimit.ts`) is per-instance: replace with Redis/Upstash on serverless.
-- Privacy notice and terms are drafts: have them reviewed. Check employer data in `lib/employers.ts`, sector content in `lib/sectors.ts` and the guide content, and keep the "last updated" dates current.
-- Supabase, Stripe and Google sign-in code paths are written but were not exercised against live services. The OpenAI integration (request shape, model ids, output token budgets) was only exercised through mocks and unit tests, not a live key.
+See `docs/launch-checklist.md` for what is done and what still needs an account, a key or a decision. In short: the privacy notice and terms need a lawyer's review; Stripe and Google sign-in are untested against live services; Supabase's built-in email is capped at 2 per hour, so add an SMTP provider; employer data in `lib/firms/*` and `lib/employers.ts` needs ongoing re-verification.
