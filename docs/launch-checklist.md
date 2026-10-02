@@ -6,7 +6,7 @@ Status as of 2 October 2026, on branch `prelaunch-hardening`.
 
 - Supabase migration applied to the live project (`supabase/migrations/20261001000000_init.sql`), re-runnable.
 - Row-level security checked with two real users: no cross-user read or write, no self-upgrade to Pro, quota functions not callable by users, deleting a user removes their data.
-- AI routes (`/api/interview/*`, `/api/star`, `/api/review`, `/api/transcribe`) require sign-in when `ENFORCE_LIMITS=true`; per-user rate limit, 150 AI calls a day, 2 free interviews a month. Verified end to end against real Supabase and OpenAI on a production build.
+- AI routes (`/api/interview/*`, `/api/star`, `/api/review`, `/api/transcribe`) require sign-in when `ENFORCE_LIMITS=true`; per-user rate limit, 150 AI calls a day, 2 free interviews a month and 2 free reviews a week (Pro is unlimited for both). Verified end to end against real Supabase and OpenAI on a production build.
 - OpenAI model ids (`gpt-6.1-sol`, `gpt-6-luna`, `gpt-transcribe`) accepted by the live API.
 - Moderation and UK safeguarding signposting on all free-text AI inputs (verified live).
 - Prompt-injection hardening: user text can no longer close our prompt delimiters.
@@ -20,7 +20,7 @@ Status as of 2 October 2026, on branch `prelaunch-hardening`.
 
 ## Needs you (accounts, keys, decisions)
 
-1. **Email provider.** Supabase's built-in email is limited to 2 magic-link emails per hour for the whole project. Create an account with an SMTP provider (for example Resend) and set it under Supabase, Project Settings, Authentication, SMTP.
+1. **Email provider (you are setting up Resend).** Supabase's built-in email is limited to 2 magic-link emails per hour for the whole project. Create an account with an SMTP provider (for example Resend) and set it under Supabase, Project Settings, Authentication, SMTP.
 2. **Auth settings** in Supabase (Authentication, URL Configuration): Site URL = your production domain; add `https://<domain>/**` and `http://localhost:3000/**` to Redirect URLs. Consider shortening the magic-link expiry to 15 minutes (Providers, Email).
 3. **Stripe**: account, product and monthly price, then `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`, `STRIPE_WEBHOOK_SECRET`. Enable the customer portal. Run one test-mode checkout, cancel and refund, and one account deletion with a live subscription.
 4. **Upstash Redis** (free tier): `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`.
@@ -28,7 +28,7 @@ Status as of 2 October 2026, on branch `prelaunch-hardening`.
 6. **Legal review** of `/privacy` and `/terms` by someone qualified. Confirm who the data controller is, whether you need to register with the ICO (a fee is usually due), and complete a short DPIA because users are under 18.
 7. **Google sign-in** (optional): OAuth client in Google Cloud Console, then enable in Supabase.
 8. **Error tracking** (optional but recommended): Sentry or similar.
-9. **Decision: Pro "statement reviews".** The pricing page lists it as a Pro benefit but `/api/review` is available to every signed-in user (within the daily budget). Decide what free users get.
+9. **Resend**: once set up, add its SMTP details in Supabase (item 1) and verify your sending domain.
 10. **Revoke the Supabase access token** used during setup.
 
 ## Content upkeep

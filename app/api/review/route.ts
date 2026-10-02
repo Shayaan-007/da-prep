@@ -3,6 +3,7 @@ import { mockReview } from "@/lib/mocks";
 import { reviewInput, reviewOutput, reviewSystem, reviewUser } from "@/lib/writing";
 import { guardAi } from "@/lib/server/guard";
 import { screenText } from "@/lib/server/safety";
+import { consumeReview } from "@/lib/server/usage";
 
 export const maxDuration = 120;
 
@@ -14,6 +15,9 @@ export async function POST(req: Request) {
   const { kind, text, jobAd } = parsed.data;
   const blocked = await screenText(text, jobAd);
   if (blocked) return blocked;
+  // Free accounts get a couple of reviews a week; Pro is unlimited. Counted after the safety check so blocked text is free.
+  const usage = await consumeReview(req);
+  if (!usage.ok) return Response.json({ error: usage.error }, { status: usage.status });
   try {
     const out = await askJson({
       system: reviewSystem(kind),

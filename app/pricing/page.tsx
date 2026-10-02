@@ -8,10 +8,11 @@ import { supabase } from "@/lib/supabase";
 
 const FREE = [
   "2 AI mock interviews a month",
+  "2 statement or answer reviews a week",
   "Unlimited practice tests, tracker, stories bank, guides",
   "Progress history",
 ];
-const PRO = ["Unlimited AI mock interviews", "Everything in Free", "Statement reviews"];
+const PRO = ["Unlimited AI mock interviews", "Unlimited statement and answer reviews", "Everything in Free"];
 
 export default function Pricing() {
   const { enabled, user } = useAuth();

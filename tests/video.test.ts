@@ -9,7 +9,7 @@ vi.mock("@/lib/ai", () => ({
   transcribeModel: () => "gpt-transcribe",
   mockEnabled: () => false,
 }));
-vi.mock("@/lib/server/usage", () => ({ consumeInterview: async () => ({ ok: true }) }));
+vi.mock("@/lib/server/usage", () => ({ consumeInterview: async () => ({ ok: true }), consumeReview: async () => ({ ok: true }) }));
 
 import { POST as next } from "@/app/api/interview/next/route";
 import { GET as transcribeReady, POST as transcribe } from "@/app/api/transcribe/route";
