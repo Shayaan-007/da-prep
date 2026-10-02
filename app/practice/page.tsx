@@ -106,14 +106,14 @@ export default function Practice() {
               onClick={() => begin(c)}
               className="card card-hover animate-fade-up p-5 text-left"
             >
-              <h2 className="flex items-center gap-2 font-bold">
+              <span className="flex items-center gap-2 font-bold">
                 {CATEGORY_INFO[c].label}
                 {sector && SECTOR_BY_ID[sector].tests.includes(c) && (
                   <span className="rounded-md bg-mint-50 px-2 py-0.5 text-xs font-semibold text-mint-600">
                     Recommended for {SECTOR_BY_ID[sector].name.toLowerCase()}
                   </span>
                 )}
-              </h2>
+              </span>
               <p className="mt-1 text-sm text-muted">{CATEGORY_INFO[c].blurb}</p>
               <p className="mt-3 inline-block rounded-md bg-brand-50 px-2.5 py-1 text-xs font-semibold text-brand-700">
                 {questionsFor(c).length} questions
@@ -185,8 +185,14 @@ export default function Practice() {
           <p>
             {info.label}: question {i + 1} of {total}
           </p>
+          {/* Announce only the key moments, not every tick. */}
+          <p className="sr-only" aria-live="assertive">
+            {timed && !answered ? (left === 10 ? "10 seconds left" : left <= 0 ? "Time is up" : "") : ""}
+          </p>
           {timed && !answered && (
             <p
+              role="timer"
+              aria-label="Time left"
               className={`rounded-md px-3 py-1 text-base font-semibold tabular-nums ${
                 left <= 10 ? "animate-pulse bg-coral-50 text-coral-600" : "bg-brand-50 text-brand-700"
               }`}
@@ -221,13 +227,15 @@ export default function Practice() {
                   {String.fromCharCode(65 + n)}
                 </span>
                 {q.options[idx]}
+                {answered && correct && <span className="sr-only"> (correct answer)</span>}
+                {answered && !correct && idx === picked && <span className="sr-only"> (your answer, incorrect)</span>}
               </button>
             </li>
           );
         })}
       </ul>
       {(answered || timeUp) && (
-        <div className="animate-fade-up space-y-3">
+        <div className="animate-fade-up space-y-3" role="status">
           {timeUp && <p className="text-sm font-semibold text-coral-600">Time&apos;s up.</p>}
           <p className="callout bg-brand-50">
             <strong>{picked === q.answer ? "Correct. " : "Answer: " + q.options[q.answer] + ". "}</strong>

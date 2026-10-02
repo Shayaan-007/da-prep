@@ -29,7 +29,10 @@ export default function Footer() {
       </div>
       <div className="border-t border-white/15">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-5 text-xs text-white/65 sm:flex-row sm:items-center sm:justify-between">
-          <p>Guidance only. Always check the employer&apos;s own process and dates.</p>
+          <p>
+            Independent guidance, not affiliated with or endorsed by any employer named. Always check the employer&apos;s
+            own process and dates.
+          </p>
           <nav aria-label="Legal" className="flex gap-4">
             {LEGAL_LINKS.map((l) => (
               <Link key={l.href} href={l.href} className="hover:text-white hover:underline">
