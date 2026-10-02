@@ -41,7 +41,10 @@ function group(r: Rng): { stimulus: Stimulus; specs: Spec[] } {
   const claimTrue = r.next() < 0.5;
   const claimedPct = claimTrue ? pctX : pctX + r.pick([-7, -5, 6, 9]);
   const specA: Spec = {
-    text: `${x} revenue changed by ${claimedPct}% between 2024 and 2025 (to the nearest whole percent).`,
+    text:
+      claimedPct === 0
+        ? `${x} revenue was unchanged between 2024 and 2025 (to the nearest whole percent).`
+        : `${x} revenue ${claimedPct > 0 ? "rose" : "fell"} by ${Math.abs(claimedPct)}% between 2024 and 2025 (to the nearest whole percent).`,
     truth: claimTrue ? 0 : 1,
     why: `${x}: (${x25} − ${x24}) ÷ ${x24} = ${(((x25 - x24) / x24) * 100).toFixed(1)}%, which is ${pctX}% to the nearest whole percent.`,
     check: (s) => {

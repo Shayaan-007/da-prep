@@ -50,6 +50,13 @@ describe("situational judgement bank", () => {
     expect(new Set(positions).size).toBeGreaterThan(1);
   });
 
+  it("ranking items never show the options already in the right order", () => {
+    for (const item of SJT.rank) {
+      if (item.kind !== "rank") throw new Error("expected rank");
+      expect(item.order, item.id).not.toEqual(item.order.map((_, k) => k));
+    }
+  });
+
   it("is deterministic", () => {
     expect(JSON.stringify(buildSjt())).toBe(JSON.stringify(SJT));
   });

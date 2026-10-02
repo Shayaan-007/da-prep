@@ -120,9 +120,42 @@ describe("deductive bank", () => {
     }
   });
 
+  it("never states the answer, never repeats a rule, and every rule is needed", () => {
+    for (const item of DEDUCTIVE.items) {
+      const m = DEDUCTIVE.meta[item.id];
+      const texts = m.constraints.map((c) => c.text);
+      expect(new Set(texts).size, item.id).toBe(texts.length);
+      expect(texts.some((t) => t.toLowerCase().startsWith(`${m.tasks[m.target]} is on `)), item.id).toBe(false);
+      m.constraints.forEach((c, i) => {
+        const without = m.constraints.filter((_, j) => j !== i);
+        expect(new Set(validArrangements(without).map((p) => p[m.target])).size, `${item.id} rule ${i + 1}`).toBeGreaterThan(1);
+      });
+    }
+  });
+
+  it("spans difficulty 2 to 5 and explains every ruled-out day", () => {
+    const levels = new Set(DEDUCTIVE.items.map((i) => i.difficulty));
+    for (const d of [2, 3, 4, 5]) expect(levels.has(d as 2 | 3 | 4 | 5)).toBe(true);
+    for (const item of DEDUCTIVE.items) {
+      if (item.kind !== "mcq") throw new Error("expected mcq");
+      const notLines = (item.explanation.match(/Not (Monday|Tuesday|Wednesday|Thursday|Friday):/g) ?? []).length;
+      expect(notLines, item.id).toBe(4);
+    }
+  });
+
   it("the prompt lists every constraint the solver used", () => {
     for (const item of DEDUCTIVE.items) {
       for (const c of DEDUCTIVE.meta[item.id].constraints) expect(item.prompt, item.id).toContain(c.text);
     }
+  });
+});
+
+describe("no repeated questions", () => {
+  it.each([
+    ["inductive", INDUCTIVE],
+    ["deductive", DEDUCTIVE.items],
+  ] as const)("%s prompts are all different", (_name, items) => {
+    const prompts = items.map((i) => i.prompt);
+    expect(new Set(prompts).size).toBe(prompts.length);
   });
 });

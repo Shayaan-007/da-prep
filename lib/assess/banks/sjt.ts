@@ -60,9 +60,9 @@ const MOST_LEAST: ML[] = [
   {
     scenario: "You accidentally email a spreadsheet containing client details to the wrong external address.",
     best: "Tell your manager or the data protection lead immediately so they can act.",
-    others: ["Email the recipient asking them to delete it, and report it afterwards.", "Email the recipient asking them to delete it, and tell no one."],
+    others: ["Email the recipient asking them to delete it, and report it afterwards.", "Email the recipient asking them to delete it, and report it at the end of the week."],
     worst: "Wait to see whether anything comes of it.",
-    why: "Data incidents must be reported straight away so they can be contained. Waiting or staying silent increases the harm.",
+    why: "Data incidents must be reported straight away so they can be contained. Delaying the report, or waiting to see what happens, increases the harm.",
   },
   {
     scenario: "Two managers each give you an urgent task with the same deadline.",
@@ -127,11 +127,11 @@ const RATE_EACH: RE[] = [
     scenario: "You must choose between two suppliers. The cheaper one has poor customer reviews.",
     actions: [
       ["Compare cost and quality evidence and talk it through with your manager.", 3],
-      ["Ask a colleague which they would pick and follow their advice.", 2],
+      ["Ask an experienced colleague for their view, then decide.", 2],
       ["Pick the cheaper one because it saves money.", 1],
       ["Choose at random.", 0],
     ],
-    why: "Good decisions weigh evidence and use advice. Choosing on price alone ignores the risk, and chance is not a decision.",
+    why: "Good decisions weigh the evidence and use advice. Asking an experienced colleague helps but skips your own check of the evidence. Choosing on price alone ignores the risk, and chance is not a decision.",
   },
   {
     scenario: "You receive negative feedback on a piece of written work.",
@@ -179,14 +179,14 @@ const RANK: RK[] = [
     why: "Prompt honesty with a solution is best. Fixing quietly is better than ignoring it, but hides information others may need.",
   },
   {
-    scenario: "You see something unsafe at work. Rank these actions from best to worst.",
+    scenario: "You see something unsafe at work that could hurt someone soon. Rank these actions from best to worst.",
     best_first: [
-      "Stop what you are doing and report it to your supervisor.",
-      "Warn people nearby, then report it.",
+      "Warn anyone at immediate risk, then report it to your supervisor straight away.",
+      "Report it to your supervisor straight away and get on with your work.",
       "Mention it at the next team meeting.",
       "Assume someone else has noticed.",
     ],
-    why: "Immediate reporting protects people. Waiting for a meeting delays action, and assuming someone else knows is the most dangerous.",
+    why: "Protect people in immediate danger first, then report so it gets fixed. Reporting without warning anyone leaves people at risk in the meantime. Waiting for a meeting delays action, and assuming someone else knows is the most dangerous.",
   },
 ];
 
@@ -220,7 +220,9 @@ export function buildSjt(): { mostLeast: Item[]; rateEach: Item[]; rank: Item[] 
   });
   const rank = RANK.map((s, i): Item => {
     const r = rng(32000 + i);
-    const options = r.shuffle(s.best_first);
+    let options = r.shuffle(s.best_first);
+    // Never show the options already in the right order.
+    while (options.every((o, k) => o === s.best_first[k])) options = r.shuffle(s.best_first);
     return {
       id: `sjt-rk-${i + 1}`,
       kind: "rank",
