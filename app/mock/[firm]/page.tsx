@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import MockRunner from "@/components/mock/MockRunner";
 import { getFirm } from "@/lib/firms";
+import { getTest } from "@/lib/assess/tests";
+import type { Test } from "@/lib/assess/types";
 import { MOCKS, getMock } from "@/lib/mockprocess/definitions";
 import { pageMeta } from "@/lib/site";
 
@@ -24,5 +26,7 @@ export default async function MockPage({ params }: { params: Promise<{ firm: str
   const mock = getMock(slug);
   const firm = getFirm(slug);
   if (!mock || !firm) notFound();
-  return <MockRunner mock={mock} firmName={firm.name} />;
+  const tests: Record<string, Test> = {};
+  for (const s of mock.stages) if (s.kind === "test") tests[s.testId] = getTest(s.testId)!;
+  return <MockRunner mock={mock} firmName={firm.name} tests={tests} />;
 }

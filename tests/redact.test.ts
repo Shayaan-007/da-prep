@@ -18,3 +18,14 @@ describe("redacting personal details before AI", () => {
     expect(redact(text)).toBe(text);
   });
 });
+
+describe("Supabase address", () => {
+  it("reduces whatever was configured to the project origin", async () => {
+    const { supabaseOrigin } = await import("@/lib/supabase-url");
+    expect(supabaseOrigin("https://abc.supabase.co/rest/v1/")).toBe("https://abc.supabase.co");
+    expect(supabaseOrigin(" https://abc.supabase.co/ ")).toBe("https://abc.supabase.co");
+    expect(supabaseOrigin("https://abc.supabase.co")).toBe("https://abc.supabase.co");
+    expect(supabaseOrigin("not a url")).toBeUndefined();
+    expect(supabaseOrigin(undefined)).toBeUndefined();
+  });
+});
