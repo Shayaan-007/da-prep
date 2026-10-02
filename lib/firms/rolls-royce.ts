@@ -33,7 +33,7 @@ export const rollsRoyce: FirmProfile = {
   ],
   entry: {
     other:
-      "Specific UCAS/grade requirements are set per vacancy and were not retrievable from the careers site in this research; check the live advert. Rolls-Royce says the online application has no CV and three ~300-word essay questions (see Online application stage).",
+      "Engineering degree apprenticeship (from a search excerpt of Rolls-Royce's 'what you need' page, so check the live advert): five GCSEs at grade 4/C or above including English Language, Maths and Science, plus 112 UCAS points from three A-levels at BBC including Maths and one of a specified list of subjects; alternatives are an engineering BTEC Extended Diploma with a Merit in further maths, or a T Level at Merit plus A-level Maths at C. Starting salary quoted as £21,776. Requirements are set per vacancy. Rolls-Royce says the online application has no CV and three ~300-word essay questions (see Online application stage).",
     source: AC_GUIDE_2026,
   },
   timeline: {
@@ -78,7 +78,7 @@ export const rollsRoyce: FirmProfile = {
       order: 3,
       name: "Assessment centre",
       format:
-        "Half-day session, in person at a Rolls-Royce site or virtual depending on programme and year (the 2024 guide layout indicates degree apprentices in person; the 2026 guide's column order differs and the extraction is ambiguous, so confirm in your invitation). Activities in order: (1) interview (questions published in the guide), (2) 7-minute prepared presentation with short Q&A, (3) technical exercise responding to a case study given on the day (degree/higher apprentices). Level 3 gets a practical activity to test how well you learn and follow instructions instead. Assessors rate each behaviour 1-6 against published positive/negative indicators (e.g. problem solving: analyses and interprets data from multiple sources; communication: uses simple language to ensure common understanding).",
+        "Half-day session. Per the 2026 guide, degree and higher apprentices and Level 3 candidates attend in person at a Rolls-Royce site; graduate and internship candidates attend virtually. Confirm in your invitation. Activities in order: (1) interview (questions published in the guide), (2) 7-minute prepared presentation with short Q&A, (3) technical exercise responding to a case study given on the day (degree/higher apprentices). Level 3 gets a practical activity to test how well you learn and follow instructions instead. Assessors rate each behaviour 1-6 against published positive/negative indicators (e.g. problem solving: analyses and interprets data from multiple sources; communication: uses simple language to ensure common understanding).",
       tips: [
         "Read the official AC guide end to end: Rolls-Royce publishes the exact interview questions and the rating scale.",
         "Practise the 7-minute presentation aloud against a timer; candidates report Rolls-Royce is strict on timing. No projectors or screens in person: bring handouts, notes or props.",
@@ -138,7 +138,7 @@ export const rollsRoyce: FirmProfile = {
   videoInterview: undefined,
   assessmentCentre: {
     text:
-      "Half-day (in person or virtual, check invite): interview, 7-minute presentation (explain a complex technical concept to a non-specialist senior colleague from another discipline, say why it matters to Rolls-Royce, and what you learned/skills developed; a technical topic for engineering, any subject for business), then a technical case-study exercise. Short Q&A on the presentation. Previous candidates used topics from sustainable aviation fuel and nuclear to a Rubik's cube walkthrough and the economics of a concert tour. One candidate report says there was no group task at their AC, so a group exercise is not guaranteed.",
+      "Half-day, in person for degree and higher apprentices (2026 guide): interview, 7-minute presentation (explain a complex technical concept to a non-specialist senior colleague from another discipline, say why it matters to Rolls-Royce, and what you learned/skills developed; a technical topic for engineering, any subject for business), then a technical case-study exercise. Short Q&A on the presentation. Previous candidates used topics from sustainable aviation fuel and nuclear to a Rubik's cube walkthrough and the economics of a concert tour. One candidate report says there was no group task at their AC, so a group exercise is not guaranteed.",
     source: AC_GUIDE_2026,
     confidence: "official",
   },
@@ -223,7 +223,7 @@ export const rollsRoyce: FirmProfile = {
     },
   ],
   specificAdvice: [
-    "The interview questions are published: write a 60-90 second answer to each of the six degree-apprentice questions in the 2026 AC guide, each anchored to one of the four behaviours, and rehearse them out loud.",
+    "The interview questions are published: write a 60-90 second answer to each of the seven degree-apprentice questions in the 2026 AC guide, each anchored to one of the four behaviours, and rehearse them out loud.",
     "Build the 7-minute presentation around a project you actually did (code, a build, a CAD design, a volunteering project) rather than a textbook topic: the guide explicitly says it should not be a summary of a theoretical module. Finish with 'why this matters to Rolls-Royce' (engines, nuclear, SAF, digital twins, etc.).",
     "Rolls-Royce rates each behaviour 1-6 using published indicators. During the technical exercise, say aloud how you use data from more than one source, reach a conclusion, and explain it in plain language; that maps to the problem solving and Keep it simple indicators.",
     "Safety is the foundation: for any workplace scenario (SJE or interview), lead with speaking up and following process before productivity.",
@@ -236,13 +236,12 @@ export const rollsRoyce: FirmProfile = {
     APP_GUIDE,
     "https://careers.rolls-royce.com/early-careers",
   ],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
     "Current (2026-27) OA test lengths/item counts: official doc is the 2021-22 cycle; later timings (SJE 15 min, verbal/numerical 6 min) are from a search summary of a newer version of the same doc and were not read directly.",
     "Whether a video interview exists for Rolls-Royce plc degree apprentices: a pre-recorded apprentice video interview is documented only for Rolls-Royce Motor Cars (BMW Group), not plc, and is not included here.",
     "Entry requirements (UCAS points/grades) and 2027 open/close dates for plc degree apprenticeships.",
     "Student Room / Reddit threads for 2025-26 returned 403 to direct fetch, so candidate timings come from search-result summaries only; no verbatim candidate questions beyond the firm's own published questions.",
-    "AC mode (in person vs virtual) for degree apprentices differs between the 2024 and 2026 guide layouts and could not be read unambiguously.",
     "Technical case-study content is deliberately undisclosed by the firm until the day.",
   ],
 };

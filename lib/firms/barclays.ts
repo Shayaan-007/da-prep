@@ -182,8 +182,11 @@ export const barclays: FirmProfile = {
     "No AI tools in any assessment or interview stage; Barclays says this explicitly.",
   ],
   officialLinks: [B_OFFICIAL, B_PROGS, B_VALUES],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: Barclays' apprentice journey lists no video interview stage. Third-party descriptions of a HireVue interview (5-7 questions) and 60-90 min of numerical, verbal, logical and personality tests describe the graduate route and are not applied here.",
+    "Barclays says using third-party AI tools in an assessment or interview ends the interview and withdraws the application (official).",
+    "The apprenticeship-programmes page describes Level 3/4 roles (5 GCSEs, salary £25,200); degree and higher routes may have different requirements.",
     "Exact test vendor and item counts for the 2025/2026 DA online assessments (SHL is candidate-reported only; Barclays does not name it).",
     "Whether a video interview or group exercise is part of the DA route; official page mentions a group activity but the only 2025 candidate report of the final stage described an interview only.",
     "Official UCAS/A-level entry requirements per role (sources conflict: BCC, BBB, 112 points).",

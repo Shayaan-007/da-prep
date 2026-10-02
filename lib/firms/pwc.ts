@@ -61,10 +61,10 @@ export const pwc: FirmProfile = {
     },
     {
       order: 2,
-      name: "Online assessment",
+      name: "Online assessments (immersive job preview and psychometrics)",
       format:
-        "Hosted on SHL platform. Behavioural assessment (natural work preferences, not timed) plus a timed cognitive assessment covering numerical, inductive and deductive reasoning. A 2025 Flying Start candidate described it as about 30 minutes in total.",
-      provider: "SHL",
+        "Sources conflict, so check your invitation. A search excerpt of PwC's own page lists an immersive job preview (a situational judgement test of about 15 short video questions) and a games-based psychometric assessment. Other reports describe a behavioural questionnaire (natural work preferences, untimed) plus a timed SHL cognitive test covering numerical, inductive and deductive reasoning: a 2025 Flying Start candidate said about 30 minutes in total, one source says allow about 90 minutes and complete within 48 hours, and WikiJob names the games stage Career Unlocked (11 games, at least an hour).",
+      provider: "SHL and/or in-house (sources conflict)",
       durationMins: 30,
       passMarkNotes: "Not published. Feedback reportedly takes about 2 weeks (candidate reports, TSR 2025).",
       tips: [
@@ -72,43 +72,43 @@ export const pwc: FirmProfile = {
         "Answer the behavioural questionnaire consistently and honestly; do not try to game it.",
       ],
       source: PWC_SELECTION,
-      confidence: "official",
+      confidence: "multiple-candidate-reports",
     },
     {
       order: 3,
       name: "Video interview",
       format:
-        "On-demand recorded video interview on the SHL platform; questions on screen about how you typically approach work at school, university or work experience. Reviewed later by assessors. A prep-site (single source) says ~30s preparation and 2-3 min answers.",
+        "On-demand recorded video interview on the SHL platform; questions on screen about how you typically approach work at school, university or work experience. Reviewed later by assessors. Format reports conflict: 6 questions with 30s prep and 2 min answers; 10 questions with 2 min prep and 3 min answers (plus case-study questions with 10 min prep); 1.5 min prep and 2 min answers; 3-6 questions with no retakes. PwC's excerpt says you have about a week to complete it after receiving login details.",
       provider: "SHL",
       tips: ["Use STAR with real examples from school, part-time work or clubs.", "Practise speaking to camera for 2-3 minutes."],
       source: PWC_SELECTION,
-      confidence: "official",
+      confidence: "multiple-candidate-reports",
     },
     {
       order: 4,
       name: "Virtual assessment centre",
       format:
-        "Virtual immersive assessment centre assessing core skills and attributes (PwC Professional framework). Prep-site/candidate reports: individual case-study/calculation tasks and a group exercise in groups of ~4-6, possibly role-play. Older (pre-2025) school leaver reports describe a ~5 hour day with video interview, Arctic Shores game, group exercise, case study and 45 min 1:1.",
+        "Virtual immersive assessment centre assessing core skills and attributes (PwC Professional framework). Prep-site/candidate reports: individual case-study/calculation tasks and a group exercise in groups of ~4-6, possibly role-play. Older (pre-2025) school leaver reports describe a ~5 hour day with video interview, Arctic Shores game, group exercise, case study and 45 min 1:1. Length conflicts: one report says about 1h40 with up to 5 other candidates (run November to April), WikiJob says a full day with an in-tray, presentation and 20-minute coaching interview.",
       tips: [
         "In the group task contribute structured points and include quieter members.",
         "Practise reading a short data pack and writing brief recommendations.",
       ],
       source: PWC_SELECTION,
-      confidence: "official",
+      confidence: "multiple-candidate-reports",
     },
     {
       order: 5,
       name: "Final interview",
       format:
-        "In-person interview in your matched office with a senior leader from the business area, per PwC's early careers selection page. Prep-site (single source) says ~45 min competency interview.",
+        "In-person interview in your matched office with a senior leader from the business area, per PwC's early careers selection page. Prep-site (single source) says ~45 min competency interview. This stage is not in the five-stage list on PwC's current selection page excerpt, so treat it as unconfirmed for 2026/27.",
       durationMins: 45,
       tips: ["Prepare why PwC, why this line of service and why an apprenticeship/degree-with-work route.", "Bring 5-6 STAR stories mapped to the PwC Professional attributes."],
       source: PWC_SELECTION,
-      confidence: "official",
+      confidence: "inferred",
     },
   ],
   oa: {
-    provider: "SHL (2025-26 cycle per PwC). Earlier cycles used Arctic Shores game-based assessment (Career Unlocked); one 2025 prep source says this was dropped.",
+    provider: "SHL and/or in-house; the games-based assessment (Arctic Shores, Career Unlocked in earlier cycles) still appears in PwC's current stage list, so do not assume it was dropped.",
     tests: [
       { name: "Behavioural assessment", format: "Self-report questionnaire of natural work preferences; untimed", notes: "Item count not verified." },
       { name: "Cognitive assessment", format: "Timed numerical, inductive and deductive reasoning", timeMins: 30, notes: "Item counts per test not verified; 30 mins total from one 2025 candidate." },
@@ -116,22 +116,22 @@ export const pwc: FirmProfile = {
     styleNotes:
       "Standard SHL-style multiple choice: numerical interpretation of tables/charts, inductive (pattern/sequence of shapes) and deductive (logical conclusion from statements). Behavioural section is preference-based rather than right/wrong.",
     source: PWC_SELECTION,
-    confidence: "official",
+    confidence: "multiple-candidate-reports",
   },
   videoInterview: {
-    text: "On-demand, recorded via SHL platform; on-screen questions about your typical approach to work/study/experience; assessors review afterwards. Question count and timings not confirmed from an official source.",
+    text: "On-demand, recorded via SHL platform; on-screen questions about your typical approach to work/study/experience; assessors review afterwards. Question count and timings conflict across sources and are not confirmed officially.",
     source: PWC_SELECTION,
-    confidence: "official",
+    confidence: "multiple-candidate-reports",
   },
   assessmentCentre: {
     text: "Virtual immersive assessment centre testing core skills against the PwC Professional framework. Reported components: case study with calculations, group discussion in groups of 4-6 (prep-site), earlier cycles also role-play. Exact 2026 agenda not verified.",
     source: PWC_SELECTION,
-    confidence: "official",
+    confidence: "multiple-candidate-reports",
   },
   finalInterview: {
-    text: "In-person interview with a senior leader from the business area you are matched to, in the matched office.",
+    text: "In-person interview with a senior leader from the business area you are matched to, in the matched office. Not confirmed in PwC's current five-stage list.",
     source: PWC_SELECTION,
-    confidence: "official",
+    confidence: "inferred",
   },
   values: [
     "The PwC Professional: whole leadership",
@@ -141,6 +141,20 @@ export const pwc: FirmProfile = {
     "Relationships",
   ],
   questions: [
+    {
+      stage: "Video interview",
+      question: "What would you do when you face a problem?",
+      type: "situational",
+      source: "https://www.graduatesfirst.com/pwc-interviews",
+      confidence: "single-report",
+    },
+    {
+      stage: "Video interview",
+      question: "What are your motivations for the role?",
+      type: "motivation",
+      source: "https://www.graduatesfirst.com/pwc-interviews",
+      confidence: "single-report",
+    },
     {
       stage: "Virtual assessment centre",
       question:
@@ -158,7 +172,7 @@ export const pwc: FirmProfile = {
     },
   ],
   specificAdvice: [
-    "PwC uses SHL for both tests and the video interview, so use SHL's free practice tests and a timed mock video in the same style.",
+    "The video interview is on the SHL platform; the online assessments vary by route and cycle (job preview SJT, games, cognitive tests), so read your invitation and practise each style, including SHL's free practice tests and a timed mock video.",
     "Apply early: candidate and vendor reports say popular Flying Start places (London, Manchester) are fought over (one parent report: 50,000 applicants for 11 places at one university), so the OA is a real filter.",
     "Map every example to the five PwC Professional attributes (whole leadership, business acumen, technical/digital, global/inclusive, relationships).",
     "Flying Start is also a UCAS application: you need to meet the university offer as well as pass PwC's process.",
@@ -171,9 +185,10 @@ export const pwc: FirmProfile = {
     "https://www.pwc.co.uk/careers/early-careers/applying/the-behaviours-we-look-for.html",
     "https://elearn.pwc.co.uk/interview/",
   ],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
-    "pwc.co.uk blocked automated fetches (403); official claims rely on search excerpts only.",
+    "pwc.co.uk blocked automated fetches (403) again on 2 Oct 2026: nothing here comes from a direct read of PwC's pages, so fields that were labelled official are now labelled as candidate reports or inferred where sources conflict.",
+    "Stage list, video format, assessment length and assessment-centre length all conflict across sources; PwC is the least certain profile.",
     "Number of items and timings for the SHL cognitive tests and behavioural test not verified.",
     "Video interview: question count, prep time and answer length not officially confirmed.",
     "Assessment centre exact activities for 2025-26 not verified; no first-hand 2025-26 write-up obtained (TSR/Reddit/Glassdoor blocked).",

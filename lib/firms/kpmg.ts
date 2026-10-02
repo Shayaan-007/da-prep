@@ -4,6 +4,7 @@ import type { FirmProfile } from "./types";
 const K_PROC = "https://www.kpmgcareers.co.uk/apprentice/applying-to-kpmg/application-process/";
 const K_APPLY = "https://www.kpmgcareers.co.uk/apprentice/applying-to-kpmg/";
 const K_AA = "https://www.amazingapprenticeships.com/employers/kpmg/";
+const KPMG_LP = "https://www.hackingthecaseinterview.com/pages/kpmg-launch-pad";
 
 export const kpmg: FirmProfile = {
   slug: "kpmg",
@@ -11,8 +12,10 @@ export const kpmg: FirmProfile = {
   sector: "Professional services (Big 4)",
   programmes: [
     { name: "Audit Apprenticeship", level: "Apprenticeship with professional qualification" },
-    { name: "Tax Apprenticeship", level: "Apprenticeship with professional qualification" },
-    { name: "KPMG Business Services (KBS) Apprenticeship", level: "Apprenticeship supporting internal specialist teams" },
+    { name: "Tax & Law Apprenticeship", level: "Apprenticeship with professional qualification" },
+    { name: "Technology & Engineering Apprenticeship", level: "Apprenticeship" },
+    { name: "Consulting Apprenticeship", level: "Apprenticeship" },
+    { name: "Corporate Services Apprenticeship (Business Administration)", level: "2-year apprenticeship supporting internal teams" },
   ],
   entry: {
     ucas: "Criteria on each programme page; KPMG encourages applications a few grades/points short, as applications are read alongside assessment performance.",
@@ -22,7 +25,7 @@ export const kpmg: FirmProfile = {
   timeline: {
     rolling: true,
     notes:
-      "Launch Pad dates listed for Nov 2026 to May 2027 across UK locations. Offers within 2 working days of Launch Pad. Unofficial prep site suggests application window Oct-Feb for a Sept start, rolling offers, typical application to offer 6-10 weeks.",
+      "2026/27 Launch Pad dates (KPMG): 17 Nov 2026 London; 1 Dec Birmingham; 9 Dec Manchester; 16 Mar 2027 Bristol; 23 Mar Glasgow; 27 Apr London; 5 May Leeds. Offers within 2 working days of Launch Pad. Roles are across 19 offices. Unofficial prep site suggests application window Oct-Feb for a Sept start, rolling offers, typical application to offer 6-10 weeks (single report).",
     source: K_PROC,
   },
   stages: [
@@ -94,7 +97,12 @@ export const kpmg: FirmProfile = {
     "Integrity",
     "Technical proficiency",
   ],
-  questions: [],
+  questions: [
+    { stage: "Launch Pad", question: "Why KPMG, and why this service line?", type: "motivation", source: KPMG_LP, confidence: "single-report" },
+    { stage: "Launch Pad", question: "What is the most challenging task you have done, and how did you approach it?", type: "competency", source: KPMG_LP, confidence: "single-report" },
+    { stage: "Launch Pad", question: "Tell me about a time you diffused tension in a team and how it was resolved.", type: "competency", source: KPMG_LP, confidence: "single-report" },
+    { stage: "Launch Pad", question: "Describe a technology that has had a big impact in the last five years.", type: "commercial", source: KPMG_LP, confidence: "single-report" },
+  ],
   specificAdvice: [
     "The video interview is answered to an AI avatar and reviewed by humans later; practise talking to a screen, not a person.",
     "KPMG reads grades together with assessment results, so a strong OA can offset being a point or two short.",
@@ -102,9 +110,9 @@ export const kpmg: FirmProfile = {
     "Integrity matters: KPMG states dishonesty (including AI misuse) can lead to withdrawal and referral to professional bodies.",
   ],
   officialLinks: [K_PROC, K_APPLY, "https://www.kpmgcareers.co.uk/apprentice/"],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
-    "No candidate-reported apprentice questions obtained: TSR, Glassdoor, Reddit and the hackingthecaseinterview pages returned 403.",
+    "Launch Pad questions come from a single commercial prep page; TSR, Glassdoor and Reddit could not be read, so no first-hand apprentice accounts were obtained.",
     "Cognitive test item count, live test provider and pass mark not published.",
     "Video interview prep/answer times for the apprentice version not confirmed.",
     "Launch Pad exact agenda (group case topics, analysis task) only from third-party sites; KPMG lists 12 strengths, the AssessmentDay page lists nine older behaviours.",

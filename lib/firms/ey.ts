@@ -5,7 +5,6 @@ const EY_PROCESS = "https://www.ey.com/en_uk/careers/students/application-proces
 const EY_FAQ = "https://www.ey.com/en_uk/careers/students/faqs";
 const EY_AA = "https://www.amazingapprenticeships.com/employers/ey/";
 const EY_WJ = "https://www.wikijob.co.uk/interview-advice/company-interview-questions/ey";
-
 export const ey: FirmProfile = {
   slug: "ey",
   name: "EY UK",
@@ -66,7 +65,7 @@ export const ey: FirmProfile = {
       order: 4,
       name: "EY Experience Day",
       format:
-        "In-person day of assessed activities plus time with current employees (virtual only in exceptional circumstances; EY's apprenticeship page describes a virtual event with webcam interaction with assessors). Wikijob (graduate) lists aptitude retest, group discussion, case study, inbox prioritisation and partner interview, 9:00-16:30. TSR candidates report the day sets tasks rather than asking interview questions, with a group task of 5-6: read a document, answer questions, create a proposal.",
+        "Apprentices attend the Experience Day in person at an EY UK office; virtual only in exceptional circumstances, and travel costs are reimbursed up to a maximum (EY FAQ). Assessed activities plus time with current employees. Wikijob (graduate) lists aptitude retest, group discussion, case study, inbox prioritisation and partner interview, 9:00-16:30. A graduate-oriented prep site (single report) gives case prep 60 min + 15 min presentation + 15 min Q&A, a 40-50 min group exercise, a 45 min competency interview and a partner interview. TSR candidates report the day sets tasks rather than asking interview questions, with a group task of 5-6: read a document, answer questions, create a proposal.",
       tips: ["Bring ideas but listen and build on others in the group task.", "Practise prioritising an inbox with a clear rationale."],
       source: EY_FAQ,
       confidence: "official",
@@ -136,8 +135,11 @@ export const ey: FirmProfile = {
     "The question list is from wikijob's graduate page; treat it as a style guide for apprentice final interviews.",
   ],
   officialLinks: [EY_PROCESS, EY_FAQ, EY_AA, "https://www.ey.com/en_uk/careers/students"],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Apprentice-adjacent 2025 Tax interview questions (why Tax, balancing work and study, what research you did) appeared in search summaries but no readable source URL was found, so they are not listed.",
+    "EY's own process page lists search and apply, preparation hub, online assessment, Experience Day and onboarding, with no separate final-interview stage: the final interview is probably part of the Experience Day, but this is not stated.",
+    "EY's page lists proactivity, ethical behaviour, curiosity, relationship building, agility, critical thinking, technology comfort and motivation; the 10-item strengths list below is still not on an official page.",
     "Item counts/timings for the apprentice version of the assessment are not published; 60 min/28 q and 45 min/14 q are graduate figures from wikijob.",
     "Whether the apprentice route has a separate telephone interview is not confirmed by EY.",
     "TSR, Glassdoor and Reddit returned 403; final interview questions come from graduate-oriented sources.",
