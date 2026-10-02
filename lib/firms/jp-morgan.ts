@@ -143,8 +143,12 @@ export const jpMorgan: FirmProfile = {
     "Expect silence: statuses read 'under review' for weeks, and decisions arrive for a whole batch on the same day.",
   ],
   officialLinks: [JPM_OFFICIAL, JPM_PRINCIPLES],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: the official Financial Services apprenticeship page confirms 4 years (London, Bournemouth, Edinburgh), the Exeter and Heriot-Watt entry grades, one study day a week and an 'assessment center' and 'insight evening', but gives no stages, dates or salary. The Technology apprenticeship page returned 404.",
+    "A search summary of a job-board listing (page not readable) says the 2026 London Technology apprenticeship was posted 1 September 2025 with a deadline of about 2 November 2025, an online Superday in the last two weeks of October or early November and an in-person Assessment Evening in late November or early December. Single report; the 2026/27 cycle is not confirmed.",
+    "Other J.P. Morgan routes exist that this profile does not cover (a Glasgow software graduate apprenticeship with Strathclyde; a Bournemouth Level 4 AAT 'Global Finance and Business Management' apprenticeship on Find an Apprenticeship).",
+    "WikiJob's grade requirements for J.P. Morgan apprenticeships (three C grades) conflict with the official page (three B grades) and look outdated, so they are not used. The firm values list is not on any page we could read.",
     "Official JPM page for the 2026 cycle (applications from September 2026) not checked beyond the programme page.",
     "Assessment Evening format in detail: only a single brief candidate description; no specific exercises, timings or questions reported.",
     "Whether Pymetrics/HireVue still feature: 2025 London Finance candidates skipped them, but older prep guides and 2024 Bournemouth reports show a telephone interview.",

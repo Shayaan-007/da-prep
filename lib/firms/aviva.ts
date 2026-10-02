@@ -41,10 +41,10 @@ export const aviva: FirmProfile = {
     source: A_TECH,
   },
   timeline: {
-    rolling: true,
+    closes: "2026 Software Engineer (Norwich) listing closed on 16 March 2026 (Find an Apprenticeship); the 2027 date was not found",
     notes:
-      "Note: Direct Line Group is now part of Aviva and its careers site redirects to careers.aviva.co.uk, so Norwich tech apprenticeship pages appear under Aviva. No published opening/closing dates retrieved for the 2026-27 cycle; apprenticeship roles are advertised by role and typically close when filled.",
-    source: A_APPS,
+      "Direct Line Group is now part of Aviva and its careers site redirects to careers.aviva.co.uk, so Norwich tech apprenticeship pages appear under Aviva. The gov.uk Find an Apprenticeship listing shows the 2026 Software Engineer vacancy closed on 16 March 2026 (that page shows only the closure). Search summaries (not read) report Software Engineer and Underwriting both closing mid-March 2026 with a 7 September 2026 start, so Aviva's cycle looks like a September start with a mid-March close rather than 'closes when filled'. The 2027 window is not published where we could read it: expect it to open in autumn or winter 2026 (inferred).",
+    source: "https://www.findapprenticeship.service.gov.uk/apprenticeship/VAC2000017088",
   },
   stages: [
     {
@@ -74,7 +74,7 @@ export const aviva: FirmProfile = {
       order: 3,
       name: "Video interview",
       format:
-        "Pre-recorded HireVue-style interview: a practice question, then about 5-6 strengths-based questions with roughly 1-2 minutes per answer, 20-30 minutes overall. Live Teams interviews are possible depending on role.",
+        "Pre-recorded HireVue-style interview: a practice question, then strengths-based questions. Reports conflict and mostly describe the graduate route: about 5-6 questions at 1-2 minutes each (GraduatesFirst), or 5 questions with 2 minutes' preparation and 2 minutes to answer, about 30 minutes overall (a Glassdoor summary, search summary only). Live Teams interviews are possible depending on role. The apprenticeship format is not confirmed.",
       provider: "HireVue",
       durationMins: 30,
       tips: ["Use STAR+R (situation, task, action, result, reflection) and reference Care, Community and Confidence.", "Answer strengths questions honestly: what energises you, what you are good at."],
@@ -135,8 +135,10 @@ export const aviva: FirmProfile = {
     "Learn Aviva's values (Care, Community, Confidence, Commitment) and have one specific example for each.",
   ],
   officialLinks: [A_APPS, A_TECH, "https://careers.aviva.co.uk/apply/application-process/"],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: careers.aviva.co.uk pages still returned 403, so nothing here comes from a direct read of Aviva's own pages. The only official read was the gov.uk listing, which shows just the 16 March 2026 closure (search summaries say 15 March).",
+    "Two motivation questions (why this role at Aviva; why a career in this industry) appear in Glassdoor summaries for the graduate route, but the exact source page could not be identified, so they are not listed.",
     "Official Aviva application process and entry requirements for degree apprenticeships: careers pages returned 403 or a redirect; process details come from prep sites.",
     "Candidate-reported real questions for any stage: no Aviva apprenticeship threads found on TSR, Reddit or Glassdoor.",
     "Item counts and timings for the Situational Strengths, numerical and coding tests.",

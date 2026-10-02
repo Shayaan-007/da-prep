@@ -28,7 +28,7 @@ export const santander: FirmProfile = {
   ],
   entry: {
     ucas: "Sources disagree: 112 UCAS points from top 3 A-levels (official apprenticeship page), or 104 points (third-party listings); one aggregator cited 96 points for banking and 104 for financial crime. Check the live listing.",
-    other: "Maths and English GCSE grade 4+ (aggregator). Right to work in the UK; no sponsorship for apprenticeships (official).",
+    other: "Maths and English GCSE grade 4+ (aggregator). Right to work in the UK; no sponsorship for apprenticeships (official). Santander's apprenticeship page (read 2 Oct 2026) lists a salary of £27,500, a hybrid pattern of at least 12 office days a month, 25 days' holiday and three 12-month placements over 33 months; it gives no UCAS points or GCSE requirements. Applications go through Santander's Talent Network.",
     source: S_APPS,
   },
   timeline: {
@@ -53,7 +53,7 @@ export const santander: FirmProfile = {
       order: 2,
       name: "Online assessment games",
       format:
-        "Email link after applying (2025: 'within the next 72 hours'). Three short games; candidates call them HireVue games. One candidate called them Pymetrics-style. Reviewed by Santander before you are invited to the video stage.",
+        "Santander's application-process page says that for selected roles there is an online scenario gamification step (cognitive and conscientiousness games) combined with the video interview, and names no vendor. Candidates report an email link after applying (2025: 'within the next 72 hours') and three short games, which they call HireVue games; one called them Pymetrics-style. Reviewed by Santander before you are invited to the video stage.",
       provider: "HireVue games (candidate-reported; one candidate cites Pymetrics)",
       passMarkNotes: "Candidates report games are scored first and passing leads to the video interview; some reject emails had no detailed reason. One 2026 applicant reports 'all positive feedback' on games yet an accidental rejection that was reversed after emailing Santander.",
       tips: [
@@ -136,8 +136,10 @@ export const santander: FirmProfile = {
     "Chase the AC link if missing; ask about group-exercise format in advance.",
   ],
   officialLinks: [S_PROCESS, S_ET, S_APPS, S_BEHAVIOURS],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-read 2 Oct 2026: Santander's application-process page says the games and video interview are one combined step for selected roles (4-5 video questions, 7 days to finish, results within 7 days) followed by a phone screen of about 20 minutes, shortlisting of up to 4 weeks, then an interview or assessment day; it gives no assessment-centre format. The UCAS conflict is unresolved because the apprenticeship page lists no UCAS points.",
+    "A Glassdoor summary (likely a graduate or risk role, role unconfirmed) reports a virtual assessment centre with two 45-minute interviews and a 15-minute presentation prepared in 30 minutes from a 5-page PDF; it could not be read and is not applied here.",
     "Games provider and exact game types (HireVue games vs Pymetrics) and time per game.",
     "Verbatim video interview and assessment centre questions; no candidate posted any; Glassdoor and Reddit were not retrievable.",
     "UCAS points discrepancy (96, 104, 112) and GCSE requirement from an official source.",

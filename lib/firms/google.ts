@@ -16,6 +16,10 @@ export const google: FirmProfile = {
       level: "Level 4 (NOT a degree apprenticeship)",
       locations: ["London"],
     },
+    {
+      name: "Other Google UK apprenticeships reported in search summaries (not read): Infrastructure Technician (Level 3) and Digital Business / Digital Marketer (Level 3, about 15 months, Sales or Marketing team, October 2026 start, Makers bootcamp)",
+      level: "Level 3",
+    },
   ],
   entry: {
     predictedGrades: "GCSE Maths and English 4-9",
@@ -94,8 +98,10 @@ export const google: FirmProfile = {
     "https://www.google.com/about/careers/applications/how-we-hire/",
     G_MAKERS,
   ],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: found no evidence of a Google UK Level 6 degree apprenticeship. Google's careers pages returned only navigation text. Older read pages (a 2023 listing: STEM A-level, coding experience, closed 18 March 2023, 12-week Makers bootcamp; a 2021 listing asking for a B at A-level) are historical and requirements may have changed.",
+    "The two listed 'questions' above are generic motivation prompts attributed to a Prosple listing that could not be verified.",
     "Google's own listing/How-we-hire pages returned only navigation; no official stage-by-stage detail for the UK apprenticeship obtained.",
     "Whether Google UK runs a true Level 6 degree apprenticeship - not found; treat as unavailable unless a listing appears.",
     "OA provider/format, video interview, any 2025-26 candidate-reported questions (Glassdoor/TSR/Medium blocked with 403).",

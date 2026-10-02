@@ -27,12 +27,12 @@ export const ibm: FirmProfile = {
     ucas: "Minimum 120 UCAS points (2026 start advert)",
     predictedGrades: "GCSE Maths and English grade 4+ (2026 advert)",
     other:
-      "Right to work in England without sponsorship; must not have started/completed a similar degree or apprenticeship; STEM subject preferred not mandatory; must live within commuting distance and be office-based (if not on client site) min. 3 days/week.",
+      "Salary quoted as £27,000 or more for the 2026 London Technology advert (£26,000 for the 2025 intake). Eligible for security clearance. Right to work in England without sponsorship; must not have started/completed a similar degree or apprenticeship; STEM subject preferred not mandatory; must live within commuting distance and be office-based (if not on client site) min. 3 days/week.",
     source: IBM_2026,
   },
   timeline: {
-    opens: "Advert for Sept 2026 start gave an application deadline of 4 March 2026 (may close earlier on volume)",
-    closes: "4 March 2026 (2026 cycle, per third-party advert)",
+    opens: "Varies by pathway and posting (see closing dates)",
+    closes: "Conflicting third-party adverts: 4 March 2026 (one advert); 27 May 2026 with a 14 September 2026 start (London Technology Level 6 advert on Uptree, which may close earlier); 17 August 2025 with a 6 October 2025 start (2025 intake, which listed Hursley, London, Manchester and Warwick)",
     rolling: true,
     notes:
       "The 2026 advert says a full application form must be submitted within 48 hours of the initial quick application. Assessment centres ('exploration sessions') have historically run around February for some roles and are mandatory with fixed dates. Start date 7 Sept 2026.",
@@ -55,7 +55,7 @@ export const ibm: FirmProfile = {
       order: 2,
       name: "Online assessment",
       format:
-        "Online assessment in which IBM's careers site says may include coding, video and English-language assessments depending on role. Third-party summaries for the UK apprenticeship describe an online cognitive ability test. Exact UK apprentice content is not officially published.",
+        "May not apply to the Level 6 Digital and Technology Solutions apprenticeship: the 2026 London Technology advert text on Uptree states 'No online assessment required'. IBM's careers site says other roles may include coding, video and English-language assessments, and third-party summaries describe an online cognitive ability test for some IBM apprenticeships (for example Test Engineer or Junior Management Consultant). Check your own invitation.",
       provider: "IBM (in-house/Kenexa-family platform reported by prep sites - unverified for UK apprentices)",
       tips: [
         "Expect timed numerical/logical-style items; practise speed, as older candidate reports say to be quick at maths.",
@@ -165,8 +165,10 @@ export const ibm: FirmProfile = {
     "https://www.ibm.com/uk-en/careers/apprenticeships",
     "https://www.amazingapprenticeships.com/employers/ibm/",
   ],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: IBM's own application-process page is generic (not apprenticeship-specific) and its apprenticeships page gives no requirements, dates or stages. The 2026 and 2025 details above come from third-party adverts hosting IBM's text, which disagree on deadlines and locations by pathway.",
+    "IPAT and Cognify tests appear in generic IBM prep content and are not confirmed for apprentices.",
     "Exact UK apprentice online assessment provider, item counts and timings (prep-site claims of IPAT/Kenexa/Cognify/100 minutes are unverified for apprentices).",
     "The Student Room and Glassdoor returned HTTP 403, so 2025-26 candidate threads were only seen as search snippets; no verbatim 2025/26 questions captured.",
     "Whether a video interview is part of the current apprenticeship cycle.",

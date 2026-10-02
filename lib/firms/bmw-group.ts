@@ -27,7 +27,7 @@ export const bmwGroup: FirmProfile = {
   },
   timeline: {
     notes:
-      "Earlier cycle: AC provisionally week commencing 10 March 2025 (BMW job listing). Online assessment must be completed within 5 days of invitation; video interview window reported as five days. Reports say decisions 2-3 weeks after the AC; whole process can take up to about six months. Opening dates for 2027 not confirmed.",
+      "Earlier cycle: AC provisionally week commencing 10 March 2025 (BMW job listing). The video interview window is reported as about five days. A search extract of BMW's page says BMW UK recruits mostly October to March; 2026 Level 6 listings (search summaries, not read) were Communications at Farnborough, and Manufacturing Engineering and Electronic Engineering (the latter with Birmingham City University), starting at the end of August 2026. Reports say decisions 2-3 weeks after the AC; the whole process can take up to about six months. Opening dates for 2027 not confirmed.",
     rolling: true,
     source: RECRUIT,
   },
@@ -43,7 +43,7 @@ export const bmwGroup: FirmProfile = {
     {
       order: 2,
       name: "Online assessment",
-      format: "Online tests sent after application, to complete within 5 days. Reported to include an SJT plus numerical, verbal and abstract reasoning; a commercial source says numerical/verbal/abstract are combined in a Criteria RCAT of 51 questions in 20 minutes.",
+      format: "UNCONFIRMED FOR APPRENTICES: a search extract of BMW's own page lists three steps (online application, video interview, face-to-face assessment centre) with no separate online assessment. A commercial source describing BMW Group in general says tests may be sent after application, including an SJT plus numerical, verbal and abstract reasoning combined in a Criteria RCAT of 51 questions in 20 minutes. Treat this stage as possible, not confirmed.",
       provider: "Criteria Corp (commercial source)",
       durationMins: 20,
       tips: ["Practise timed mixed-reasoning sets (about 23 seconds per item) and do the test in one sitting."],
@@ -103,8 +103,10 @@ export const bmwGroup: FirmProfile = {
     "Notice periods are short (7-10 days) so pre-build a presentation template.",
   ],
   officialLinks: [RECRUIT, "https://www.bmwgroup.jobs/gb/en/apprentices.html", CULTURE],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: BMW's recruitment-process page returned 404 again. The process comes from a search extract of that page, which lists three steps and no online assessment, so the online assessment stage above is unconfirmed for apprentices.",
+    "Assessment-centre activities seen in Glassdoor summaries (a paper-building team task, planning a car launch, a 15-minute presentation on electric versus combustion cars) could not be tied to a readable apprentice review and are not listed.",
     "BMW page could not be fetched directly (404/timeouts); the three-step process and five-day windows come from search extracts of the official page and a BMW job listing (" + BRIGHT + ").",
     "OA provider and item counts are from a commercial source describing BMW Group in general.",
     "No candidate-reported interview questions or AC details found for UK degree apprentices; Student Room BMW threads were not readable.",

@@ -40,14 +40,14 @@ export const hsbc: FirmProfile = {
   ],
   entry: {
     other:
-      "Varies by programme; A-level/UCAS requirements not retrievable from the official page. Applicants use the talent community and the careers site. Salary reported for 2025: just under GBP 26k outside London, about GBP 28k in London (single candidate, unverified).",
+      "HSBC's schools and apprenticeships page (read 2 Oct 2026): degree apprenticeships last about 3 years with no tuition fees; you must be 16 or older, a UK resident and not in full-time education; locations listed are Sheffield (tech), Birmingham (UK head office), Leeds, Manchester, Hamilton, Chester and London; academic requirements vary by programme. A search summary of a Commercial Banking listing says five GCSEs including Maths and English at grade 4 and three A-levels at BCC or higher (unread). Applicants use the talent community and the careers site. Salary reported for 2025: just under GBP 26k outside London, about GBP 28k in London (single candidate, unverified).",
     source: TSR_P29,
   },
   timeline: {
     opens: "2025 cycle opened October 2024 (several routes, Asset Management and Private Banking closing within weeks). Expect roughly October for the next cycle; HSBC posts to its talent community first.",
     rolling: true,
     notes:
-      "HSBC reviews rolling and may close before the printed deadline once places fill (aggregator claim). One applicant received the Simulate feedback report the day after taking the assessment. Start dates and places can change, so keep a backup option.",
+      "HSBC reviews rolling and may close before the printed deadline once places fill (aggregator claim). One applicant received the Simulate feedback report the day after taking the assessment. Reported dates: the 2024 cycle degree apprenticeships closed 6 November 2024, and a Commercial Banking Manchester listing closed 6 November 2025 (search summaries of Find an Apprenticeship; pages not read). One search summary suggests 2026/27 applications for Relationship Management (Commercial Banking) may open 28 September and close 1 November 2026 with a 1 October 2027 start, but this could not be confirmed on hsbc.com, so check the live page.",
     source: TSR_P1,
   },
   stages: [
@@ -165,11 +165,13 @@ export const hsbc: FirmProfile = {
     "For Digital Business Services, drill Python/pandas, SQL and Java on Codility-style tasks with a 100-160 minute limit.",
     "Prepare division-specific answers (Commercial Banking vs Private Banking vs Asset Management); candidates say questions are generic so specificity differentiates you.",
     "Map your STAR stories to 'succeed together' and 'take responsibility', the values the situational items are scored against.",
-    "Keep a backup application: one thread reported HSBC withdrawing some 2025 starts.",
   ],
   officialLinks: [H_GUIDE, H_PROGS, "https://www.hsbc.com/careers/students-and-graduates/student-opportunities/uk-degree-apprenticeship"],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: a claim that HSBC cancelled some 2025 starts was found only in a search summary of forum threads (not read) and no official or news source supports it, so it has been removed.",
+    "A search summary says Commercial Banking and retail routes are a BSc (Hons) Applied Retail and Commercial Banking via Exeter, which differs from the 'LIBF Financial Services Management' degree above: the degree provider needs checking on the live advert.",
+    "HSBC's application guide is for students and graduates generally, so its 90-minute assessment and 3-hour assessment centre may not apply to apprentices.",
     "Official HSBC page stating DA entry requirements (UCAS points / A-level subjects) could not be retrieved.",
     "Official HSBC values page could not be read; values are from prep-site and aggregator descriptions (JobTestPrep, Quizlet-style pages) and match HSBC's publicly known four values.",
     "Item-level detail of the Simulate assessment comes from prep sites, not HSBC or candidate screenshots.",

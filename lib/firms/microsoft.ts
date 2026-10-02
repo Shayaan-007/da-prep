@@ -14,7 +14,7 @@ export const microsoft: FirmProfile = {
       name: "Future Forward Apprentice Programme - Digital & Technology Solutions Professional (Data / technical tracks), 3-year employment contract",
       level: "Level 6",
       degree: "Level 6 Digital & Technology Solutions Professional (degree apprenticeship)",
-      locations: ["London (West London / Paddington)", "Reading"],
+      locations: ["London (West London / Paddington)", "Reading", "Cheltenham (a 2026 Level 6 Cyber Security listing with Gloucestershire College, 4 years, September 2026 start; listing no longer available)"],
     },
     {
       name: "Other technical and non-technical apprenticeships (e.g. Customer Technical Solutions, Xbox Studios Quality Engineer, sales, corporate)",
@@ -24,7 +24,7 @@ export const microsoft: FirmProfile = {
   ],
   entry: {
     other:
-      "Eligibility is screened through application questions, with no CV screening. Specific UCAS/grade requirements not verified for the current cycle.",
+      "Eligibility is screened through application questions, with no CV screening. From a single 2026 Level 6 Cyber Security listing (third-party, no longer available, so check the live advert): no existing degree, Level 3 qualification by 31 August 2026, five GCSEs including Maths and English at grades 9-4, right to work in the UK, and export-control verification. Candidates may apply to only one Microsoft opportunity (search summary).",
     source: MS_GMFJ,
   },
   timeline: {
@@ -103,8 +103,10 @@ export const microsoft: FirmProfile = {
     MS_STORY,
     MS_GMFJ,
   ],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: Microsoft's own apprenticeship pages could not be read (certificate error); the process comes from Microsoft's content hosted by a partner (three stages, matching this profile) and the UK stories page (about 125 apprentices; providers QA, Corndel, Firebrand, BPP, TDM and Multiverse). Entry requirements above are from a single third-party listing.",
+    "A Glassdoor summary reports 'what about Microsoft fascinated you' for a London apprentice interview in February 2026, but the page could not be read, so no questions are listed.",
     "Microsoft's own candidate page could not be fetched (certificate error); process taken from its GetMyFirstJob profile.",
     "Video interview question count/timing and real questions; TSR threads returned 403, so only search snippets were available.",
     "Exact UCAS/grade requirements, current (Sept 2026/2027) degree programme dates, and locations for Level 6 roles.",
