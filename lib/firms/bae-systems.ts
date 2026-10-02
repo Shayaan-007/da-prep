@@ -1,6 +1,6 @@
 import type { FirmProfile } from "./types";
 
-const DA_PAGE = "https://www.baesystems.com/en/careers/careers-in-the-uk/apprenticeships/degree";
+const DA_PAGE = "https://careers.baesystems.com/locations/uk/apprentices/degree";
 const HA_PAGE = "https://www.baesystems.com/en/careers/careers-in-the-uk/apprenticeships/higher";
 const VALUES_PAGE = "https://careers.baesystems.com/life-at-bae-systems/our-values";
 const GD_DA = "https://www.glassdoor.co.uk/Interview/BAE-Systems-Degree-Apprentice-Interview-Questions-EI_IE3102.0,11_KO12,29.htm";
@@ -29,7 +29,7 @@ export const baeSystems: FirmProfile = {
   },
   timeline: {
     opens: "January 2027 (2027 intake)",
-    closes: "Main window starts at the beginning of January and runs for 6 weeks (DA page). An older FAQ line on the same page states November to end of February; follow the live advert.",
+    closes: "Main window starts at the beginning of January and runs for about 6 weeks, with additional hiring through February (BAE degree apprenticeship page, re-read 2 Oct 2026). Follow the live advert.",
     notes:
       "2026 apprenticeship roles closed; reopening January 2027. Candidate reports for the 2026 cycle describe video/games then a face-to-face interview. BAE says apply early.",
     source: DA_PAGE,
@@ -51,7 +51,7 @@ export const baeSystems: FirmProfile = {
       order: 2,
       name: "Virtual assessment (gamified + on-demand video)",
       format:
-        "Sent after a successful application. BAE says the virtual assessment includes gamified challenges and video questions. Candidate reports: HireVue platform, a maths-style game, a puzzle game and other cognitive/behavioural games, then recorded questions.",
+        "Sent after a successful application. BAE says the virtual assessment includes gamified challenges and video questions. Candidate reports: HireVue platform, a maths-style game, a puzzle game and other cognitive/behavioural games, then recorded questions. A 2026 Glassdoor summary (single report, read via search summary) lists 3-5 past-experience video questions with retakes allowed and three games: shape matching, a maths game and an image-choice 'which are you more like?' game. Video preparation time conflicts across reports (30 seconds vs 3 minutes).",
       provider: "HireVue (reported); SHL also reported for some reasoning tests",
       tips: [
         "Complete in a quiet space on a laptop with stable Wi-Fi and do the practice questions first.",
@@ -175,8 +175,10 @@ export const baeSystems: FirmProfile = {
     "Use STAR+R (Result plus Reflection) as recommended by prep guides.",
   ],
   officialLinks: [DA_PAGE, HA_PAGE, VALUES_PAGE, "https://careers.baesystems.com/join-us/faqs"],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "BAE's old careers URLs now redirect to careers.baesystems.com; the degree page link was updated, but the higher apprenticeship link (HA_PAGE) was not re-checked.",
+    "Game names, video timings, number of questions and whether there is a group task come only from single reports.",
     "Official sources give only a three-line process; OA provider, game titles, item counts and timings are not published by BAE. HireVue/SHL claims are from prep sites and Student Room summaries.",
     "Conflicting reports on video interview prep time (30 s vs 3 min) and retake allowance; not resolved.",
     "No verified group exercise or presentation for degree apprenticeships.",

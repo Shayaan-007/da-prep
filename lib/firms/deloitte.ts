@@ -4,6 +4,7 @@ import type { FirmProfile } from "./types";
 const D_ASSESS = "https://www.deloitte.com/uk/en/careers/early-careers/early-careers-assessment.html";
 const D_TJ = "https://targetjobs.co.uk/careers-advice/accountancy-banking-and-finance/your-guide-deloitte-application-process-start-finish";
 const D_PROG = "https://www.deloitte.com/uk/en/careers/early-careers/early-careers-programmes.html";
+const D_GD_BS = "https://static.glassdoor.fr/Interview/Deloitte-BrightStart-Apprentice-Interview-Questions-EI_IE2763.0,8_KO9,31_IP2.htm";
 
 export const deloitte: FirmProfile = {
   slug: "deloitte",
@@ -46,7 +47,7 @@ export const deloitte: FirmProfile = {
       order: 2,
       name: "OneStop Assessment (apprenticeships)",
       format:
-        "For entry-level apprenticeships the immersive assessment and job simulation are merged into a single online assessment: workplace scenarios ranked by preference (behavioural) plus numerical and verbal reasoning. Feedback is strengths-based rather than pass/fail, within about four weeks. Entry-level apprenticeship process ends here. (BrightStart is reported to follow the standard 5-step path below.)",
+        "For entry-level apprenticeships the immersive assessment and job simulation are merged into a single online assessment: workplace scenarios ranked by preference (behavioural) plus numerical and verbal reasoning. Feedback is strengths-based rather than pass/fail, within about four weeks. Entry-level apprenticeship process ends here. BrightStart follows the standard path below; Deloitte's programmes page lists its final stage as in person.",
       provider: "Deloitte Candidate Zone (deloitte.preparationplus.com); question style reported as Cappfinity-like",
       passMarkNotes: "Not published.",
       tips: ["Use the free Candidate Zone practice; Deloitte says to go with your gut and not second-guess.", "Read the Integrity & AI guidance first; unofficial third-party coaching sites are not endorsed."],
@@ -56,7 +57,7 @@ export const deloitte: FirmProfile = {
     {
       order: 3,
       name: "Immersive online assessment (standard route)",
-      format: "About 30 min in one sitting: situational judgement ranked against Deloitte values plus cognitive numerical/verbal reasoning and game-style tasks (TargetJobs). Results within ~2 weeks.",
+      format: "Deloitte: behavioural part ranking the most and least likely actions in workplace scenarios, plus a numerical and verbal cognitive part; some sections are timed with no overall limit; decision within 4 weeks. TargetJobs (single report) adds ~30 min in one sitting and game-style tasks.",
       provider: "Deloitte (Candidate Zone platform)",
       durationMins: 30,
       tips: ["Learn the five Deloitte values and rank options against them."],
@@ -66,7 +67,7 @@ export const deloitte: FirmProfile = {
     {
       order: 4,
       name: "Job simulation (standard route)",
-      format: "About 40 min: video-based with multiple-choice reasoning, video-recorded answers of 30s to 2 min, written responses and an email task (TargetJobs). Wikijob (graduate page) says ~45 min and 18 questions. Results typically within 3-4 weeks.",
+      format: "Deloitte: ranking, selection, written and video responses, now including AI-related scenarios; results within 4 weeks. Timings are not published: TargetJobs (single report) says ~40 min with video answers of 30s to 2 min and an email task; Wikijob (graduate page) says ~45 min and 18 questions.",
       durationMins: 40,
       tips: ["Practise short 30-120 second recorded answers.", "Write a clear, brief email under time pressure."],
       source: D_TJ,
@@ -76,14 +77,14 @@ export const deloitte: FirmProfile = {
       order: 5,
       name: "Final stage assessment",
       format:
-        "About 90 min: (1) topic discussion, ~30 min, on a topic chosen from four options sent in advance (prepared research, two-way discussion with assessor); (2) skills and motivation interview, ~50 min (competency, motivation, scenario, topical questions). BrightStart candidates attend in person at the office applied to. A 2025 TSR report says some offices ran the topic discussion as a group task - format varies by office.",
+        "About 90 min (Deloitte): (1) topic discussion, 30-40 min, on a topic chosen from four options sent in advance (preparation required; two-way discussion with assessor); (2) skills and motivation interview, ~50 min (competency, motivation, scenario, topical questions). Graduates, entry-level apprentices and BrightStart attend in person at the office applied to. A 2025 TSR report says some offices ran the topic discussion as a group task, and a Glassdoor BrightStart summary mentions ~3 days to prepare a presentation topic plus a group assessment: format varies by office.",
       durationMins: 90,
       tips: [
         "Research your chosen topic from several angles and prepare questions back to the assessor.",
         "Dress business formal, even if virtual.",
         "Know the role: candidates report being asked what audit practice involves for audit apprenticeships.",
       ],
-      source: D_TJ,
+      source: D_ASSESS,
       confidence: "official",
     },
     {
@@ -130,6 +131,10 @@ export const deloitte: FirmProfile = {
     { stage: "Final stage assessment", question: "Give me an example of a time you have been creative.", type: "competency", source: "https://www.wikijob.co.uk/interview-advice/company-interview-questions/deloitte", confidence: "single-report" },
     { stage: "Final stage assessment", question: "What does successful collaboration mean to you?", type: "competency", source: "https://www.wikijob.co.uk/interview-advice/company-interview-questions/deloitte", confidence: "single-report" },
     { stage: "Final stage assessment", question: "Tell me about a time you were challenged and how you overcame it.", type: "competency", source: "https://www.wikijob.co.uk/interview-advice/company-interview-questions/deloitte", confidence: "single-report" },
+    { stage: "Final stage assessment", question: "Why Deloitte, and what do you know about Deloitte? (BrightStart)", type: "motivation", source: D_GD_BS, confidence: "single-report" },
+    { stage: "Final stage assessment", question: "Tell me about a time you worked successfully in a team. (BrightStart)", type: "competency", source: D_GD_BS, confidence: "single-report" },
+    { stage: "Final stage assessment", question: "Tell me about a time you came up with a creative idea. (BrightStart)", type: "competency", source: D_GD_BS, confidence: "single-report" },
+    { stage: "Final stage assessment", question: "Tell me about a setback you experienced on a project. (BrightStart)", type: "competency", source: D_GD_BS, confidence: "single-report" },
     { stage: "Final stage assessment", question: "Reported in BrightStart threads: managing tasks; a time you faced an unexpected problem; role-specific knowledge (e.g. what audit involves).", type: "situational", source: "https://www.thestudentroom.co.uk/showthread.php?t=7649277", confidence: "single-report" },
   ],
   specificAdvice: [
@@ -140,9 +145,9 @@ export const deloitte: FirmProfile = {
     "Questions come from wikijob (graduate page): treat them as indicative of style, not guaranteed apprentice content.",
   ],
   officialLinks: [D_ASSESS, D_PROG, "https://apply.deloitte.co.uk/UKEarlyCareers", "https://www.deloitte.com/uk/en/careers/early-careers.html"],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
-    "Deloitte's own pages do not detail BrightStart (degree-level) vs entry-level process differences; BrightStart assumed to follow the 5-step standard path.",
+    "Deloitte's pages confirm BrightStart follows the 5-step path with an in-person final stage; the Glassdoor BrightStart questions were read from a search summary, not the page itself.",
     "BrightStart university partners, degree titles, locations and 2026/27 dates not verified.",
     "OneStop item counts/timings not published; Stage 3/4 details are from TargetJobs/wikijob (graduate-oriented, undated).",
     "TSR, Glassdoor and Reddit blocked; no first-hand 2025-26 apprentice write-ups read directly.",

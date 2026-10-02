@@ -13,7 +13,7 @@ export const lloyds: FirmProfile = {
     {
       name: "Degree apprenticeships (Level 6-7): Finance (chartered accountant route), Technology Engineering, Risk/Audit/Data, Cyber and Information Communications, Customer Services & HR",
       level: "Level 6-7 degree/higher apprenticeships, minimum salary GBP 26,500 from day one",
-      locations: ["Eight UK locations (not itemised on the page)"],
+      locations: ["Birmingham", "Bristol", "Chester", "Edinburgh", "Halifax", "Leeds", "London", "Manchester"],
     },
   ],
   entry: {
@@ -21,8 +21,8 @@ export const lloyds: FirmProfile = {
     source: L_AA,
   },
   timeline: {
-    opens: "Degree apprenticeships reported (prep sites) as opening autumn 2026",
-    notes: "If a programme is closed you can register interest. Exact dates not verified.",
+    opens: "Lloyds' apprenticeships page says opportunities open for applications on 3 November (the year is not stated; presumably 2026)",
+    notes: "If a programme is closed you can register interest. Closing dates not verified.",
     source: L_PROC,
   },
   stages: [
@@ -47,7 +47,7 @@ export const lloyds: FirmProfile = {
       order: 3,
       name: "Final interview or assessment day",
       format:
-        "Varies by apprenticeship and may be digital (events platform) or in person. TSR 2025 reports: group challenge, structured behavioural interview (SBI) and an individual task, about 9:00 to 14:30. Wikijob (graduate page) says the graduate assessment day has case studies, group exercises and interviews.",
+        "Varies by apprenticeship and may be digital (events platform) or in person. TSR 2025 reports: group challenge, structured behavioural interview (SBI) and an individual task, about 9:00 to 14:30. Wikijob (graduate page) says the graduate assessment day has case studies, group exercises and interviews. Other single-report summaries conflict: higher apprentices a 1-hour strengths-based interview plus four 10-minute micro-exercises, a group exercise and a 15-minute VR exercise; degree apprentices shorter exercises, a longer one-to-one interview, a numerical exercise and a group exercise (groups of 4 to 6 presenting a resolution). Treat the contents as unconfirmed.",
       durationMins: 330,
       tips: ["Prepare to discuss genuine interest in the industry and how you show Lloyds' values, e.g. via volunteering or community work.", "Be ready for both individual and group exercises."],
       source: L_PROC,
@@ -83,8 +83,10 @@ export const lloyds: FirmProfile = {
     "Research the group's brands (Halifax, Bank of Scotland, Scottish Widows) and its finance, tech and risk areas.",
   ],
   officialLinks: [L_PROC, "https://www.lloydsbankinggrouptalent.com/our-opportunities/apprenticeships/", "https://lbg.wd3.myworkdayjobs.com/LBG_HigherApprenticeCareers"],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Reported interview questions are strengths-based (what you are like at your best, what you enjoy, what a great day looks like, how you will put the customer first) but came from search summaries with no readable source URL, so they are not listed.",
+    "Assessment-centre contents conflict across sources (see the final stage) and none is official.",
     "Assessment provider and test timings/item counts for apprentices not published.",
     "Degree partners (universities), entry requirements (UCAS/GCSE) and closing dates not verified.",
     "Candidate-reported real questions for degree apprenticeships largely missing (TSR threads 403; only one wikijob graduate item).",

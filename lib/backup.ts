@@ -1,6 +1,6 @@
 // Export and import of everything the app stores in the browser.
 
-export const COLLECTIONS = ["applications", "stories", "sessions", "practice"] as const;
+export const COLLECTIONS = ["applications", "stories", "sessions", "practice", "mocks"] as const;
 const VERSION = 1;
 
 type Backup = {

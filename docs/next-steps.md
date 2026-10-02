@@ -1,0 +1,76 @@
+# Next steps and handover
+
+Written 2 October 2026. Read `README.md` for what the app is, `docs/launch-checklist.md` for launch status, and `AGENTS.md` before touching any Next.js code (this is Next 16, and its docs live in `node_modules/next/dist/docs/`).
+
+## Where things stand
+
+Built and tested: the app and its AI features, accounts and cloud sync (Supabase), limits and payments code (Stripe), security hardening, privacy notice and terms, 32 firm profiles, ten assessment replicas (`/tests`) and eight firm mock processes (`/mock`). All 284 tests pass and the production build works.
+
+Not yet done, in priority order:
+
+### 1. Launch blockers that need an account, a key or a person
+See `docs/launch-checklist.md` ("Needs you"). In short:
+1. Email provider for Supabase magic links (the built-in one allows 2 emails an hour for the whole project). Resend is being set up.
+2. Supabase auth settings: Site URL, redirect URLs for the production domain.
+3. Stripe: product, price, webhook, customer portal, then one test-mode run (checkout, cancel, refund, account deletion with a live subscription). The Stripe code is unit tested but has never run against Stripe.
+4. Upstash Redis (rate limits shared across serverless instances), Vercel project and domain, `NEXT_PUBLIC_OPERATOR_NAME` and `NEXT_PUBLIC_CONTACT_EMAIL` for the legal pages.
+5. **Lawyer review of `/privacy` and `/terms`**, ICO registration, and a short DPIA (users are under 18). Do not launch publicly without this.
+6. Revoke any Supabase access token used during setup.
+
+### 2. Content (the biggest quality lever)
+- **Wave 2 firms.** The 24 other profiles in `lib/firms/` have not had the re-verification the wave-1 eight got. Weakest first: Aviva, Cisco, Google (may not run a UK degree apprenticeship), JP Morgan, IBM, HSBC. Method: official page first, record source and confidence, never invent.
+- **Reported past questions are thin.** Several firms have none (BMW, Cisco, Experian, Microsoft, Santander, Google). Glassdoor, TheStudentRoom and Reddit return 403 to plain fetches: use browser automation or a person with a browser. Only record a question if you have a real source URL; paraphrase, tag confidence.
+- **Blocked sources to retry:** Arctic Shores and HireVue official pages, the SHL OPQ fact sheet, SHL Verify Verbal, Civil Service Fast Stream tests, Talent Q Dimensions, pwc.co.uk.
+- **Per-claim freshness.** Every profile carries one bulk `lastVerified` date. Add per-claim dates and structured fields (salary, deadline, status) in `lib/firms/types.ts`, and flag past-cycle dates automatically. Re-check each profile before each application cycle.
+- Finish the "still to do" list in `docs/research/01-selection-process.md`.
+
+### 3. Replicas and mock processes
+- **More firms and tests.** Add mock processes for the other firms (see "How to add a firm mock" below). Missing replica formats: gamified tasks (Arctic Shores, Pymetrics, BAE), Talent Q and CCAT-style speed tests, full-length scales tests (the real ones are 37 to 49 items; ours are 18), group-exercise simulation, in-tray.
+- **Item banks are small.** Adaptive pools are 28 to 32 items; real tests draw from far larger pools. Grow banks by adding generator templates and hand-written items, and keep the independent-recompute tests passing.
+- **Voice answers in the mock stages** have not been exercised in an automated browser test (no microphone). Test manually on Chrome and Safari.
+- **Interview prompts** in `lib/interview.ts` still use fixed stages. Mock stages score through `/api/mock/score`; consider unifying.
+- **Free allowance for mocks:** a mock currently counts as one interview (2 a month on Free). Revisit once there is usage data.
+
+### 4. Engineering
+- Add Sentry (or similar) and structured logging; `/api/health` exists.
+- Add real browser tests (Playwright) for the runner, the mock flow and sign-in. Today these are verified by hand.
+- Full accessibility audit (only the practice tests have had a pass, plus the new components were built with labels and live regions but not audited).
+- The CSP allows inline scripts; moving to a per-request nonce makes every page dynamic.
+- Free-interview allowance is counted when an interview starts and can be inflated by a client faking history; the daily budget bounds the cost.
+- `docs/launch-checklist.md` "Known limitations" lists more.
+
+## How to work in this repo
+
+```
+npm install
+npm run dev        # http://localhost:3000
+npm test           # vitest, 284 tests
+npx tsc --noEmit && npm run lint && npm run build
+```
+Copy `.env.example` to `.env.local`. `MOCK_AI=1` serves canned AI output so every screen works offline (ignored in production). `.env.local` is gitignored: never commit keys.
+
+**Rules that matter**
+- Replicas use **original items**. Never copy a vendor's or employer's real questions.
+- Every firm fact needs a **source URL and a confidence level** (`official`, `multiple-candidate-reports`, `single-report`, `inferred`). Say "unverified" in `gaps` rather than guess.
+- Text that goes to a model must pass through `esc()` in `lib/prompt.ts`; free text from users goes through `screenText()` in `lib/server/safety.ts`; every AI route starts with `guardAi()` in `lib/server/guard.ts`.
+- `lib/server/` may use the Supabase service-role key. Never import it from client code.
+- Database changes are SQL files in `supabase/migrations/`, written to be safe to re-run. A new `user_data` collection needs a migration widening `user_data_key_check`, an entry in `COLLECTIONS` in `lib/backup.ts`, and care with the 1 MB per-key cap.
+
+**How to add a firm mock** (`lib/mockprocess/definitions.ts`)
+1. Make sure the firm profile in `lib/firms/<firm>.ts` is researched and its stages are accurate.
+2. Add a `MockProcess`: `stageOrder` links each stage to a real `FirmStage.order`; reuse replica tests by `testId`; use `reported()` for sourced questions plus original prompts; use `NOT_REPLICATED()` for games and group exercises; put every uncertainty in `note`.
+3. Run `npm test`: `tests/mockprocess.test.ts` checks the links, ordering and that no research annotation leaks into a prompt.
+
+**How to add a replica test** (`lib/assess/`)
+1. Items: add to a bank in `lib/assess/banks/` (generated items must expose an independent check; see `tests/banks-*.test.ts`).
+2. Register the test in `lib/assess/tests.ts` with accurate counts and timings, `formatNotes` that say what is confirmed and what is approximated, and `sources`.
+3. `tests/assess-catalog.test.ts` validates every test and that a perfect candidate scores full marks.
+
+**Gotchas**
+- Next 16 differences: the error boundary prop is `retry`, not `reset`; the middleware file is `proxy`. Check the bundled docs.
+- On Windows, git prints "LF will be replaced by CRLF" warnings. They are harmless.
+- When automating a browser tab that is in the background, Chrome throttles timers to about one second; drive React with microtask yields instead of `setTimeout`.
+- Test data created in your own browser (localStorage keys `da-prep:*`) shows up in your Progress page: clear it after manual testing.
+
+## Where the research lives
+`docs/research/01-selection-process.md` (interim, original), `02-assessment-formats.md` (vendor formats, sourced), `03-firm-processes-wave1.md` (the eight firms). Each profile's `gaps` field lists what could not be verified.

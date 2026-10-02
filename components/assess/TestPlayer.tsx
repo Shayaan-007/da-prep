@@ -1,0 +1,157 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Runner from "@/components/assess/Runner";
+import StimulusView from "@/components/assess/StimulusView";
+import { describeKey, describeResponse } from "@/lib/assess/describe";
+import { percent, scoreItem, traitProfile } from "@/lib/assess/score";
+import type { Test, TestResult } from "@/lib/assess/types";
+import { useCollection } from "@/lib/store";
+import type { PracticeRecord } from "@/lib/types";
+
+const mmss = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+function Results({ test, result, onRetry }: { test: Test; result: TestResult; onRetry: () => void }) {
+  const pct = percent(result.points, result.max);
+  const profile = test.kind === "trait" ? traitProfile(test, result) : [];
+  const missed = test.sections.flatMap((s) =>
+    s.items
+      .filter((i) => i.id in result.responses)
+      .map((item) => ({ item, section: s, score: scoreItem(item, result.responses[item.id]) }))
+      .filter((x) => x.score.max > 0 && x.score.points < x.score.max),
+  );
+
+  return (
+    <div className="mx-auto max-w-3xl space-y-6">
+      <div className="space-y-2 text-center">
+        <h1 className="page-title">{test.name}</h1>
+        {pct !== null ? (
+          <>
+            <p className="text-5xl font-bold tabular-nums">
+              {result.points % 1 === 0 ? result.points : result.points.toFixed(1)} / {result.max}
+            </p>
+            <p className="lead">{pct}% correct</p>
+          </>
+        ) : (
+          <p className="lead">Your work-style profile</p>
+        )}
+      </div>
+
+      {pct !== null && (
+        <>
+          <ul className="space-y-1 text-sm">
+            {result.sections.map((s) => (
+              <li key={s.sectionId} className="flex justify-between border-b border-line py-1.5">
+                <span>
+                  {test.sections.find((x) => x.id === s.sectionId)?.title}: {s.answered} of {s.total} answered
+                </span>
+                <span className="tabular-nums text-muted">{mmss(s.secondsUsed)} used</span>
+              </li>
+            ))}
+          </ul>
+          <p className="callout bg-brand-50 text-sm">
+            Real employers compare your score with other candidates (a norm group) and set their own pass marks, and
+            neither is published. We can show how many you got right, but not whether it would pass.
+          </p>
+        </>
+      )}
+
+      {profile.length > 0 && (
+        <section className="space-y-3">
+          <ul className="space-y-3">
+            {profile.map((p) => (
+              <li key={p.trait}>
+                <div className="flex justify-between text-sm font-medium">
+                  <span>{p.trait}</span>
+                  <span className="tabular-nums">{p.percent}</span>
+                </div>
+                <div role="meter" aria-label={p.trait} aria-valuemin={0} aria-valuemax={100} aria-valuenow={p.percent} className="h-2.5 rounded-full bg-brand-50">
+                  <div className="h-full rounded-full" style={{ width: `${p.percent}%`, background: "#2563eb" }} />
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="callout bg-brand-50 text-sm">
+            There are no right or wrong answers, and this is a short practice questionnaire, not a validated personality
+            assessment. Use it to think about which strengths you can back up with examples. Employers weigh these
+            questionnaires differently, and honest answers matter more than a particular profile.
+          </p>
+        </section>
+      )}
+
+      {missed.length > 0 && (
+        <section className="space-y-3">
+          <h2 className="font-bold">Review: {missed.length} to revisit</h2>
+          <ul className="space-y-3">
+            {missed.map(({ item, section, score }) => {
+              const stim = item.stimulus ? section.stimuli?.[item.stimulus] : undefined;
+              return (
+                <li key={item.id} className="card space-y-2 p-4 text-sm">
+                  {stim && <StimulusView stimulus={stim} />}
+                  <p className="whitespace-pre-line font-medium">{item.prompt}</p>
+                  <p className="whitespace-pre-line text-coral-600">
+                    <strong>Your answer:</strong> {describeResponse(item, result.responses[item.id])}
+                  </p>
+                  <p className="whitespace-pre-line text-mint-600">
+                    <strong>Best answer:</strong> {describeKey(item)}
+                  </p>
+                  {score.max > 1 && (
+                    <p className="text-muted">
+                      You scored {score.points} of {score.max} on this item.
+                    </p>
+                  )}
+                  <p className="callout bg-brand-50">{item.explanation}</p>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+      {pct !== null && missed.length === 0 && (
+        <p className="callout bg-mint-50 text-center font-medium text-mint-600">Full marks on every question you reached.</p>
+      )}
+
+      <div className="flex justify-center gap-3">
+        <button className="btn btn-primary" onClick={onRetry}>
+          Try again
+        </button>
+        <Link href="/tests" className="btn btn-secondary">
+          All tests
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+export default function TestPlayer({ test }: { test: Test }) {
+  const [result, setResult] = useState<TestResult | null>(null);
+  const [run, setRun] = useState(0);
+  const practice = useCollection<PracticeRecord>("practice");
+  const router = useRouter();
+
+  function done(r: TestResult) {
+    setResult(r);
+    if (test.kind === "ability") {
+      practice.update((p) => [
+        { id: crypto.randomUUID(), date: r.finishedAt, category: test.name, score: Math.round(r.points * 10) / 10, total: r.max },
+        ...p,
+      ]);
+    }
+  }
+
+  if (result) {
+    return (
+      <Results
+        test={test}
+        result={result}
+        onRetry={() => {
+          setResult(null);
+          setRun((n) => n + 1);
+        }}
+      />
+    );
+  }
+  return <Runner key={run} test={test} onComplete={done} onExit={() => router.push("/tests")} />;
+}

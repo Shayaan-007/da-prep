@@ -37,6 +37,22 @@ Status as of 2 October 2026, on branch `prelaunch-hardening`.
 - Several firms have little or no official sourcing (Aviva, Cisco, Google, JP Morgan, IBM, HSBC); see each profile's `gaps`. Google may not run a UK degree apprenticeship.
 - `docs/research/01-selection-process.md` is marked interim; its "still to do" list is open.
 
+## Assessment replicas and mock processes (branch `assessment-replicas`)
+
+Built and verified in a browser: ten replica tests (timers, adaptive serving, no-back, calculator, resume after reload, forced expiry, ranking and most/least formats, trait profile) and the Barclays mock end to end with real AI scoring, resume from a new tab, and a production build. Unit tests recompute every generated answer independently.
+
+Apply before this goes live: `supabase/migrations/20261002010000_mocks_key.sql` (already applied to the development project).
+
+What the replicas are not:
+- **Not the vendors' real tests.** They copy the published format (counts, timing, response style), not questions, norms, difficulty calibration or adaptive algorithms. Every replica is labelled approximate and lists what is unconfirmed.
+- **Interactive SHL responses** (building charts, filling spreadsheets) are replaced by multiple choice on tables and charts.
+- **Games** (Arctic Shores, Pymetrics, BAE) and **group exercises** are not simulated; those stages appear as information with a note.
+- **Voice answers in the mock stages** use the existing recorder and transcription, but were not exercised in automated browser tests (no microphone). Typed answers were.
+- **PwC is the least certain mock**: its stage list, video format and assessment-centre length conflict across sources.
+- **Reported questions** are paraphrased candidate reports from single sources; several firms have none yet (see each profile's `gaps`).
+
+Costs and limits: a mock process counts as one interview against the free monthly allowance (charged when its first question stage is scored), and every scoring call also counts against the daily AI budget.
+
 ## Known limitations
 
 - The free-interview allowance is counted when an interview starts; a client that fakes history can start extra questions, but is still bounded by the daily budget.
