@@ -49,4 +49,5 @@ export const PUBLIC_PATHS = [
   "/pricing",
   "/privacy",
   "/terms",
+  "/accessibility",
 ];

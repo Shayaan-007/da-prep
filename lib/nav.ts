@@ -43,4 +43,5 @@ export const LEGAL_LINKS: NavLink[] = [
   { href: "/pricing", label: "Plans" },
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
+  { href: "/accessibility", label: "Accessibility" },
 ];

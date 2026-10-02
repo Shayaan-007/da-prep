@@ -30,5 +30,4 @@ export const checkoutInput = z.object({
   acceptTerms: z.literal(true),
 });
 
-export const OPERATOR = process.env.NEXT_PUBLIC_OPERATOR_NAME || "DA Prep";
-export const CONTACT = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "";
+export { CONTACT_EMAIL as CONTACT, OPERATOR_NAME as OPERATOR } from "@/lib/legal";

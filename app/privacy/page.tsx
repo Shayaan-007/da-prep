@@ -21,6 +21,20 @@ export default function Privacy() {
       <h1 className="page-title">Privacy notice</h1>
       <p className="text-muted">Last updated {LEGAL_UPDATED}.</p>
 
+      <section aria-labelledby="short-version" className="callout space-y-2 bg-brand-50">
+        <h2 id="short-version" className="text-base font-semibold">
+          The short version
+        </h2>
+        <ul className="list-disc space-y-1 pl-5">
+          <li>You don&apos;t need an account. Without one, everything you save stays on your device and we never see it.</li>
+          <li>If you make an account (16 and over), we keep your email and your saved work so it syncs. You can delete it all yourself, any time.</li>
+          <li>What you type or say into the AI tools is sent to OpenAI to make questions and feedback. We don&apos;t keep it. Please leave out names, phone numbers and addresses.</li>
+          <li>No adverts, no tracking, no analytics, and we never share your data with employers.</li>
+          <li>The feedback is written by AI, so it can be wrong. You decide what to use.</li>
+        </ul>
+        <p>The full details are below.</p>
+      </section>
+
       <h2 className="text-base font-semibold">Who we are</h2>
       <p>
         {OPERATOR_NAME} runs DA Prep and is the controller of your personal data under UK GDPR.
@@ -50,8 +64,9 @@ export default function Privacy() {
           interview data so it syncs between devices. We use this to provide the service you asked for (contract).
         </li>
         <li>
-          <strong>If you subscribe to Pro:</strong> a Stripe customer ID and your plan. Stripe holds your payment
-          details.
+          <strong>If you buy Pro:</strong> a Stripe customer ID, your plan and, for the 3-month pass, the date it
+          ends. When you pay we also record, with the payment, that you confirmed the payer is 18 or over, that you
+          asked Pro to start straight away and that you accepted the terms. Stripe holds your payment details.
         </li>
         <li>
           <strong>Usage counts:</strong> how many interviews and AI requests your account has made, to apply fair-use
@@ -134,6 +149,20 @@ export default function Privacy() {
           ico.org.uk
         </a>
         , 0303 123 1113.
+      </p>
+
+      <h2 className="text-base font-semibold">Automated feedback</h2>
+      <p>
+        Interview questions, marks and feedback are produced automatically by AI. They are practice guidance only, are
+        never shared with employers and don&apos;t decide anything about you. If you think feedback was wrong or
+        unfair, tell us{CONTACT_EMAIL ? ` at ${CONTACT_EMAIL}` : ""} and we will look into it.
+      </p>
+
+      <h2 className="text-base font-semibold">If you contact us</h2>
+      <p>
+        If you email us, we keep your message and contact details to reply. If a message raises a concern about
+        someone&apos;s safety, we keep a short, secure record of it and may share it with the right service (such as
+        children&apos;s services or the police) to keep someone safe.
       </p>
 
       <h2 className="text-base font-semibold">If you are struggling</h2>
