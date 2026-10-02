@@ -4,7 +4,7 @@ Written 2 October 2026 for branch `shayaan`. Plain-English steps to take DA Prep
 
 ## Verdict: not ready for public launch yet, but close
 
-**The product is built and tested as far as possible without real accounts.** 494 automated tests and 46 browser journeys pass. Every one of 105 pages passes automated accessibility checks on desktop and phone. Key pages score 90-100 on Lighthouse, the production build handled about 1,000 requests a second without errors, and no known security issues remain.
+**The product is built and tested as far as possible without real accounts.** 493 automated tests and 46 browser journeys pass. Every one of 105 pages passes automated accessibility checks on desktop and phone. Key pages score 90-100 on Lighthouse, the production build handled about 1,000 requests a second without errors, and no known security issues remain.
 
 **What stops a public launch today** is not code. It's five things that need you:
 1. A lawyer's review of the legal drafts (`docs/legal/`), the privacy notice and the terms, plus the ICO fee.

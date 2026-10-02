@@ -4,7 +4,7 @@ Written 2 October 2026; updated the same day after the finance rebuild (branch `
 
 ## Where things stand
 
-Built and tested: the app and its AI features, accounts and cloud sync (Supabase), limits and payments code (Stripe: £17 monthly and a £30 one-off 3-month pass), security hardening, privacy notice and terms (plus legal drafts in `docs/legal/`), 42 firm profiles, 19 assessment replicas (`/tests`, including Cappfinity-style tests, job simulations, full-length Aon scales and switch puzzles), 13 firm mock processes (`/mock`) and a finance hub. 494 unit tests and 46 Playwright journeys pass (`npm test`, `npm run test:e2e`) and the production build works. Testing results: `docs/testing/phase4-report.md`.
+Built and tested: the app and its AI features, accounts and cloud sync (Supabase), limits and payments code (Stripe: £17 monthly and a £30 one-off 3-month pass), security hardening, privacy notice and terms (plus legal drafts in `docs/legal/`), 42 firm profiles, 19 assessment replicas (`/tests`, including Cappfinity-style tests, job simulations, full-length Aon scales and switch puzzles), 13 firm mock processes (`/mock`) and a finance hub. 493 unit tests and 46 Playwright journeys pass (`npm test`, `npm run test:e2e`) and the production build works. Testing results: `docs/testing/phase4-report.md`.
 
 Not yet done, in priority order:
 
@@ -44,7 +44,7 @@ See `docs/LAUNCH.md` (launch blockers and set-up steps). In short:
 ```
 npm install
 npm run dev        # http://localhost:3000
-npm test           # vitest, 494 tests
+npm test           # vitest, 493 tests
 npm run test:e2e   # Playwright journeys (starts a dev server with MOCK_AI=1)
 npm run check:freshness  # employer guides not re-verified in 150 days
 npx tsc --noEmit && npm run lint && npm run build
