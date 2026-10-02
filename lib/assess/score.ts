@@ -122,7 +122,7 @@ export function scoreSection(section: Section, responses: Record<string, Respons
 }
 
 /** Combine section results. Trait totals are summed across sections. */
-export function summarise(test: Test, startedAt: string, sections: SectionResult[]): TestResult {
+export function summarise(test: Test, startedAt: string, sections: SectionResult[], responses: Record<string, Response>): TestResult {
   const traits: Record<string, number> = {};
   for (const s of sections) addTraits(traits, s.traits);
   return {
@@ -133,7 +133,36 @@ export function summarise(test: Test, startedAt: string, sections: SectionResult
     points: sections.reduce((a, s) => a + s.points, 0),
     max: sections.reduce((a, s) => a + s.max, 0),
     traits: Object.keys(traits).length ? traits : undefined,
+    responses,
   };
+}
+
+/**
+ * Turn raw trait totals into 0-100 scores. The possible range per trait comes from the items that measure it:
+ * each likert item contributes 1-5, each forced-choice block contributes -1 (least like me) to +1 (most like me).
+ * Traits with no answered items are omitted. These are profile positions, not norm-referenced scores.
+ */
+export function traitProfile(test: Test, result: TestResult): { trait: string; percent: number }[] {
+  const range = new Map<string, { min: number; max: number }>();
+  const widen = (trait: string, min: number, max: number) => {
+    const r = range.get(trait) ?? { min: 0, max: 0 };
+    range.set(trait, { min: r.min + min, max: r.max + max });
+  };
+  for (const section of test.sections) {
+    for (const item of section.items) {
+      if (!(item.id in result.responses)) continue;
+      if (item.kind === "likert") widen(item.trait, 1, 5);
+      if (item.kind === "forced-choice") for (const s of item.statements) widen(s.trait, -1, 1);
+    }
+  }
+  // A forced-choice block gives each statement at most one of +1/-1, so only count one block-worth per trait appearance.
+  return [...range.entries()]
+    .filter(([trait]) => result.traits && trait in result.traits)
+    .map(([trait, { min, max }]) => ({
+      trait,
+      percent: max === min ? 50 : Math.round((((result.traits![trait] ?? 0) - min) / (max - min)) * 100),
+    }))
+    .sort((a, b) => b.percent - a.percent);
 }
 
 /** Percentage 0-100, or null when there is nothing to mark (trait tests). */

@@ -3,8 +3,8 @@ import { NUMERICAL, buildNumerical } from "@/lib/assess/banks/numerical";
 import { validateItem } from "@/lib/assess/validate";
 
 describe("numerical bank", () => {
-  it("has 24 valid items", () => {
-    expect(NUMERICAL.items).toHaveLength(24);
+  it("has 32 valid items", () => {
+    expect(NUMERICAL.items).toHaveLength(32);
     for (const item of NUMERICAL.items) expect(validateItem(item), item.id).toEqual([]);
   });
 
@@ -33,7 +33,8 @@ describe("numerical bank", () => {
 
   it("covers a spread of difficulties", () => {
     const levels = new Set(NUMERICAL.items.map((i) => i.difficulty));
-    expect(levels.size).toBeGreaterThanOrEqual(3);
+    expect(levels.size).toBeGreaterThanOrEqual(4);
+    expect(NUMERICAL.items.filter((i) => (i.difficulty ?? 3) >= 4).length).toBeGreaterThanOrEqual(8);
   });
 
   it("is deterministic", () => {

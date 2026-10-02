@@ -109,7 +109,7 @@ export default function Runner({ test, onComplete, onExit }: { test: Test; onCom
       /* ignore */
     }
     setSt(null);
-    onComplete(summarise(test, base.startedAt, results));
+    onComplete(summarise(test, base.startedAt, results, base.responses));
   }
 
   function finishSection(cur: RunState) {

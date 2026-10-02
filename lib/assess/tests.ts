@@ -1,0 +1,272 @@
+// Catalogue of replica tests. Each one follows the published FORMAT of a real employer assessment (counts, timing,
+// response style, rules) with original items. `formatNotes` says what is confirmed and what is approximated, so the
+// app never implies more precision than the research supports. Sources: docs/research/02-assessment-formats.md.
+
+import { DEDUCTIVE } from "@/lib/assess/banks/deductive";
+import { INDUCTIVE } from "@/lib/assess/banks/inductive";
+import { NUMERICAL } from "@/lib/assess/banks/numerical";
+import { NUMERICAL_TF } from "@/lib/assess/banks/numerical-tf";
+import { SJT } from "@/lib/assess/banks/sjt";
+import { TRAIT_BANK } from "@/lib/assess/banks/traits";
+import { VERBAL_TF, VERBAL_TF_STIMULI } from "@/lib/assess/banks/verbal-tf";
+import type { Section, Test } from "@/lib/assess/types";
+
+const SHL_NUM = "https://www.shl.com/assets/documents/rebranded-assets/product-factsheet-verify-interactive-numerical-reasoning.pdf";
+const SHL_IND = "https://www.shl.com:443/assets/documents/rebranded-assets/product-factsheet-verify-interactive-inductive.pdf";
+const SHL_DED = "https://service.shl.com/docs/Product Factsheet_Verify Interactive Deductive.pdf";
+const AD_CUTE = "https://www.assessmentday.co.uk/cut-e.htm";
+const AD_SHL = "https://www.assessmentday.co.uk/shl.htm";
+const PAT_SJT = "https://www.practiceaptitudetests.com/resources/situational-judgement-test-response-formats/";
+const CS_SJT = "https://www.gov.uk/guidance/preparing-for-the-new-civil-service-judgement-test";
+
+const section = (s: Partial<Section> & Pick<Section, "id" | "title" | "instructions" | "items" | "timing">): Section => ({
+  allowBack: false,
+  calculator: false,
+  showFeedback: false,
+  ...s,
+});
+
+export const TESTS: Test[] = [
+  {
+    id: "shl-numerical",
+    name: "Numerical reasoning (SHL Verify Interactive style)",
+    replicates: "SHL Verify Interactive Numerical Reasoning",
+    kind: "ability",
+    confidence: "official",
+    approximate: true,
+    formatNotes: [
+      "Up to 10 questions in 18 minutes, one timer for the whole test (SHL factsheet).",
+      "Adaptive in the real test. Here, difficulty steps up after a correct answer and down after a wrong one (an approximation).",
+      "The real test has you build charts and fill in spreadsheets; this replica uses multiple choice questions on tables and charts.",
+      "SHL does not publish its calculator or going-back rules. Here a calculator is provided and you cannot go back.",
+    ],
+    sources: [SHL_NUM, AD_SHL],
+    sections: [
+      section({
+        id: "num",
+        title: "Numerical reasoning",
+        instructions: "Answer questions using the tables and charts. Work quickly and accurately: you have 18 minutes in total for up to 10 questions.",
+        items: NUMERICAL.items,
+        stimuli: NUMERICAL.stimuli,
+        timing: { mode: "section", seconds: 18 * 60 },
+        calculator: true,
+        adaptive: { count: 10 },
+      }),
+    ],
+  },
+  {
+    id: "shl-inductive",
+    name: "Inductive reasoning (SHL Verify Interactive style)",
+    replicates: "SHL Verify Interactive Inductive Reasoning",
+    kind: "ability",
+    confidence: "official",
+    approximate: true,
+    formatNotes: [
+      "Up to 15 questions in 18 minutes, one timer for the whole test (SHL factsheet).",
+      "The real test uses shapes and alphanumeric sequences. This replica uses number, letter and symbol sequences.",
+      "Adaptive in the real test; approximated here.",
+    ],
+    sources: [SHL_IND, AD_SHL],
+    sections: [
+      section({
+        id: "ind",
+        title: "Inductive reasoning",
+        instructions: "Work out the rule in each sequence and choose what comes next. You have 18 minutes in total for up to 15 questions.",
+        items: INDUCTIVE,
+        timing: { mode: "section", seconds: 18 * 60 },
+        adaptive: { count: 15 },
+      }),
+    ],
+  },
+  {
+    id: "shl-deductive",
+    name: "Deductive reasoning (SHL Verify Interactive style)",
+    replicates: "SHL Verify Interactive Deductive Reasoning",
+    kind: "ability",
+    confidence: "official",
+    approximate: true,
+    formatNotes: [
+      "Up to 12 questions in 18 minutes (SHL factsheet, read through a search summary).",
+      "SHL describes calendar and scheduling logic; this replica uses weekday scheduling puzzles.",
+      "Adaptive in the real test; approximated here. Rules on notes and calculators are not published.",
+    ],
+    sources: [SHL_DED, AD_SHL],
+    sections: [
+      section({
+        id: "ded",
+        title: "Deductive reasoning",
+        instructions: "Use the rules to work out which day each task is on. You have 18 minutes in total for up to 12 questions.",
+        items: DEDUCTIVE.items,
+        timing: { mode: "section", seconds: 18 * 60 },
+        adaptive: { count: 12 },
+      }),
+    ],
+  },
+  {
+    id: "scales-numerical",
+    name: "Numerical statements, short form (Aon/cut-e scales style)",
+    replicates: "Aon/cut-e scales numerical (short form)",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: 18 true / false / cannot say statements on data in 6 minutes for the short form (prep-site reports; no official Aon guide found). The full test reports 37 items in 12 minutes.",
+      "Aon does not publish its calculator or going-back rules. Here a calculator is provided and you can go back.",
+      "Very fast: about 20 seconds per statement. Expect not to finish everything.",
+    ],
+    sources: [AD_CUTE],
+    sections: [
+      section({
+        id: "scn",
+        title: "Numerical statements",
+        instructions: "Decide whether each statement is true, false or cannot be said from the data given. You have 6 minutes for 18 statements.",
+        items: NUMERICAL_TF.items,
+        stimuli: NUMERICAL_TF.stimuli,
+        timing: { mode: "section", seconds: 6 * 60 },
+        calculator: true,
+        allowBack: true,
+      }),
+    ],
+  },
+  {
+    id: "scales-verbal",
+    name: "Verbal statements (Aon/cut-e scales style)",
+    replicates: "Aon/cut-e scales verbal",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: 49 true / false / cannot say statements in 12 minutes (prep-site reports). This replica keeps the same pace (about 15 seconds per statement) over 18 statements, so 265 seconds.",
+      "No official Aon guide found; going-back rule is not published, so you can go back here.",
+    ],
+    sources: [AD_CUTE],
+    sections: [
+      section({
+        id: "scv",
+        title: "Verbal statements",
+        instructions: "Read each passage and decide whether each statement is true, false or cannot be said from the passage alone. You have about 4 minutes for 18 statements.",
+        items: VERBAL_TF,
+        stimuli: VERBAL_TF_STIMULI,
+        timing: { mode: "section", seconds: 265 },
+        allowBack: true,
+      }),
+    ],
+  },
+  {
+    id: "sjt-most-least",
+    name: "Situational judgement: most and least effective",
+    replicates: "SHL-style situational judgement test",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: choose the most effective and the least effective response from 4 or 5 options (prep-site reports). Partial credit is reported when only one pick is right, and that is how this replica scores it.",
+      "Item counts and time limits vary by employer and are not published. This replica is untimed with 10 scenarios.",
+    ],
+    sources: [PAT_SJT],
+    sections: [
+      section({
+        id: "ml",
+        title: "Most and least effective",
+        instructions: "For each scenario, choose the response you think is the MOST effective and the one you think is the LEAST effective.",
+        items: SJT.mostLeast,
+        timing: { mode: "untimed" },
+        allowBack: true,
+      }),
+    ],
+  },
+  {
+    id: "sjt-rate-each",
+    name: "Situational judgement: rate every action (Civil Service style)",
+    replicates: "Civil Service Judgement Test, part 2",
+    kind: "ability",
+    confidence: "official",
+    approximate: true,
+    formatNotes: [
+      "Official format: each scenario has 4 actions and you rate each as Counterproductive, Ineffective, Fairly effective or Effective. The real test is untimed, with 3 scenarios per behaviour (Civil Service guidance).",
+      "This replica has 6 scenarios, not the full set. The real test also has a self-assessment part worth 15%, which is not included. The Civil Service does not publish its scoring key, so half credit for a rating one step away is our approximation.",
+    ],
+    sources: [CS_SJT],
+    sections: [
+      section({
+        id: "re",
+        title: "Rate each action",
+        instructions: "For each scenario, rate how effective each action would be. You can rate several actions the same way.",
+        items: SJT.rateEach,
+        timing: { mode: "untimed" },
+        allowBack: true,
+      }),
+    ],
+  },
+  {
+    id: "sjt-ranking",
+    name: "Situational judgement: ranking responses",
+    replicates: "Ranking-style situational judgement items",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Some employers (for example Deloitte's immersive assessment) ask candidates to rank the most and least likely actions in workplace scenarios. Timings are not published.",
+      "This replica asks you to rank four to five responses from best to worst and scores the fraction of pairs in the right order. It is untimed.",
+    ],
+    sources: ["https://www.deloitte.com/uk/en/careers/early-careers/early-careers-assessment.html"],
+    sections: [
+      section({
+        id: "rk",
+        title: "Rank the responses",
+        instructions: "Put the options in order, best first. Use the arrows to move an option up or down.",
+        items: SJT.rank,
+        timing: { mode: "untimed" },
+        allowBack: true,
+      }),
+    ],
+  },
+  {
+    id: "work-style-forced-choice",
+    name: "Work-style questionnaire: most and least like me (OPQ style)",
+    replicates: "SHL OPQ-style forced-choice personality questionnaire",
+    kind: "trait",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: for each block, pick the statement MOST like you, then the one LEAST like you (prep-site reports). The real OPQ32 has over a hundred blocks and takes about 25 to 30 minutes; this replica has 12 blocks.",
+      "There are no right answers. The result is a profile across six work-style traits, not a pass or fail, and it is not a real personality assessment.",
+    ],
+    sources: [AD_SHL],
+    sections: [
+      section({
+        id: "fc",
+        title: "Most and least like me",
+        instructions: "For each group of statements, choose the one that is MOST like you and the one that is LEAST like you. There are no right or wrong answers: answer honestly and quickly.",
+        items: TRAIT_BANK.forcedChoice,
+        timing: { mode: "untimed" },
+        allowBack: true,
+      }),
+    ],
+  },
+  {
+    id: "work-style-rating",
+    name: "Work-style questionnaire: agreement ratings",
+    replicates: "Strengths and work-style rating questionnaires used by several employers",
+    kind: "trait",
+    confidence: "single-report",
+    approximate: true,
+    formatNotes: [
+      "Several employers use rating-style questionnaires about preferred ways of working (for example Barclays' 'preferred ways of working' assessment; Capp-style likelihood ratings are reported). Item counts and timings are not published.",
+      "There are no right answers. The result is a profile across six work-style traits.",
+    ],
+    sources: ["https://search.jobs.barclays/apprentice-application-journey"],
+    sections: [
+      section({
+        id: "lk",
+        title: "How much do you agree?",
+        instructions: "Say how much you agree with each statement. There are no right or wrong answers: answer honestly.",
+        items: TRAIT_BANK.likert,
+        timing: { mode: "untimed" },
+        allowBack: true,
+      }),
+    ],
+  },
+];
+
+export const getTest = (id: string) => TESTS.find((t) => t.id === id);

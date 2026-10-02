@@ -92,7 +92,7 @@ describe("scoreSection and summarise", () => {
     const test = { id: "t" } as Test;
     const a = scoreSection({ ...section, items: [lk] }, { lk1: { kind: "likert", value: 5 } as Response }, 5);
     const b = scoreSection({ ...section, items: [lk] }, { lk1: { kind: "likert", value: 3 } as Response }, 5);
-    expect(summarise(test, "2026-10-02T00:00:00Z", [a, b]).traits).toEqual({ Resilience: 8 });
+    expect(summarise(test, "2026-10-02T00:00:00Z", [a, b], {}).traits).toEqual({ Resilience: 8 });
   });
 
   it("percent returns null when nothing is marked", () => {

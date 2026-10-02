@@ -280,6 +280,88 @@ const share: Gen = (r, n) => {
   };
 };
 
+/** Forecast: apply a percentage uplift to the latest month. Two steps (find the base, then the uplift). */
+const forecast: Gen = (r, n) => {
+  const stores = r.shuffle(["Leeds", "Bristol", "Cardiff", "Derby", "York"] as const).slice(0, 3);
+  const rows = stores.map((s) => [s, r.int(8, 20) * 20, r.int(8, 20) * 20, r.int(8, 20) * 20]);
+  const stimulus: Stimulus = { type: "table", title: "Monthly sales by store (£ thousand)", columns: ["Store", "Jan", "Feb", "Mar"], rows };
+  const idx = r.int(0, 2);
+  const uplift = r.pick([5, 10, 15, 20, 25] as const);
+  const mar = rows[idx][3] as number;
+  const feb = rows[idx][2] as number;
+  const correct = mar + (mar * uplift) / 100;
+  const k = (v: number) => `£${v}k`;
+  const { options, answer } = mcqOptions(r, k(correct), [
+    k(mar + uplift), // added the percentage as if it were thousands
+    k(feb + (feb * uplift) / 100), // used the wrong month
+    k((mar * uplift) / 100), // the uplift alone
+    k(mar - (mar * uplift) / 100), // reduced instead of increased
+    k(mar + (mar * (uplift + 5)) / 100),
+    k(correct + 20),
+  ]);
+  return {
+    item: {
+      kind: "mcq",
+      prompt: `${stores[idx]} expects April sales to be ${uplift}% higher than March. What is the forecast for April?`,
+      options,
+      answer,
+      explanation: `March sales were ${k(mar)}. A ${uplift}% increase adds ${mar} × ${uplift}/100 = ${(mar * uplift) / 100}, so April = ${mar} + ${(mar * uplift) / 100} = ${k(correct)}.`,
+      difficulty: clampDiff(4 + (n % 2) - 1),
+    },
+    stimulus,
+    check: (s) => {
+      const row = table(s).rows.find((x) => x[0] === stores[idx])!;
+      const m = row[3] as number;
+      return k(m + (m * uplift) / 100);
+    },
+  };
+};
+
+/** Weighted mean price across products: needs units as weights, so the simple mean is the trap. */
+const weighted: Gen = (r, n) => {
+  const names = r.shuffle(PRODUCTS).slice(0, 4);
+  const rows = names.map((name) => [name, r.int(2, 12) * 100, r.int(4, 30)]);
+  const stimulus: Stimulus = { type: "table", title: "Units sold and price per unit", columns: ["Product", "Units sold", "Price per unit (£)"], rows };
+  const units = rows.map((x) => x[1] as number);
+  const prices = rows.map((x) => x[2] as number);
+  const totalUnits = units.reduce((s, v) => s + v, 0);
+  const revenue = units.reduce((s, v, i) => s + v * prices[i], 0);
+  const correct = Math.round((revenue / totalUnits) * 100) / 100;
+  const simple = Math.round((prices.reduce((s, v) => s + v, 0) / prices.length) * 100) / 100;
+  if (Math.abs(correct - simple) < 0.5) rows[0][2] = (rows[0][2] as number) + 9; // keep the trap distinct from the answer
+  const u2 = rows.map((x) => x[1] as number);
+  const p2 = rows.map((x) => x[2] as number);
+  const tu = u2.reduce((s, v) => s + v, 0);
+  const rev = u2.reduce((s, v, i) => s + v * p2[i], 0);
+  const right = Math.round((rev / tu) * 100) / 100;
+  const simple2 = Math.round((p2.reduce((s, v) => s + v, 0) / p2.length) * 100) / 100;
+  const { options, answer } = mcqOptions(r, gbp(right), [
+    gbp(simple2), // simple mean of the prices
+    gbp(([...p2].sort((a, b) => a - b)[1] + [...p2].sort((a, b) => a - b)[2]) / 2), // median price
+    gbp(Math.round((right + 1.5) * 100) / 100),
+    gbp(Math.round((right - 2.25) * 100) / 100),
+    gbp(Math.round(Math.max(...p2) * 100) / 100),
+    gbp(Math.round((rev / (tu + 100)) * 100) / 100),
+  ]);
+  return {
+    item: {
+      kind: "mcq",
+      prompt: "What was the mean price per unit across all four products, taking account of the number of units sold? Give your answer to the nearest penny.",
+      options,
+      answer,
+      explanation: `Weight each price by units sold: total revenue = ${rev.toLocaleString("en-GB")}, total units = ${tu.toLocaleString("en-GB")}, so the mean is ${rev.toLocaleString("en-GB")} ÷ ${tu.toLocaleString("en-GB")} = ${gbp(right)}. The simple average of the prices (${gbp(simple2)}) ignores how many of each were sold.`,
+      difficulty: clampDiff(5 - (n % 2)),
+    },
+    stimulus,
+    check: (s) => {
+      const t = table(s).rows;
+      const tuu = t.reduce((sum, x) => sum + (x[1] as number), 0);
+      const rv = t.reduce((sum, x) => sum + (x[1] as number) * (x[2] as number), 0);
+      return gbp(Math.round((rv / tuu) * 100) / 100);
+    },
+  };
+};
+
 const TEMPLATES: [string, Gen][] = [
   ["growth", growth],
   ["currency", currency],
@@ -287,6 +369,8 @@ const TEMPLATES: [string, Gen][] = [
   ["ratio", ratio],
   ["mean", mean],
   ["share", share],
+  ["forecast", forecast],
+  ["weighted", weighted],
 ];
 
 export function buildNumerical(perTemplate = 4): NumericalBank {

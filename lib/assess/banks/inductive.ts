@@ -59,7 +59,7 @@ const growingStep = (r: Rng, n: number): Built => {
   };
 };
 
-const alternating = (r: Rng, n: number): Built => {
+const alternating = (r: Rng): Built => {
   const a0 = r.int(2, 20);
   const aStep = r.pick([2, 3, 4, 5]);
   const b0 = r.int(40, 80);
@@ -90,7 +90,7 @@ const letters = (r: Rng, n: number): Built => {
   };
 };
 
-const letterNumber = (r: Rng, n: number): Built => {
+const letterNumber = (r: Rng): Built => {
   const start = r.int(0, 6);
   const ls = r.pick([1, 2]);
   const ns = r.pick([2, 3, 5]);
@@ -146,10 +146,13 @@ const FAMILIES: [string, (r: Rng, n: number) => Built][] = [
   ["dots", dotGrowth],
 ];
 
-export function buildInductive(perFamily = 3): Item[] {
+// More of the harder families, so a strong candidate in an adaptive run does not run out of hard items.
+const PER_FAMILY: Record<string, number> = { arith: 2, geo: 3, grow: 5, alt: 5, letters: 3, letnum: 5, symbols: 3, dots: 2 };
+
+export function buildInductive(): Item[] {
   const items: Item[] = [];
   FAMILIES.forEach(([name, gen], fi) => {
-    for (let n = 0; n < perFamily; n++) {
+    for (let n = 0; n < PER_FAMILY[name]; n++) {
       const r = rng(9000 + fi * 100 + n);
       const b = gen(r, n);
       const { options, answer } = mcqOptions(r, b.correct, b.distractors);

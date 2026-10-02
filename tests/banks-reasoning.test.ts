@@ -51,8 +51,8 @@ function detectNumberNext(t: number[]): number | null {
 }
 
 describe("inductive bank", () => {
-  it("has 24 valid items with five unique options", () => {
-    expect(INDUCTIVE).toHaveLength(24);
+  it("has 28 valid items with five unique options", () => {
+    expect(INDUCTIVE).toHaveLength(28);
     for (const item of INDUCTIVE) {
       expect(validateItem(item), item.id).toEqual([]);
       if (item.kind === "mcq") expect(item.options, item.id).toHaveLength(5);
@@ -61,7 +61,7 @@ describe("inductive bank", () => {
 
   it("number sequences: the key is the next term under an independently detected rule", () => {
     const numeric = INDUCTIVE.filter((i) => /^ind-(arith|geo|grow|alt)-/.test(i.id));
-    expect(numeric).toHaveLength(12);
+    expect(numeric).toHaveLength(15);
     for (const item of numeric) {
       if (item.kind !== "mcq") throw new Error("expected mcq");
       const shown = nums(item.prompt.split("\n\n")[1].replace("?", ""));

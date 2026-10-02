@@ -107,6 +107,8 @@ export type TestResult = {
   sections: SectionResult[];
   points: number;
   max: number;
-  /** Trait totals for trait tests, normalised 0-100 per trait where possible. */
+  /** Raw trait totals for trait tests (see `traitProfile` for 0-100 scores). */
   traits?: Record<string, number>;
+  /** What the candidate answered, by item id, so the results screen can review each item. */
+  responses: Record<string, Response>;
 };
