@@ -9,6 +9,7 @@ export const PUBLIC_PATHS = [
   "/",
   "/interview",
   "/practice",
+  "/tests",
   "/review",
   "/sectors",
   "/guide",

@@ -7,26 +7,21 @@ const KEYS = ["7", "8", "9", "÷", "4", "5", "6", "×", "1", "2", "3", "−", "0
 
 /** On-screen calculator. Sections that allow one show it; the production CSP blocks third-party embeds. */
 export default function Calculator() {
-  const [expr, setExpr] = useState("");
-  const [shown, setShown] = useState("0");
+  // One state object updated functionally, so quick successive taps never read stale state.
+  const [{ shown }, setCalc] = useState({ expr: "", shown: "0" });
 
   function press(k: string) {
-    if (k === "C") {
-      setExpr("");
-      setShown("0");
-    } else if (k === "=") {
-      const r = evaluate(expr);
-      if (r === null) setShown("Error");
-      else {
+    setCalc((s) => {
+      if (k === "C") return { expr: "", shown: "0" };
+      if (k === "=") {
+        const r = evaluate(s.expr);
+        if (r === null) return { expr: s.expr, shown: "Error" };
         const text = formatResult(r);
-        setExpr(text);
-        setShown(text);
+        return { expr: text, shown: text };
       }
-    } else {
-      const next = shown === "Error" ? k : expr + k;
-      setExpr(next);
-      setShown(next);
-    }
+      const next = s.shown === "Error" ? k : s.expr + k;
+      return { expr: next, shown: next };
+    });
   }
 
   return (
