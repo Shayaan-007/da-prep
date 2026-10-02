@@ -1,0 +1,93 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { FIND_APPRENTICESHIP_URL } from "@/lib/employers";
+import type { DirectoryEntry } from "@/lib/directory";
+import { SECTORS, type SectorId } from "@/lib/sectors";
+import { useCollection } from "@/lib/store";
+import type { Application } from "@/lib/types";
+
+export default function EmployersList({ entries }: { entries: DirectoryEntry[] }) {
+  const apps = useCollection<Application>("applications");
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<SectorId | "all">("all");
+
+  const list = entries.filter(
+    (e) =>
+      (filter === "all" || e.sectors.includes(filter)) &&
+      `${e.name} ${e.sector}`.toLowerCase().includes(query.toLowerCase()),
+  );
+  const tracked = (name: string) => apps.items.some((a) => a.employer === name);
+
+  return (
+    <div className="space-y-4">
+      <h1 className="page-title">Employers</h1>
+      <p className="text-muted">
+        A starting list of employers that have offered degree apprenticeships. It is not complete, and processes and
+        dates change every year, so always check the employer&apos;s own page. Find live vacancies on{" "}
+        <a className="underline" href={FIND_APPRENTICESHIP_URL} target="_blank" rel="noreferrer">
+          Find an Apprenticeship
+        </a>
+        .
+      </p>
+      <input
+        className="w-full input text-sm"
+        placeholder="Search by name or sector"
+        aria-label="Search employers"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => setFilter("all")} className={`chip ${filter === "all" ? "chip-active" : ""}`}>
+          All
+        </button>
+        {SECTORS.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setFilter(s.id)}
+            className={`chip ${filter === s.id ? "chip-active" : ""}`}
+          >
+            {s.name}
+          </button>
+        ))}
+      </div>
+      <ul className="space-y-3">
+        {list.map((e) => (
+          <li key={e.name} className="flex flex-wrap items-center justify-between gap-2 card p-3">
+            <div>
+              <p className="font-semibold">{e.name}</p>
+              <p className="text-sm text-muted">
+                {e.sector}
+                {e.note && ` · ${e.note}`}
+              </p>
+              {e.slug && (
+                <Link className="text-sm underline mr-3" href={`/employers/${e.slug}`}>
+                  Process guide
+                </Link>
+              )}
+              {e.link && (
+                <a className="text-sm underline" href={e.link} target="_blank" rel="noreferrer">
+                  Employer / guidance page
+                </a>
+              )}
+            </div>
+            <button
+              disabled={tracked(e.name)}
+              onClick={() =>
+                apps.update((p) => [
+                  ...p,
+                  { id: crypto.randomUUID(), employer: e.name, role: "", deadline: "", status: "Interested", notes: "" },
+                ])
+              }
+              className="btn btn-secondary"
+            >
+              {tracked(e.name) ? "In tracker" : "Add to tracker"}
+            </button>
+          </li>
+        ))}
+      </ul>
+      {list.length === 0 && <p className="text-sm text-muted">No matches.</p>}
+    </div>
+  );
+}
