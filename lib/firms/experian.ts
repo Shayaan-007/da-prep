@@ -53,8 +53,8 @@ export const experian: FirmProfile = {
       order: 2,
       name: "Online assessments",
       format:
-        "Designed to show strengths, thinking style and how you approach different challenges. Reported as SHL tests: numerical, verbal, diagrammatic reasoning plus a situational judgement test (SJT). Timed; item counts/timings not published.",
-      provider: "SHL",
+        "Experian's page confirms online assessments of strengths and problem solving, with details sent on invitation; it names no vendor. A prep site (not Experian, not apprentice-specific, and describing a different overall process) says SHL numerical, verbal and diagrammatic reasoning plus a situational judgement test. Item counts and timings are not published.",
+      provider: "Not named by Experian (SHL is a prep-site claim only)",
       tips: [
         "Practise SHL-style numerical, verbal and inductive/diagrammatic tests under timed conditions.",
         "For the SJT choose responses that reflect collaborative, customer-first behaviour consistent with Experian's culture.",
@@ -122,8 +122,10 @@ export const experian: FirmProfile = {
     "Prepare to network at the assessment centre - conversations with current apprentices are part of the day.",
   ],
   officialLinks: [EXP_PROCESS, EXP_APPR, "https://jobs.experian.com/"],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-read 2 Oct 2026: Experian's recruitment-process page confirms four stages (CV, online assessments of strengths and problem solving, one-way video with timed questions, about four hours at an assessment centre) and names no test vendor. The 14 February 2026 close comes from the expired Experian advert; a search snippet saying 20 February conflicts and was not used. No 2027 vacancies were visible yet.",
+    "Candidate-reported video topics (why Experian, why this role, a time you worked in a team, a time you were inspired to learn) appeared in Glassdoor search summaries for mixed roles and could not be read, so no questions are listed.",
     "SHL test names, item counts and timings for apprentices - only a prep site states them, and none give numbers for Experian.",
     "Video interview question count, time limits and any real questions.",
     "Group exercise content and competency interview questions (Gradcracker, Bright Network, NTU case study returned 403).",

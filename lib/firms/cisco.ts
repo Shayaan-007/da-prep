@@ -11,9 +11,9 @@ export const cisco: FirmProfile = {
   sector: "Technology / networking",
   programmes: [
     {
-      name: "Cisco Degree Apprenticeship (rotational, 4 years)",
+      name: "Cisco Degree Apprenticeship (rotational, 4 years). Cisco's page confirms a four-year degree apprenticeship with a major business project, mentors and a support network. Separate Customer Experience and Sales intakes are suggested by job-posting titles (search summary). Year 1 is reported as an induction boot camp plus three 3-month rotations (single report).",
       level: "Level 6",
-      degree: "BSc (Hons) Digital and Technology Solutions OR BSc (Hons) Professional Management (Applied Business Management / Chartered Manager reported)",
+      degree: "BSc (Hons) Digital and Technology Solutions OR a Professional Management degree (Cisco's page says BSc; one search summary of a Sales posting says BA (Hons): unresolved, check the live advert)",
       locations: ["Greater London (Bedfont Lakes, Feltham)", "Manchester"],
     },
   ],
@@ -66,9 +66,9 @@ export const cisco: FirmProfile = {
     },
     {
       order: 4,
-      name: "Assessment centre (London office)",
+      name: "Assessment centre",
       format:
-        "Final stage at the London office where candidates meet managers and current apprentices. Activities not published; forum posts mention mandatory events at the office.",
+        "Final stage where candidates meet managers and current apprentices; forum posts mention mandatory events at the office. Reported activities (search summaries of a Cisco blog and a candidate blog, not read directly, single report): a presentation, a role play or group activity, and a hiring-manager interview; another account lists a management interview, a group exercise, a presentation on a topic of your choice and a technical interview. Cisco supplies preparation material beforehand. One candidate describes the day as relaxed. Glassdoor summaries mention a skills test, an IQ test and a personality test: unconfirmed.",
       tips: ["Ask current apprentices real questions - the day doubles as an introduction to the team."],
       source: CISCO_TSR,
       confidence: "single-report",
@@ -100,8 +100,11 @@ export const cisco: FirmProfile = {
     "https://www.cisco.com/c/en_uk/about/our-programmes.html",
     "https://www.cisco.com/c/en/us/about/careers/communities/students-and-new-graduates/apprenticeship.html",
   ],
-  lastVerified: "2026-09-30",
+  lastVerified: "2026-10-02",
   gaps: [
+    "Re-checked 2 Oct 2026: only Cisco's programmes page was readable (it confirms the four-year degree apprenticeship and the two degree titles but gives no entry requirements, salary, locations or dates). jobs.cisco.com redirects to careers.cisco.com and was not read.",
+    "The Velocity eligibility check, the HireVue stage, the 104 UCAS points and the 2026 timeline above could not be confirmed from any page we could read; they come from search summaries of job postings and should be checked against the live advert.",
+    "An older Cisco blog gives a 19 March deadline, assessment centres in April and applications through QA Apprenticeships. It is undated and probably describes an older three-year programme, so it is not used.",
     "Cisco's own apprenticeship recruitment pages returned redirects/no detail; process stages were taken from search-result summaries of Cisco's job posting, not fetched directly.",
     "Whether an online aptitude test is used - none found.",
     "HireVue question count/timing and real candidate questions (Glassdoor/TSR returned 403).",
