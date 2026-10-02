@@ -96,6 +96,10 @@ export default function Stories() {
         <details className="text-sm">
           <summary className="cursor-pointer font-medium">Stuck? Write rough notes and let AI structure them</summary>
           <div className="mt-2 space-y-2">
+            <p className="text-xs text-muted">
+              Some employers restrict AI help in applications. Check their rules, and rewrite the result in your own
+              words.
+            </p>
             <textarea
               className="h-24 w-full input"
               aria-label="Rough notes"

@@ -47,7 +47,7 @@ export const hsbc: FirmProfile = {
     opens: "2025 cycle opened October 2024 (several routes, Asset Management and Private Banking closing within weeks). Expect roughly October for the next cycle; HSBC posts to its talent community first.",
     rolling: true,
     notes:
-      "HSBC reviews rolling and may close before the printed deadline once places fill (aggregator claim). One applicant received the Simulate feedback report the day after taking the assessment. A 2025 thread claims some apprentices due to start in October 2025 had their places cancelled amid cost cuts (single unverified report), so keep a backup.",
+      "HSBC reviews rolling and may close before the printed deadline once places fill (aggregator claim). One applicant received the Simulate feedback report the day after taking the assessment. Start dates and places can change, so keep a backup option.",
     source: TSR_P1,
   },
   stages: [

@@ -8,10 +8,11 @@ import { supabase } from "@/lib/supabase";
 
 const FREE = [
   "2 AI mock interviews a month",
+  "2 statement or answer reviews a week",
   "Unlimited practice tests, tracker, stories bank, guides",
   "Progress history",
 ];
-const PRO = ["Unlimited AI mock interviews", "Everything in Free", "Statement reviews"];
+const PRO = ["Unlimited AI mock interviews", "Unlimited statement and answer reviews", "Everything in Free"];
 
 export default function Pricing() {
   const { enabled, user } = useAuth();
@@ -45,6 +46,16 @@ export default function Pricing() {
     }
   }
 
+  async function manage() {
+    setError("");
+    try {
+      const { url } = await postJson<{ url: string }>("/api/stripe/portal");
+      window.location.href = url;
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
+
   const label = process.env.NEXT_PUBLIC_PRO_PRICE_LABEL;
 
   return (
@@ -60,7 +71,12 @@ export default function Pricing() {
           <h2 className="font-semibold">Pro {label && <span className="font-normal text-muted">· {label}</span>}</h2>
           <ul className="list-disc pl-5 text-sm">{PRO.map((f) => <li key={f}>{f}</li>)}</ul>
           {plan === "pro" ? (
-            <p className="text-sm font-medium text-mint-600">You&apos;re on Pro.</p>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-mint-600">You&apos;re on Pro.</p>
+              <button onClick={manage} className="btn">
+                Manage or cancel subscription
+              </button>
+            </div>
           ) : enabled && user ? (
             <button onClick={upgrade} className="btn btn-primary">
               Upgrade

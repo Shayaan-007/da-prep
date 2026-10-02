@@ -5,7 +5,7 @@ export const metadata = { title: "Process guide" };
 const stages = [
   {
     name: "1. Online application",
-    what: "A form, sometimes with a CV or short written answers. You apply directly to the employer, not through UCAS.",
+    what: "A form, sometimes with a CV or short written answers. You usually apply directly to the employer. A few programmes with a university partner also use UCAS.",
     prep: "Match your examples to the job advert. Check spelling. Apply early: many schemes close once they have enough applicants.",
   },
   {
@@ -15,7 +15,7 @@ const stages = [
   },
   {
     name: "3. Video interview",
-    what: "You record answers of roughly 30 to 60 seconds to on-screen questions. No live interviewer.",
+    what: "You record answers to on-screen questions; time limits vary by employer. No live interviewer.",
     prep: "Test your camera and lighting. Use the STAR method (Situation, Task, Action, Result) and keep to time.",
   },
   {
@@ -35,7 +35,7 @@ export default function Guide() {
     <div className="space-y-6">
       <h1 className="page-title">How degree apprenticeship applications work</h1>
       <p className="text-muted">
-        There is no national deadline. Employers advertise throughout the year on{" "}
+        There is no single national deadline. Many employers advertise through the year, but some run fixed annual windows that close early, so check each one on{" "}
         <a
           className="underline"
           href="https://www.findapprenticeship.service.gov.uk"

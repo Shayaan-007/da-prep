@@ -68,6 +68,10 @@ export default function ReviewPage() {
         />
       </label>
       <p className="text-xs text-muted">Remove names, addresses and contact details first. Text is sent to an AI service.</p>
+      <p className="text-xs text-muted">
+        Some employers restrict AI help or outside coaching in applications. Check the employer&apos;s rules, and use
+        this feedback to improve your own writing rather than to replace it.
+      </p>
       {error && <p role="alert" className="callout bg-coral-50 text-coral-600">{error}</p>}
       <button
         onClick={run}

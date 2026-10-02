@@ -43,7 +43,7 @@ export const barclays: FirmProfile = {
     closes: "Rolling; roles close when filled.",
     rolling: true,
     notes:
-      "Candidate-reported slowness: one applicant heard about next stage ~2 months after the online assessment; rejections started arriving 2-3 weeks after assessments for some, with others waiting 2+ months. A candidate who applied 30 Oct and did the assessment early got an interview invite within days, so early applications move faster. Decision-to-feedback: unsuccessful candidates receive a personalised feedback report (official).",
+      "Response times vary: some candidates report hearing back within weeks of the online assessment and others after a couple of months. Applying early tends to move faster. Decision-to-feedback: unsuccessful candidates receive a personalised feedback report (official).",
     source: TSR_HIGHER_P2,
   },
   stages: [

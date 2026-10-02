@@ -24,7 +24,7 @@ const sections = [
     id: "video",
     title: "Recorded video interviews",
     intro:
-      "You answer on-screen questions into your camera, usually for 30 to 60 seconds each, with no live interviewer. Your recording is reviewed afterwards.",
+      "You answer on-screen questions into your camera, with a time limit that varies by employer, with no live interviewer. Your recording is reviewed afterwards.",
     tips: [
       "Test your camera, microphone and lighting first. Face a window or lamp, with a plain background and the camera at eye level.",
       "Look at the camera lens, not the screen, for the main part of your answer.",

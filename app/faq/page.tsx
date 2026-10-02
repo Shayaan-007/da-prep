@@ -11,7 +11,7 @@ const faqs = [
   },
   {
     q: "How do I apply?",
-    a: "Directly to the employer, not through UCAS. Find vacancies on Find an Apprenticeship and employer careers pages. There is no national deadline and roles are advertised throughout the year.",
+    a: "Usually directly to the employer, though a few programmes with a university partner (for example PwC Flying Start) also use UCAS. Find vacancies on Find an Apprenticeship and employer careers pages. There is no single national deadline: some employers recruit all year, others run fixed windows that close early or once places fill, so check each one.",
   },
   {
     q: "What grades do I need?",

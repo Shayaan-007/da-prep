@@ -1,5 +1,5 @@
 import { mockEnabled, transcribeAudio, transcribeModel } from "@/lib/ai";
-import { rateLimit } from "@/lib/rateLimit";
+import { guardAi } from "@/lib/server/guard";
 
 /** Lets the setup screen warn up front if voice transcription isn't available on this server. */
 export function GET() {
@@ -7,13 +7,13 @@ export function GET() {
 }
 
 // A 60-second answer is well under 1 MB; this leaves room for slower codecs without inviting abuse.
+export const maxDuration = 60;
+
 const MAX_BYTES = 8 * 1024 * 1024;
 
 export async function POST(req: Request) {
-  const ip = req.headers.get("x-forwarded-for") ?? "local";
-  if (!rateLimit(`transcribe:${ip}`, 15)) {
-    return Response.json({ error: "Too many requests, slow down." }, { status: 429 });
-  }
+  const gate = await guardAi(req, "transcribe", 15);
+  if (!gate.ok) return gate.response;
 
   const form = await req.formData().catch(() => null);
   const file = form?.get("audio");

@@ -2,9 +2,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const askJson = vi.fn();
 const consumeInterview = vi.fn();
+const consumeReview = vi.fn();
 
 vi.mock("@/lib/ai", () => ({ askJson: (...a: unknown[]) => askJson(...a), mockEnabled: () => false }));
-vi.mock("@/lib/server/usage", () => ({ consumeInterview: (...a: unknown[]) => consumeInterview(...a) }));
+vi.mock("@/lib/server/usage", () => ({
+  consumeInterview: (...a: unknown[]) => consumeInterview(...a),
+  consumeReview: (...a: unknown[]) => consumeReview(...a),
+}));
 
 import { DELETE as deleteAccount } from "@/app/api/account/route";
 import { POST as next } from "@/app/api/interview/next/route";
@@ -33,6 +37,8 @@ beforeEach(() => {
   askJson.mockReset();
   consumeInterview.mockReset();
   consumeInterview.mockResolvedValue({ ok: true });
+  consumeReview.mockReset();
+  consumeReview.mockResolvedValue({ ok: true });
 });
 
 describe("POST /api/interview/next", () => {
@@ -155,5 +161,12 @@ describe("billing and account endpoints without configuration", () => {
   it("account deletion requires a signed-in user", async () => {
     const res = await deleteAccount(new Request("http://localhost/api/account", { method: "DELETE" }));
     expect(res.status).toBe(401);
+  });
+
+  it("statement review stops when the free weekly allowance is used", async () => {
+    consumeReview.mockResolvedValue({ ok: false, status: 402, error: "Used up." });
+    const res = await review(req({ kind: "statement", text: "x".repeat(80) }));
+    expect(res.status).toBe(402);
+    expect(askJson).not.toHaveBeenCalled();
   });
 });
