@@ -8,10 +8,10 @@ export default function Logo({ light = false }: { light?: boolean }) {
         }`}
         aria-hidden
       >
-        DA
+        L6
       </span>
       <span className={`text-[15px] font-semibold uppercase tracking-[0.22em] ${light ? "text-white" : "text-ink"}`}>
-        DA Prep
+        Level6
       </span>
     </span>
   );

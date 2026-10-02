@@ -75,7 +75,7 @@ describe("backup and restore", () => {
     expect(list.find((x: Application) => x.id === "a1").notes).toBe("mine");
   });
 
-  it("rejects files that are not DA Prep backups", () => {
+  it("rejects files that are not Level6 backups", () => {
     expect(() => applyBackup(memoryStorage(), { hello: "world" })).toThrow(/backup/);
     expect(() => applyBackup(memoryStorage(), null)).toThrow(/backup/);
   });

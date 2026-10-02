@@ -18,7 +18,7 @@ export default function Privacy() {
 
       <h2 className="text-base font-semibold">Who we are</h2>
       <p>
-        {OPERATOR_NAME} runs DA Prep and is the controller of your personal data under UK GDPR.
+        {OPERATOR_NAME} runs Level6 and is the controller of your personal data under UK GDPR.
         {CONTACT_EMAIL ? (
           <>
             {" "}Contact us at <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> about anything
@@ -29,7 +29,7 @@ export default function Privacy() {
 
       <h2 className="text-base font-semibold">Who this is for</h2>
       <p>
-        DA Prep is for people aged 16 and over. Many users are under 18, so we collect as little as we can, do not show
+        Level6 is for people aged 16 and over. Many users are under 18, so we collect as little as we can, do not show
         advertising, do not track you across other sites, do not use analytics, and never make your content public.
         You must be 16 or over to create an account.
       </p>

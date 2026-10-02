@@ -41,7 +41,7 @@ export default function Tracker() {
     const url = URL.createObjectURL(new Blob([applicationsToIcs(apps)], { type: "text/calendar" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = "da-prep-deadlines.ics";
+    a.download = "level6-deadlines.ics";
     a.click();
     URL.revokeObjectURL(url);
   }

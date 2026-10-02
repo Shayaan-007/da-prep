@@ -10,7 +10,7 @@ export default function Terms() {
 
       <h2 className="text-base font-semibold">Who we are</h2>
       <p>
-        DA Prep is run by {OPERATOR_NAME}.
+        Level6 is run by {OPERATOR_NAME}.
         {CONTACT_EMAIL ? (
           <>
             {" "}Contact: <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
@@ -21,7 +21,7 @@ export default function Terms() {
 
       <h2 className="text-base font-semibold">What this service is</h2>
       <p>
-        DA Prep provides practice tools and general guidance for people applying for degree apprenticeships. It is not
+        Level6 provides practice tools and general guidance for people applying for degree apprenticeships. It is not
         careers, legal or financial advice. It is independent: it is not affiliated with, endorsed by or sponsored by
         any employer, university, test provider or government body. Employer, product and programme names are used only
         to describe publicly advertised opportunities and belong to their owners.
@@ -39,7 +39,7 @@ export default function Terms() {
       <h2 className="text-base font-semibold">Use of AI in your applications</h2>
       <p>
         Some employers limit or ban AI help, or outside coaching, in applications and assessments. It is your
-        responsibility to read and follow each employer&apos;s rules. Use DA Prep to practise and to learn what a good
+        responsibility to read and follow each employer&apos;s rules. Use Level6 to practise and to learn what a good
         answer looks like, and write your applications in your own words.
       </p>
 
