@@ -92,7 +92,8 @@ export default function Privacy() {
       </p>
 
       <h2 className="text-base font-semibold">Who else handles your data</h2>
-      <div className="overflow-x-auto">
+      {/* Focusable so keyboard users can scroll the table sideways on narrow screens. */}
+      <div className="overflow-x-auto" tabIndex={0} role="region" aria-label="Services that handle your data">
         <table className="w-full min-w-[32rem] border-collapse text-left">
           <thead>
             <tr className="border-b border-line">
