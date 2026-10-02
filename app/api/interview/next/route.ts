@@ -7,7 +7,7 @@ import {
   nextQuestionSystem,
   nextQuestionUser,
 } from "@/lib/interview";
-import { mockQuestion } from "@/lib/mocks";
+import { firmBriefing } from "@/lib/firms/context";
 import { consumeInterview } from "@/lib/server/usage";
 import { issuePass, requirePass } from "@/lib/server/pass";
 import { guardAi } from "@/lib/server/guard";
@@ -22,7 +22,9 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return Response.json({ error: "Invalid input" }, { status: 400 });
   }
-  const { jobAd, cv, stage, sector, history } = parsed.data;
+  const { jobAd, cv, stage, sector, history, firm, programme } = parsed.data;
+  const profile = firmBriefing(firm, programme, stage);
+  if (firm && !profile && jobAd.trim().length < 20) return Response.json({ error: "Unknown employer" }, { status: 400 });
   // Later questions need the pass issued with the first one, so the allowance can't be skipped by faking history.
   if (gate.userId && history.length > 0) {
     const denied = await requirePass(req, gate.userId, ["interview"]);
@@ -40,19 +42,19 @@ export async function POST(req: Request) {
   try {
     const index = history.length;
     const asked = history.map((t) => t.question);
-    const user = nextQuestionUser(jobAd, cv, history);
+    const user = nextQuestionUser(jobAd, cv, history, profile);
 
     // Each question has its own theme. If the model still repeats an earlier question, retry once with a nudge,
     // then fall back to a built-in question so the candidate never sees the same question twice.
     let question = "";
     for (let attempt = 0; attempt < 2; attempt++) {
       const out = await askJson({
-        system: nextQuestionSystem(stage, sector, index, attempt > 0),
+        system: nextQuestionSystem(stage, sector, index, attempt > 0, Boolean(profile)),
         user,
         schema: nextOutput,
         tier: "fast",
         maxTokens: 2000,
-        mock: () => mockQuestion(history),
+        mock: () => ({ question: fallbackQuestion(stage, index, asked) }),
       });
       if (!isDuplicateQuestion(out.question, asked)) {
         question = out.question;

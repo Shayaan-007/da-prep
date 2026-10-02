@@ -97,6 +97,8 @@ describe("POST /api/interview/score", () => {
     summary: "ok",
     strengths: ["a"],
     improvements: ["b"],
+    rubric: { structure: 3, specificity: 2, motivation: 4, firmKnowledge: 1, commercialAwareness: 2, values: 3 },
+    nextSteps: ["one", "two", "three", "four"],
     turns: turns.map(() => ({
       score: 6,
       feedback: "f",
@@ -109,11 +111,27 @@ describe("POST /api/interview/score", () => {
     expect((await score(req({ jobAd: ad, stage: "competency", turns: [] }))).status).toBe(400);
   });
 
+  it("marks against an employer profile when no advert is given", async () => {
+    askJson.mockResolvedValue(good);
+    const res = await score(req({ stage: "commercial", turns, firm: "morgan-stanley", programme: 0 }));
+    expect(res.status).toBe(200);
+    const call = askJson.mock.calls.at(-1)![0] as { user: string; system: string };
+    expect(call.user).toContain("<employer_profile>");
+    expect(call.user).toContain("Morgan Stanley");
+    expect(call.system).toContain("firmKnowledge");
+  });
+
+  it("rejects an unknown employer with no advert", async () => {
+    expect((await score(req({ stage: "competency", turns, firm: "not-a-firm" }))).status).toBe(400);
+  });
+
   it("returns the marked result", async () => {
     askJson.mockResolvedValue(good);
     const res = await score(req({ jobAd: ad, stage: "competency", turns }));
     expect(res.status).toBe(200);
-    expect((await res.json()).overall).toBe(70);
+    const body = await res.json();
+    expect(body.overall).toBe(70);
+    expect(body.nextSteps).toEqual(["one", "two", "three"]);
   });
 
   it("fails safely if the model returns the wrong number of answers", async () => {

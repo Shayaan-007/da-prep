@@ -1,4 +1,4 @@
-import type { Stage } from "@/lib/interview";
+import type { RubricKey, Stage } from "@/lib/interview";
 
 export const COMPETENCIES = [
   "Teamwork",
@@ -59,6 +59,10 @@ export type SessionRecord = {
   }[];
   strengths?: string[];
   improvements?: string[];
+  /** Added later, so optional: the rubric bands (0-5), next steps and employer used. */
+  rubric?: Partial<Record<RubricKey, number>>;
+  nextSteps?: string[];
+  firm?: string;
 };
 
 /** A finished firm mock process: one compact summary per stage (full answers are not kept). */
