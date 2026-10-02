@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const { kind, text, jobAd } = parsed.data;
   const blocked = await screenText(text, jobAd);
   if (blocked) return blocked;
-  // Free accounts get a couple of reviews a week; Pro is unlimited. Counted after the safety check so blocked text is free.
+  // Free accounts get a couple of reviews a week; Pro has fair-use limits only. Counted after the safety check so blocked text is free.
   const usage = await consumeReview(req);
   if (!usage.ok) return Response.json({ error: usage.error }, { status: usage.status });
   try {

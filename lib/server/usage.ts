@@ -46,7 +46,7 @@ export const consumeInterview = (req: Request) =>
     new Date().toISOString().slice(0, 7),
     FREE_INTERVIEWS,
     "Sign in to start an interview.",
-    `You've used your ${FREE_INTERVIEWS} free interviews this month. Upgrade to Pro for unlimited practice.`,
+    `You've used your ${FREE_INTERVIEWS} free interviews this month. Upgrade to Pro to keep practising (fair-use limits apply).`,
   );
 
 /** Count one statement or answer review against the caller's weekly free allowance. */
@@ -57,5 +57,5 @@ export const consumeReview = (req: Request) =>
     isoWeek(),
     FREE_REVIEWS,
     "Sign in to get a review.",
-    `You've used your ${FREE_REVIEWS} free reviews this week. They reset on Monday, or upgrade to Pro for unlimited reviews.`,
+    `You've used your ${FREE_REVIEWS} free reviews this week. They reset on Monday, or upgrade to Pro for more (fair-use limits apply).`,
   );

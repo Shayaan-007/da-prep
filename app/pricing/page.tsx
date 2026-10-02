@@ -12,7 +12,11 @@ const FREE = [
   "Unlimited practice tests, tracker, stories bank, guides",
   "Progress history",
 ];
-const PRO = ["Unlimited AI mock interviews", "Unlimited statement and answer reviews", "Everything in Free"];
+const PRO = [
+  "AI mock interviews and firm mock processes, within fair-use limits (up to 25 marked interviews a day)",
+  "Statement and answer reviews, within fair-use limits (up to 40 a day)",
+  "Everything in Free",
+];
 
 export default function Pricing() {
   const { enabled, user } = useAuth();
