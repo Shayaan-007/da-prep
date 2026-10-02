@@ -35,7 +35,7 @@ Without Supabase env vars the app is local-only (data in the browser). Without S
 ## Enabling limits and payments
 1. Create a Stripe subscription Product/Price; set `STRIPE_SECRET_KEY`, `STRIPE_PRICE_ID`.
 2. Point a webhook at `/api/stripe/webhook` for `checkout.session.completed`, `customer.subscription.updated` and `customer.subscription.deleted`; set `STRIPE_WEBHOOK_SECRET`. Enable the customer portal in the Stripe dashboard (Settings, Billing, Customer portal) so "Manage or cancel" works.
-3. Set `ENFORCE_LIMITS=true`. All AI routes then require sign-in, share a 150-calls-a-day budget per user (`DAILY_AI_CALLS` in `lib/server/guard.ts`), and free users get 2 interviews a month and 2 reviews a week (`FREE_INTERVIEWS`, `FREE_REVIEWS` in `lib/server/usage.ts`); Pro is unlimited.
+3. Limits switch on automatically in production once Supabase is configured (set `ENFORCE_LIMITS=false` to opt out, or `true` to force them on in development). All AI routes then require sign-in, share a 150-calls-a-day budget per user (`DAILY_AI_CALLS` in `lib/server/guard.ts`) plus a daily cap per expensive route, and free users get 2 interviews a month and 2 reviews a week (`FREE_INTERVIEWS`, `FREE_REVIEWS` in `lib/server/usage.ts`); Pro has fair-use limits only. Starting an interview or mock process issues a signed practice pass (`lib/server/pass.ts`) that its follow-up questions, marking and transcription must present, so the free allowance can't be skipped.
 4. Production: set `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` so rate limits are shared across serverless instances, and `NEXT_PUBLIC_OPERATOR_NAME` / `NEXT_PUBLIC_CONTACT_EMAIL` for the legal pages.
 
 ## Deploying

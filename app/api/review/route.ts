@@ -8,7 +8,7 @@ import { consumeReview } from "@/lib/server/usage";
 export const maxDuration = 120;
 
 export async function POST(req: Request) {
-  const gate = await guardAi(req, "review", 6);
+  const gate = await guardAi(req, "review", 6, 40);
   if (!gate.ok) return gate.response;
   const parsed = reviewInput.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: "Invalid input" }, { status: 400 });

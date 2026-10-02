@@ -1,4 +1,5 @@
 import { admin, userFromRequest } from "@/lib/server/auth";
+import { limitsEnforced } from "@/lib/server/guard";
 
 export const FREE_INTERVIEWS = 2;
 export const FREE_REVIEWS = 2;
@@ -14,7 +15,7 @@ export function isoWeek(d = new Date()): string {
   return `${t.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
 }
 
-/** Count one use against a free allowance. Only enforced when ENFORCE_LIMITS=true; otherwise always allowed. */
+/** Count one use against a free allowance. Only enforced when limits are enforced (see limitsEnforced); otherwise always allowed. */
 async function consume(
   req: Request,
   rpc: "consume_interview" | "consume_review",
@@ -23,7 +24,7 @@ async function consume(
   signIn: string,
   used: string,
 ): Promise<Result> {
-  if (process.env.ENFORCE_LIMITS !== "true") return { ok: true };
+  if (!limitsEnforced()) return { ok: true };
   const a = admin();
   if (!a) return { ok: false, status: 500, error: "Usage limits are enabled but Supabase is not configured." };
   const user = await userFromRequest(req);
