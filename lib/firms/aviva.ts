@@ -16,7 +16,7 @@ export const aviva: FirmProfile = {
       name: "Software Engineer Apprentice (Level 4 and Level 6 routes, applicants state a preference)",
       level: "Level 4 (about 19 months) and Level 6 (about 40-48 months)",
       degree: "BSc (Hons) Digital and Technology Solutions (Level 6)",
-      locations: ["Norwich"],
+      locations: ["Norwich", "York (Aviva's Technology and Change pathway page lists Norwich and York)"],
     },
     {
       name: "Automation Engineer Apprentice",
@@ -137,7 +137,8 @@ export const aviva: FirmProfile = {
   officialLinks: [A_APPS, A_TECH, "https://careers.aviva.co.uk/apply/application-process/"],
   lastVerified: "2026-10-02",
   gaps: [
-    "Re-checked 2 Oct 2026: careers.aviva.co.uk pages still returned 403, so nothing here comes from a direct read of Aviva's own pages. The only official read was the gov.uk listing, which shows just the 16 March 2026 closure (search summaries say 15 March).",
+    "Browser pass 2 Oct 2026: Aviva's careers pages DO load in a real browser (plain fetches get 403). Read directly: the Technology and Change pathway page (official) says Level 3 to Level 6 apprenticeships lasting 18 months to four years, 80% on the job and 20% study, a two-year central development programme for all early-careers entrants, and locations Norwich and York; most roles need no tech background. Aviva's application-process page (official) is generic: Aviva contacts you, then an online test or interview, then an interview that may be one-to-one or a group assessment (possibly several stages), a verbal offer, then pre-employment screening. It says different roles have slightly different processes and gives no apprenticeship-specific stages, test names, video format, dates or entry requirements, so the stage detail in this profile is still from prep sites.",
+    "Re-checked 2 Oct 2026 by plain fetch: careers.aviva.co.uk pages returned 403, so nothing here comes from a direct read of Aviva's own pages. The only official read was the gov.uk listing, which shows just the 16 March 2026 closure (search summaries say 15 March).",
     "Two motivation questions (why this role at Aviva; why a career in this industry) appear in Glassdoor summaries for the graduate route, but the exact source page could not be identified, so they are not listed.",
     "Official Aviva application process and entry requirements for degree apprenticeships: careers pages returned 403 or a redirect; process details come from prep sites.",
     "Candidate-reported real questions for any stage: no Aviva apprenticeship threads found on TSR, Reddit or Glassdoor.",

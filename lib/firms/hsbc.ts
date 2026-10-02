@@ -169,6 +169,7 @@ export const hsbc: FirmProfile = {
   officialLinks: [H_GUIDE, H_PROGS, "https://www.hsbc.com/careers/students-and-graduates/student-opportunities/uk-degree-apprenticeship"],
   lastVerified: "2026-10-02",
   gaps: [
+    "Browser pass 2 Oct 2026: TheStudentRoom's 2025 degree-apprenticeship thread (page 6, read directly) corroborates the Codility reports (3 questions in 100 minutes for data; 4 tasks in 160 minutes with Java for engineering; generic development feedback only), a Virtual Experience Day for digital routes, and, for Global Private Banking, a final stage of three interviews with 'no AC'. Posters asked for interview questions but none were shared. HSBC's own degree-apprenticeship page could not be opened because the browser extension disconnected.",
     "Re-checked 2 Oct 2026: a claim that HSBC cancelled some 2025 starts was found only in a search summary of forum threads (not read) and no official or news source supports it, so it has been removed.",
     "A search summary says Commercial Banking and retail routes are a BSc (Hons) Applied Retail and Commercial Banking via Exeter, which differs from the 'LIBF Financial Services Management' degree above: the degree provider needs checking on the live advert.",
     "HSBC's application guide is for students and graduates generally, so its 90-minute assessment and 3-hour assessment centre may not apply to apprentices.",
