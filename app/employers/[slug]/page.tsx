@@ -1,10 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FIRMS, getFirm } from "@/lib/firms";
 import { getMock } from "@/lib/mockprocess/definitions";
 import type { Confidence } from "@/lib/firms/types";
+import { pageMeta } from "@/lib/site";
 
 export const generateStaticParams = () => FIRMS.map((f) => ({ slug: f.slug }));
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const firm = getFirm((await params).slug);
+  if (!firm) return { title: "Employer not found" };
+  const stages = firm.stages.map((s) => s.name.split(/[(:]/)[0].trim().toLowerCase()).join(", ");
+  return pageMeta({
+    title: `${firm.name} degree apprenticeship: process, tests and interview`,
+    description: `How the ${firm.name} degree apprenticeship application works: ${stages}. Sourced dates, entry requirements, reported questions and tips.`.slice(0, 300),
+    path: `/employers/${firm.slug}`,
+  });
+}
 
 const CONFIDENCE: Record<Confidence, string> = {
   official: "Official source",

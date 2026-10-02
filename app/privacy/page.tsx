@@ -1,6 +1,11 @@
+import { pageMeta } from "@/lib/site";
 import { CONTACT_EMAIL, LEGAL_UPDATED, OPERATOR_NAME } from "@/lib/legal";
 
-export const metadata = { title: "Privacy" };
+export const metadata = pageMeta({
+  title: "Privacy notice",
+  description: "What DA Prep stores, what is sent to AI services, and your rights. No ads, no tracking, no analytics.",
+  path: "/privacy",
+});
 
 const PROCESSORS: [string, string, string][] = [
   ["OpenAI", "Generates interview questions and feedback, transcribes your voice, and screens text for harmful content", "United States"],

@@ -1,6 +1,11 @@
+import { pageMeta } from "@/lib/site";
 import { CONTACT_EMAIL, LEGAL_UPDATED, OPERATOR_NAME } from "@/lib/legal";
 
-export const metadata = { title: "Terms" };
+export const metadata = pageMeta({
+  title: "Terms of use",
+  description: "The terms for using DA Prep, including plans, cancellation and using AI responsibly in applications.",
+  path: "/terms",
+});
 
 export default function Terms() {
   return (
