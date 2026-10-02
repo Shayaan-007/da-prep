@@ -1,4 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#007e82"/>
-  <text x="32" y="43" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#ffffff">DA</text>
+  <rect width="64" height="64" rx="14" fill="#ffffff"/>
+  <rect x="8.0" y="49.0" width="48.0" height="5.5" rx="1" fill="#1A1A1A"/>
+  <rect x="12.0" y="41.2" width="40.0" height="5.5" rx="1" fill="#1A1A1A"/>
+  <rect x="16.0" y="33.4" width="32.0" height="5.5" rx="1" fill="#1A1A1A"/>
+  <rect x="20.0" y="25.6" width="24.0" height="5.5" rx="1" fill="#1A1A1A"/>
+  <rect x="24.0" y="17.8" width="16.0" height="5.5" rx="1" fill="#1A1A1A"/>
+  <rect x="28.0" y="10.0" width="8.0" height="5.5" rx="1" fill="#007e82"/>
 </svg>
