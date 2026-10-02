@@ -19,6 +19,15 @@ Result: **no new reported interview questions were added** to any of these ten p
 - **Microsoft:** added a Cheltenham Level 6 Cyber Security listing (single third-party source) and its entry requirements.
 - **Santander:** added salary (£27,500), hybrid pattern, and that the games and video interview are one combined step for selected roles.
 
+## Browser pass (2 Oct 2026, same day)
+
+A real browser (Chrome automation, public logged-out pages only, essential cookies only, read-only) reads sources that plain fetches cannot:
+- **Works:** careers.aviva.co.uk (loads; its text needs the page body, not just `<main>`), bmwgroup.jobs, jpmorganchase.com, and **TheStudentRoom threads** (no CAPTCHA).
+- **Blocked by a bot check, not attempted further:** **Glassdoor** ("Humans only" / "Just a moment"). It was not bypassed and should not be, so Glassdoor remains unavailable as a source.
+- **Genuine 404s (pages removed, not blocked):** BMW's UK recruitment-process page and the whole `/gb/en/apprentices` section; J.P. Morgan's technology apprenticeship page.
+- **Yield was low.** Aviva's official process page is generic. TheStudentRoom threads confirm existing claims (HSBC Codility timings, no assessment centre, three final interviews; J.P. Morgan assessment evening with a group task) but candidates rarely post real questions there, so **no new reported questions were added**.
+- The browser extension disconnected partway through, so HSBC's own degree-apprenticeship page, Cisco and Google were not opened.
+
 ## Still open (needs a browser, a person, or the firm)
 
 - Re-read the blocked official pages with browser automation: careers.aviva.co.uk, careers.cisco.com, Google Careers, bmwgroup.jobs, Microsoft's apprenticeship pages, HSBC's degree-apprenticeship listing, J.P. Morgan's Technology page.
