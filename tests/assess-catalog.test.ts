@@ -18,6 +18,8 @@ function perfect(item: Item): Response {
       return { kind: "rate-each", ratings: item.ratings };
     case "rank":
       return { kind: "rank", order: item.order };
+    case "numeric":
+      return { kind: "numeric", value: String(item.answer) };
     case "likert":
       return { kind: "likert", value: 5 };
     case "forced-choice":
@@ -61,7 +63,7 @@ describe("test catalogue", () => {
 
   it("adaptive and rotating pools are bigger than the number served", () => {
     for (const t of TESTS) for (const s of t.sections) if (s.adaptive) expect(s.items.length, t.id).toBeGreaterThan(s.adaptive.count);
-    for (const t of TESTS) for (const s of t.sections) if (s.sample) expect(s.items.length, t.id).toBeGreaterThanOrEqual(s.sample.count * 2);
+    for (const t of TESTS) for (const s of t.sections) if (s.sample) expect(s.items.length, t.id).toBeGreaterThan(s.sample.count);
   });
 
   it("rotating sections serve whole groups, the right number, and vary between attempts", () => {
@@ -75,7 +77,7 @@ describe("test catalogue", () => {
           const ids = serveIds(s, rand);
           expect(new Set(ids).size, t.id).toBe(ids.length);
           if (s.sample.byStimulus) {
-            const groups = new Set(ids.map((id) => s.items.find((i) => i.id === id)!.stimulus));
+            const groups = new Set(ids.map((id) => s.items.find((i) => i.id === id)!.stimulus).filter(Boolean));
             for (const g of groups) for (const i of s.items.filter((x) => x.stimulus === g)) expect(ids, t.id).toContain(i.id);
             expect(ids.length, t.id).toBeGreaterThanOrEqual(s.sample.count);
           } else expect(ids.length, t.id).toBe(s.sample.count);

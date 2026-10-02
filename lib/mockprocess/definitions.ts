@@ -146,8 +146,8 @@ export const MOCKS: MockProcess[] = [
         "Check eligibility (104 UCAS points for BrightStart) before you apply.",
       ]),
       { kind: "test", name: "Immersive assessment: ranking actions", testId: "sjt-ranking", stageOrder: 3, note: "Deloitte says you rank the most and least likely actions in workplace scenarios. Timings are not published." },
-      { kind: "test", name: "Immersive assessment: numerical reasoning", testId: "scales-numerical", stageOrder: 3, note: "Deloitte includes numerical and verbal reasoning; this uses an Aon-style statement format as a stand-in." },
-      { kind: "test", name: "Immersive assessment: verbal reasoning", testId: "scales-verbal", stageOrder: 3 },
+      { kind: "test", name: "Immersive assessment: numerical reasoning", testId: "capp-numerical", stageOrder: 3, note: "Deloitte includes numerical and verbal reasoning. Prep sites report Cappfinity runs it, so this uses a Cappfinity-style, time-recorded replica." },
+      { kind: "test", name: "Immersive assessment: verbal reasoning", testId: "capp-verbal", stageOrder: 3 },
       {
         kind: "qa",
         name: "Job simulation: recorded answers",
@@ -258,7 +258,7 @@ export const MOCKS: MockProcess[] = [
     stages: [
       APPLICATION(1, "Create an account and complete the application form. Apprentices wait three months after a rejection before applying again.", ["Roles close once filled, so apply early."]),
       { kind: "test", name: "Online assessment: realistic job preview", testId: "sjt-ranking", stageOrder: 2, note: "EY describes rank-order questions on teamwork and learning capability. Counts and timings are not published." },
-      { kind: "test", name: "Online assessment: numerical reasoning", testId: "shl-numerical", stageOrder: 2, note: "EY says some programmes include a timed numerical test. Format and timing are not published." },
+      { kind: "test", name: "Online assessment: numerical reasoning", testId: "capp-numerical", stageOrder: 2, note: "EY says some programmes include a numerical test. Prep sites report a single Cappfinity 'EY One Assessment' since 2025, so this uses a Cappfinity-style replica. Format and timing are not published." },
       {
         kind: "qa",
         name: "Online assessment: recorded video answers",
@@ -768,7 +768,7 @@ export const MOCKS: MockProcess[] = [
         "Pick your division deliberately: Commercial Banking, Wealth or Digital.",
       ]),
       { kind: "test", name: "Simulate: ranking workplace actions", testId: "sjt-ranking", stageOrder: 2, note: "HSBC's Simulate assessment (built with Cappfinity) uses work scenarios with ranked responses; this replica uses written ranking scenarios." },
-      { kind: "test", name: "Simulate: data interpretation", testId: "scales-numerical", stageOrder: 2, note: "Prep sites describe data-monitoring tasks with tables and graphs; this uses an Aon-style statement format as a stand-in." },
+      { kind: "test", name: "Simulate: data interpretation", testId: "capp-numerical", stageOrder: 2, note: "Prep sites describe data-monitoring tasks with tables and graphs in HSBC's Cappfinity simulation; this uses a Cappfinity-style, time-recorded replica." },
       {
         kind: "qa",
         name: "Simulate: recorded video responses",

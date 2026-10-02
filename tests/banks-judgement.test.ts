@@ -106,3 +106,31 @@ describe("trait bank", () => {
     expect(JSON.stringify(buildTraits())).toBe(JSON.stringify(TRAIT_BANK));
   });
 });
+
+describe("Cappfinity-style banks", () => {
+  it("are valid and computed keys match the tables", async () => {
+    const { CAPP_NUMERICAL } = await import("@/lib/assess/banks/capp-numerical");
+    const { CAPP_VERBAL, CAPP_CRITICAL } = await import("@/lib/assess/banks/capp-verbal");
+    for (const item of [...CAPP_NUMERICAL.items, ...CAPP_VERBAL, ...CAPP_CRITICAL]) expect(validateItem(item), item.id).toEqual([]);
+    for (const item of CAPP_NUMERICAL.items) {
+      const got = CAPP_NUMERICAL.checks[item.id](CAPP_NUMERICAL.stimuli[item.stimulus!]);
+      const key = item.kind === "numeric" ? item.answer : item.kind === "rank" ? item.order : item.kind === "mcq" ? item.answer : null;
+      expect(got, item.id).toEqual(key);
+    }
+    expect(new Set(CAPP_NUMERICAL.items.map((i) => i.kind))).toEqual(new Set(["numeric", "rank", "mcq"]));
+  });
+
+  it("never shows ranking options already in order and spreads correct answers", async () => {
+    const { CAPP_NUMERICAL } = await import("@/lib/assess/banks/capp-numerical");
+    const { CAPP_VERBAL, CAPP_CRITICAL } = await import("@/lib/assess/banks/capp-verbal");
+    const all = [...CAPP_NUMERICAL.items, ...CAPP_VERBAL, ...CAPP_CRITICAL];
+    for (const i of all) if (i.kind === "rank") expect(i.order, i.id).not.toEqual(i.order.map((_, k) => k));
+    const mcqPositions = new Set(all.flatMap((i) => (i.kind === "mcq" && i.options.length === 4 ? [i.answer] : [])));
+    expect(mcqPositions.size).toBeGreaterThan(2);
+  });
+
+  it("covers all five critical reasoning styles four times each", async () => {
+    const { CAPP_CRITICAL } = await import("@/lib/assess/banks/capp-verbal");
+    for (const style of ["lc", "brd", "arg", "tf", "as"]) expect(CAPP_CRITICAL.filter((i) => i.id.startsWith(`capp-cr-${style}`)), style).toHaveLength(4);
+  });
+});

@@ -2,6 +2,8 @@
 // response style, rules) with original items. `formatNotes` says what is confirmed and what is approximated, so the
 // app never implies more precision than the research supports. Sources: docs/research/02-assessment-formats.md.
 
+import { CAPP_NUMERICAL } from "@/lib/assess/banks/capp-numerical";
+import { CAPP_CRITICAL, CAPP_CRITICAL_STIMULI, CAPP_VERBAL, CAPP_VERBAL_STIMULI } from "@/lib/assess/banks/capp-verbal";
 import { DEDUCTIVE } from "@/lib/assess/banks/deductive";
 import { INDUCTIVE } from "@/lib/assess/banks/inductive";
 import { NUMERICAL } from "@/lib/assess/banks/numerical";
@@ -18,6 +20,9 @@ const AD_CUTE = "https://www.assessmentday.co.uk/cut-e.htm";
 const AD_SHL = "https://www.assessmentday.co.uk/shl.htm";
 const PAT_SJT = "https://www.practiceaptitudetests.com/resources/situational-judgement-test-response-formats/";
 const CS_SJT = "https://www.gov.uk/guidance/preparing-for-the-new-civil-service-judgement-test";
+const GF_CAPP = "https://www.graduatesfirst.com/aptitude-tests-publishers/cappfinity";
+const PAT_CAPP = "https://www.practiceaptitudetests.com/testing-publishers/cappfinity/";
+const HEY_CR = "https://heycademy.com/en/cappfinity-critical-reasoning-test/";
 
 const section = (s: Partial<Section> & Pick<Section, "id" | "title" | "instructions" | "items" | "timing">): Section => ({
   allowBack: false,
@@ -225,6 +230,80 @@ export const TESTS: Test[] = [
         timing: { mode: "untimed" },
         allowBack: true,
         sample: { count: 4 },
+      }),
+    ],
+  },
+  {
+    id: "capp-numerical",
+    name: "Numerical reasoning, mixed answers (Cappfinity style)",
+    replicates: "Cappfinity numerical reasoning (time-recorded)",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: about 12 to 15 questions on tables and charts, with mixed answer types: choose one, type the number, or put values in order (prep-site reports; Cappfinity publishes no item counts).",
+      "Employers choose whether the test is time-limited, adaptive or time-recorded. This replica is time-recorded: no countdown, but your time is shown, and speed is reported to count when time is recorded.",
+      "A calculator is reported to be allowed. Each attempt serves 3 of 8 tables (12 questions).",
+    ],
+    sources: [GF_CAPP, PAT_CAPP],
+    sections: [
+      section({
+        id: "cnum",
+        title: "Numerical reasoning",
+        instructions: "Answer each question from the table. Some ask you to type a number, some to choose an answer and some to put values in order. There is no time limit, but your time is recorded, so work quickly and accurately.",
+        items: CAPP_NUMERICAL.items,
+        stimuli: CAPP_NUMERICAL.stimuli,
+        timing: { mode: "recorded" },
+        calculator: true,
+        sample: { count: 12, byStimulus: true },
+      }),
+    ],
+  },
+  {
+    id: "capp-verbal",
+    name: "Verbal reasoning, mixed answers (Cappfinity style)",
+    replicates: "Cappfinity verbal reasoning (time-recorded)",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported answer styles: fill the gap, match a statement to the passage, rank statements, and true/false (prep-site reports). Item counts vary by employer and are not published.",
+      "Time-recorded here: no countdown, but your time is shown. Each attempt serves 3 of 4 passages (12 questions).",
+    ],
+    sources: [GF_CAPP, PAT_CAPP],
+    sections: [
+      section({
+        id: "cverb",
+        title: "Verbal reasoning",
+        instructions: "Read each passage and answer the questions using only what it says. There is no time limit, but your time is recorded.",
+        items: CAPP_VERBAL,
+        stimuli: CAPP_VERBAL_STIMULI,
+        timing: { mode: "recorded" },
+        sample: { count: 12, byStimulus: true },
+      }),
+    ],
+  },
+  {
+    id: "capp-critical",
+    name: "Critical reasoning, five styles (Cappfinity style)",
+    replicates: "Cappfinity critical reasoning (time-recorded)",
+    kind: "ability",
+    confidence: "single-report",
+    approximate: true,
+    formatNotes: [
+      "Reported format: five question styles in one test: logical conclusions, beyond reasonable doubt, strong or weak arguments, true/false/cannot say, and assumptions, with time recorded (single prep-site report).",
+      "Each attempt serves about 12 of 20 questions, mixing the styles.",
+    ],
+    sources: [HEY_CR],
+    sections: [
+      section({
+        id: "ccrit",
+        title: "Critical reasoning",
+        instructions: "Each question says what to decide: which conclusion must be true, whether a conclusion follows beyond reasonable doubt, whether an argument is strong or weak, whether a statement is true, false or cannot be said, or whether an assumption is made. Your time is recorded.",
+        items: CAPP_CRITICAL,
+        stimuli: CAPP_CRITICAL_STIMULI,
+        timing: { mode: "recorded" },
+        sample: { count: 12, byStimulus: true },
       }),
     ],
   },

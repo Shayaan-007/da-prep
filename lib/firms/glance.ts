@@ -53,7 +53,7 @@ export type PracticeLink = { href: string; label: string };
 const TEST_RULES: [RegExp, string[]][] = [
   [/\bSHL\b/i, ["shl-numerical", "shl-inductive"]],
   [/\bAon\b|cut-e|scales/i, ["scales-numerical", "scales-verbal"]],
-  [/cappfinity|immersive|simulat/i, ["sjt-ranking", "scales-numerical"]],
+  [/cappfinity|immersive|simulat/i, ["capp-numerical", "capp-verbal", "sjt-ranking"]],
   [/situational|\bSJT\b|scenario/i, ["sjt-most-least"]],
   [/numerical|numeracy/i, ["shl-numerical"]],
   [/verbal/i, ["scales-verbal"]],

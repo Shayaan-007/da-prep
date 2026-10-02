@@ -36,8 +36,10 @@ export type Item =
   | (Base & { kind: "most-least"; options: string[]; most: number; least: number })
   /** Rate every action 0-3 (see RATING_LABELS). `ratings[i]` is the key for `actions[i]`. */
   | (Base & { kind: "rate-each"; actions: string[]; ratings: number[] })
+  /** Type a number. Correct when within `tolerance` of `answer` (default: exact). `unit` is shown beside the box. */
+  | (Base & { kind: "numeric"; answer: number; tolerance?: number; unit?: string })
   /** Put the options in order, best first. `order` lists option indexes in the correct order. */
-  | (Base & { kind: "rank"; options: string[]; order: number[] })
+  | (Base & { kind: "rank"; options: string[]; order: number[]; /** e.g. "smallest first"; default "best first". */ orderLabel?: string })
   /** Agreement 1-5 with a statement, feeding one trait. No right answer. */
   | (Base & { kind: "likert"; trait: string; reverse?: boolean })
   /** Pick the statement most like you and the one least like you. Each statement feeds a trait. */
@@ -52,13 +54,16 @@ export type Response =
   | { kind: "most-least"; most: number | null; least: number | null }
   | { kind: "rate-each"; ratings: (number | null)[] }
   | { kind: "rank"; order: number[] | null }
+  | { kind: "numeric"; value: string | null }
   | { kind: "likert"; value: number | null }
   | { kind: "forced-choice"; most: number | null; least: number | null };
 
 export type Timing =
   | { mode: "section"; seconds: number }
   | { mode: "item"; seconds: number }
-  | { mode: "untimed" };
+  | { mode: "untimed" }
+  /** No time limit, but the time taken is recorded and shown (Cappfinity's "time recorded" mode). */
+  | { mode: "recorded" };
 
 export type Section = {
   id: string;

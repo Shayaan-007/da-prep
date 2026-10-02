@@ -120,7 +120,7 @@ export default function ItemView({ item, response, onChange, locked }: Props) {
       };
       return (
         <div className="space-y-2">
-          <p className="text-sm text-muted">Put the options in order, best first. Use the arrows to move an option.</p>
+          <p className="text-sm text-muted">Put the options in order, {item.orderLabel ?? "best first"}. Use the arrows to move an option.</p>
           <ol className="space-y-2">
             {order.map((optIdx, pos) => (
               <li key={optIdx} className="flex items-center gap-3 rounded-lg border border-line bg-white p-3 text-sm">
@@ -137,6 +137,26 @@ export default function ItemView({ item, response, onChange, locked }: Props) {
             </button>
           )}
         </div>
+      );
+    }
+    case "numeric": {
+      const r = response as Extract<Response, { kind: "numeric" }>;
+      return (
+        <label className="block space-y-1 text-sm">
+          <span className="font-semibold">Your answer</span>
+          <span className="flex items-center gap-2">
+            <input
+              type="text"
+              inputMode="decimal"
+              autoComplete="off"
+              className="input max-w-[12rem] tabular-nums"
+              value={r.value ?? ""}
+              disabled={locked}
+              onChange={(e) => onChange({ kind: "numeric", value: e.target.value === "" ? null : e.target.value })}
+            />
+            {item.unit && <span className="text-muted">{item.unit}</span>}
+          </span>
+        </label>
       );
     }
     case "likert": {

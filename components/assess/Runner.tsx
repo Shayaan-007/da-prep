@@ -47,6 +47,7 @@ const mmss = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, 
 
 function describeTiming(s: Section) {
   if (s.timing.mode === "untimed") return "Untimed";
+  if (s.timing.mode === "recorded") return "No time limit, but your time is recorded: work quickly and accurately";
   if (s.timing.mode === "section") return `${Math.round(s.timing.seconds / 60)} minutes for the whole section`;
   return `${s.timing.seconds} seconds per question`;
 }
@@ -247,6 +248,11 @@ export default function Runner({ test, onComplete, onExit }: { test: Test; onCom
             <button type="button" className="btn btn-secondary px-3 py-1 text-sm" aria-expanded={calcOpen} onClick={() => setCalcOpen((v) => !v)}>
               Calculator
             </button>
+          )}
+          {section.timing.mode === "recorded" && (
+            <p role="timer" aria-label="Time taken" aria-live="off" className="rounded-md bg-soft px-3 py-1 text-base tabular-nums text-muted">
+              {mmss(Math.max(0, Math.floor((now - st.sectionStart) / 1000)))}
+            </p>
           )}
           {remaining !== null && (
             <p
