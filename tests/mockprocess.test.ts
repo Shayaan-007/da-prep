@@ -59,3 +59,17 @@ describe("mock processes", () => {
     for (const m of MOCKS) for (const s of m.stages) if (s.kind === "qa") for (const p of s.prompts) if (p.stimulus?.type === "table") for (const r of p.stimulus.rows) expect(r.length, `${m.firm} ${s.name}`).toBe(p.stimulus.columns.length);
   });
 });
+
+describe("question cleaning", () => {
+  it("strips research annotations from reported questions", async () => {
+    const { cleanQuestion } = await import("@/lib/mockprocess/definitions");
+    expect(cleanQuestion("Why this role (for example corporate banking)? Note: the candidate was not asked 'why Barclays'.")).toBe("Why this role (for example corporate banking)?");
+    expect(cleanQuestion("Describe a time you used a skill (the 'technical' questions were behavioural in style).")).toBe("Describe a time you used a skill.");
+    expect(cleanQuestion("Tell me about a team success. (BrightStart)")).toBe("Tell me about a team success.");
+    expect(cleanQuestion("Tell me about yourself.")).toBe("Tell me about yourself.");
+  });
+
+  it("no prompt shown to a candidate contains research annotations", () => {
+    for (const m of MOCKS) for (const s of m.stages) if (s.kind === "qa") for (const p of s.prompts) expect(p.text, `${m.firm} ${s.name}`).not.toMatch(/\bNote:|candidate was|single report|reported by|\(reported/i);
+  });
+});

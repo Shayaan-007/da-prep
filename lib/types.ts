@@ -61,6 +61,17 @@ export type SessionRecord = {
   improvements?: string[];
 };
 
+/** A finished firm mock process: one compact summary per stage (full answers are not kept). */
+export type MockRunRecord = {
+  id: string;
+  date: string;
+  firm: string;
+  title: string;
+  /** Average of the 0-100 scores across scored stages, if any stage was scored. */
+  overall?: number;
+  stages: { name: string; kind: "test" | "qa"; score?: number }[];
+};
+
 export type PracticeRecord = {
   id: string;
   date: string;

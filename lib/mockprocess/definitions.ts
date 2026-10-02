@@ -21,12 +21,21 @@ const firm = (slug: string) => {
   return f;
 };
 
+/** Strip research annotations ("Note: ...", parenthetical remarks about the source) so a prompt reads as the question alone. */
+export function cleanQuestion(q: string): string {
+  return q
+    .replace(/\s*\(BrightStart\)\s*$/, "")
+    .replace(/\s*Note:[\s\S]*$/, "")
+    .replace(/\s*\((?:the |reported|candidate|single)[^)]*\)/gi, "")
+    .trim();
+}
+
 /** Reported questions for a firm, kept only if they read as a single standalone question. */
 function reported(slug: string, stage: RegExp, max = 6, maxLen = 230): QaPrompt[] {
   return firm(slug)
     .questions.filter((q) => stage.test(q.stage) && q.question.length < maxLen && !/^(Reported in|Common questions)/.test(q.question) && !/\(reported/.test(q.question))
     .slice(0, max)
-    .map((q) => ({ text: q.question.replace(/\s*\(BrightStart\)$/, "") }));
+    .map((q) => ({ text: cleanQuestion(q.question) }));
 }
 
 const prompts = (...texts: string[]): QaPrompt[] => texts.map((text) => ({ text }));

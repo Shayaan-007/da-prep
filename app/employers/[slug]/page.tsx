@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FIRMS, getFirm } from "@/lib/firms";
+import { getMock } from "@/lib/mockprocess/definitions";
 import type { Confidence } from "@/lib/firms/types";
 
 export const generateStaticParams = () => FIRMS.map((f) => ({ slug: f.slug }));
@@ -46,6 +47,11 @@ export default async function FirmPage({ params }: { params: Promise<{ slug: str
           {firm.sector} · researched {firm.lastVerified}. Processes change every year, so confirm on the employer&apos;s
           own page.
         </p>
+        {getMock(firm.slug) && (
+          <Link href={`/mock/${firm.slug}`} className="btn btn-primary mt-3 inline-block">
+            Run the {firm.name} mock process
+          </Link>
+        )}
       </div>
 
       <section className="card p-4 space-y-2">
