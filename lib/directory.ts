@@ -1,9 +1,11 @@
 import { EMPLOYERS, type Employer } from "@/lib/employers";
 import { FIRMS } from "@/lib/firms";
 import type { SectorId } from "@/lib/sectors";
+import { trackerTemplate } from "@/lib/tracker";
+import type { TrackerTemplate } from "@/lib/tracker-item";
 
 /** One row in the employer directory: the seed list merged with researched firm profiles. */
-export type DirectoryEntry = Employer & { slug?: string };
+export type DirectoryEntry = Employer & { slug?: string; template?: TrackerTemplate };
 
 const firstWord = (s: string) =>
   s
@@ -35,11 +37,11 @@ export function directory(): DirectoryEntry[] {
   const merged: DirectoryEntry[] = EMPLOYERS.map((e) => {
     const firm = FIRMS.find((f) => !HIDDEN.has(f.slug) && firstWord(f.name) === firstWord(e.name));
     if (firm) used.add(firm.slug);
-    return firm ? { ...e, slug: firm.slug } : e;
+    return firm ? { ...e, slug: firm.slug, template: trackerTemplate(firm) } : e;
   });
   for (const f of FIRMS) {
     if (used.has(f.slug) || HIDDEN.has(f.slug)) continue;
-    merged.push({ name: f.name, sector: f.sector, sectors: sectorsFor(f.sector), slug: f.slug, note: NOTES[f.slug] });
+    merged.push({ name: f.name, sector: f.sector, sectors: sectorsFor(f.sector), slug: f.slug, note: NOTES[f.slug], template: trackerTemplate(f) });
   }
   return merged.sort((a, b) => a.name.localeCompare(b.name));
 }

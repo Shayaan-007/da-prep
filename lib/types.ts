@@ -28,6 +28,15 @@ export type Application = {
   deadline: string;
   status: Status;
   notes: string;
+  // Optional extras (added later, so older saved items still load).
+  /** Firm profile slug when added from our employer guides. */
+  firm?: string;
+  /** Closes when filled rather than on a fixed date. */
+  rolling?: boolean;
+  /** Last cycle's dates from our research, as a guide. */
+  datesHint?: string;
+  /** The firm's selection stages, ticked off as you complete them. */
+  checklist?: { label: string; done: boolean }[];
 };
 
 export type Story = {

@@ -6,6 +6,7 @@ import { FIND_APPRENTICESHIP_URL } from "@/lib/employers";
 import type { DirectoryEntry, NoDegreeRoute } from "@/lib/directory";
 import { SECTORS, type SectorId } from "@/lib/sectors";
 import { useCollection } from "@/lib/store";
+import { fromTemplate } from "@/lib/tracker-item";
 import type { Application } from "@/lib/types";
 
 export default function EmployersList({ entries, noDegree = [] }: { entries: DirectoryEntry[]; noDegree?: NoDegreeRoute[] }) {
@@ -80,7 +81,9 @@ export default function EmployersList({ entries, noDegree = [] }: { entries: Dir
               onClick={() =>
                 apps.update((p) => [
                   ...p,
-                  { id: crypto.randomUUID(), employer: e.name, role: "", deadline: "", status: "Interested", notes: "" },
+                  e.template
+                    ? { ...fromTemplate(e.template, crypto.randomUUID()), employer: e.name }
+                    : { id: crypto.randomUUID(), employer: e.name, role: "", deadline: "", status: "Interested", notes: "" },
                 ])
               }
               className="btn btn-secondary"
