@@ -87,7 +87,7 @@ export type Section = {
    * Pool of items; each attempt serves a fresh random selection of `count` items. With `byStimulus`, whole groups
    * that share a passage or table are served together, in their original order.
    */
-  sample?: { count: number; byStimulus?: boolean };
+  sample?: { count: number; byStimulus?: boolean; /** Trim to exactly `count`, even mid-group. */ exact?: boolean };
 };
 
 export type Test = {

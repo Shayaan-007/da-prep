@@ -51,6 +51,8 @@ export type PracticeLink = { href: string; label: string };
 
 // Which of our replica tests suit the tests a firm is reported to use.
 const TEST_RULES: [RegExp, string[]][] = [
+  [/work scenarios/i, ["work-scenarios"]],
+  [/switchChallenge/i, ["switch-challenge"]],
   [/\bSHL\b/i, ["shl-numerical", "shl-inductive"]],
   [/\bAon\b|cut-e|scales/i, ["scales-numerical", "scales-verbal"]],
   [/cappfinity|immersive|simulat/i, ["capp-numerical", "capp-verbal", "sjt-ranking"]],

@@ -78,7 +78,8 @@ describe("test catalogue", () => {
         for (let k = 0; k < 6; k++) {
           const ids = serveIds(s, rand);
           expect(new Set(ids).size, t.id).toBe(ids.length);
-          if (s.sample.byStimulus) {
+          if (s.sample.exact) expect(ids.length, t.id).toBe(s.sample.count);
+          else if (s.sample.byStimulus) {
             const groups = new Set(ids.map((id) => s.items.find((i) => i.id === id)!.stimulus).filter(Boolean));
             for (const g of groups) for (const i of s.items.filter((x) => x.stimulus === g)) expect(ids, t.id).toContain(i.id);
             expect(ids.length, t.id).toBeGreaterThanOrEqual(s.sample.count);

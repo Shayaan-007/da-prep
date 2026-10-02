@@ -42,3 +42,10 @@ describe("employer page summary", () => {
     for (const f of FIRMS) for (const l of practiceLinks(f)) if (l.href.startsWith("/tests/")) expect(getTest(l.href.slice(7)), l.href).toBeDefined();
   });
 });
+
+describe("links to the newer test formats", () => {
+  it("sends NatWest to work scenarios and Morgan Stanley to switch puzzles", () => {
+    expect(practiceLinks(getFirm("natwest")!).map((l) => l.href)).toContain("/tests/work-scenarios");
+    expect(practiceLinks(getFirm("morgan-stanley")!).map((l) => l.href)).toContain("/tests/switch-challenge");
+  });
+});

@@ -10,6 +10,7 @@ import { INDUCTIVE } from "@/lib/assess/banks/inductive";
 import { NUMERICAL } from "@/lib/assess/banks/numerical";
 import { NUMERICAL_TF } from "@/lib/assess/banks/numerical-tf";
 import { SJT } from "@/lib/assess/banks/sjt";
+import { SWITCH } from "@/lib/assess/banks/switch";
 import { TRAIT_BANK } from "@/lib/assess/banks/traits";
 import { VERBAL_TF, VERBAL_TF_STIMULI } from "@/lib/assess/banks/verbal-tf";
 import type { Section, Test } from "@/lib/assess/types";
@@ -124,7 +125,7 @@ export const TESTS: Test[] = [
       "Reported format: 18 true / false / cannot say statements on data in 6 minutes for the short form (prep-site reports; no official Aon guide found). The full test reports 37 items in 12 minutes.",
       "Aon does not publish its calculator or going-back rules. Here a calculator is provided and you can go back.",
       "Very fast: about 20 seconds per statement. Expect not to finish everything.",
-      "Each attempt serves 3 of 12 tables (retail, fee income, trading desks and branch deposits), so repeat attempts differ.",
+      "Each attempt serves 3 of 16 tables (retail, fee income, trading desks and branch deposits), so repeat attempts differ.",
     ],
     sources: [AD_CUTE],
     sections: [
@@ -164,6 +165,103 @@ export const TESTS: Test[] = [
         timing: { mode: "section", seconds: 265 },
         allowBack: true,
         sample: { count: 18, byStimulus: true },
+      }),
+    ],
+  },
+  {
+    id: "scales-numerical-full",
+    name: "Numerical statements, full length (Aon/cut-e scales style)",
+    replicates: "Aon/cut-e scales numerical (full length)",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: 37 true / false / cannot say statements on data in 12 minutes (prep-site reports; no official Aon guide found). Real versions show data in up to 6 tabs, one visible at a time; this replica shows one table per group of statements.",
+      "A calculator is provided and you can go back. Expect not to finish: about 19 seconds per statement.",
+    ],
+    sources: [AD_CUTE],
+    sections: [
+      section({
+        id: "scnf",
+        title: "Numerical statements",
+        instructions: "Decide whether each statement is true, false or cannot be said from the data given. You have 12 minutes for 37 statements.",
+        items: NUMERICAL_TF.items,
+        stimuli: NUMERICAL_TF.stimuli,
+        timing: { mode: "section", seconds: 12 * 60 },
+        calculator: true,
+        allowBack: true,
+        sample: { count: 37, byStimulus: true, exact: true },
+      }),
+    ],
+  },
+  {
+    id: "scales-verbal-full",
+    name: "Verbal statements, full length (Aon/cut-e scales style)",
+    replicates: "Aon/cut-e scales verbal (full length)",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: 49 true / false / cannot say statements in 12 minutes (prep-site reports). This replica uses all 48 of our statements at the same pace, so 705 seconds.",
+      "You can go back. Expect not to finish: about 15 seconds per statement.",
+    ],
+    sources: [AD_CUTE],
+    sections: [
+      section({
+        id: "scvf",
+        title: "Verbal statements",
+        instructions: "Read each passage and decide whether each statement is true, false or cannot be said from the passage alone. You have just under 12 minutes for 48 statements.",
+        items: VERBAL_TF,
+        stimuli: VERBAL_TF_STIMULI,
+        timing: { mode: "section", seconds: 705 },
+        allowBack: true,
+      }),
+    ],
+  },
+  {
+    id: "switch-challenge",
+    name: "Switch puzzles (Aon switchChallenge style)",
+    replicates: "Aon switchChallenge (game-based)",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: a gamified test of about 6 minutes where you work out which 'switch' reorders a row of shapes, getting harder as you go (prep-site reports). The real game is adaptive, animated and scored on speed and accuracy; this is a simplified multiple-choice version.",
+      "Codes are four digits: position 1 of the output takes the shape at the code's first digit, and so on. The second half chains two switches.",
+    ],
+    sources: ["https://www.gameassessmentprep.com/game-based-assessments"],
+    sections: [
+      section({
+        id: "sw",
+        title: "Switch puzzles",
+        instructions:
+          "Each switch reorders four shapes. A code like 3142 means: the first shape out is the 3rd shape in, the second is the 1st, the third is the 4th and the fourth is the 2nd. Choose the code that turns the input into the output. You have 6 minutes; work quickly.",
+        items: SWITCH,
+        timing: { mode: "section", seconds: 6 * 60 },
+      }),
+    ],
+  },
+  {
+    id: "work-scenarios",
+    name: "Work scenarios (SHL style, as used by NatWest)",
+    replicates: "SHL situational judgement 'work scenarios' assessment",
+    kind: "ability",
+    confidence: "multiple-candidate-reports",
+    approximate: true,
+    formatNotes: [
+      "Reported format: about 14 untimed workplace scenarios where you judge which responses are most and least effective (prep-site reports of NatWest's Work Scenarios assessment, run by SHL; NatWest's own page says about 20 to 25 minutes).",
+      "Each attempt serves 14 of our 24 scenarios, including banking ones.",
+    ],
+    sources: ["https://www.graduatesfirst.com/rbs-natwest-work-scenarios-assessment", "https://jobs.natwestgroup.com/pages/degree-apprenticeships"],
+    sections: [
+      section({
+        id: "ws",
+        title: "Work scenarios",
+        instructions: "For each scenario, choose the MOST effective and the LEAST effective response. There is no time limit, but the real assessment takes about 20 to 25 minutes.",
+        items: SJT.mostLeast,
+        timing: { mode: "untimed" },
+        allowBack: true,
+        sample: { count: 14 },
       }),
     ],
   },

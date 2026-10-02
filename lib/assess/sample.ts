@@ -26,7 +26,7 @@ export function serveIds(section: Section, rand: () => number = Math.random): st
     if (out.length >= count) break;
     out.push(...g);
   }
-  return out;
+  return section.sample.exact ? out.slice(0, count) : out;
 }
 
 /** Number of items one attempt serves. */

@@ -5,9 +5,9 @@ import { NUMERICAL_TF, buildNumericalTf } from "@/lib/assess/banks/numerical-tf"
 import { validateItem } from "@/lib/assess/validate";
 
 describe("numerical true/false/cannot say bank", () => {
-  it("has 72 valid statements in 12 groups sharing a table, across four themes", () => {
-    expect(NUMERICAL_TF.items).toHaveLength(72);
-    expect(Object.keys(NUMERICAL_TF.stimuli)).toHaveLength(12);
+  it("has 96 valid statements in 16 groups sharing a table, across four themes", () => {
+    expect(NUMERICAL_TF.items).toHaveLength(96);
+    expect(Object.keys(NUMERICAL_TF.stimuli)).toHaveLength(16);
     const titles = new Set(Object.values(NUMERICAL_TF.stimuli).map((s) => (s.type === "table" ? s.title : "")));
     expect(titles.size).toBe(4);
     for (const item of NUMERICAL_TF.items) {
@@ -166,5 +166,24 @@ describe("no repeated questions", () => {
   ] as const)("%s prompts are all different", (_name, items) => {
     const prompts = items.map((i) => i.prompt);
     expect(new Set(prompts).size).toBe(prompts.length);
+  });
+});
+
+describe("switch puzzles", () => {
+  it("have exactly one code that produces the output", async () => {
+    const { SWITCH, applySwitch } = await import("@/lib/assess/banks/switch");
+    expect(SWITCH).toHaveLength(24);
+    for (const item of SWITCH) {
+      if (item.kind !== "mcq") throw new Error("expected mcq");
+      expect(validateItem(item), item.id).toEqual([]);
+      const lines = item.prompt.split("\n");
+      const input = lines[0].replace("Input: ", "").split(" ");
+      const twoStep = lines.length === 4;
+      const middle = twoStep ? applySwitch(input, lines[1].match(/switch (\d{4})/)![1]) : input;
+      const output = lines[twoStep ? 2 : 1].split(": ")[1];
+      const producing = item.options.filter((code) => applySwitch(middle, code).join(" ") === output);
+      expect(producing, item.id).toEqual([item.options[item.answer]]);
+      expect(item.options.includes("1234"), item.id).toBe(false);
+    }
   });
 });

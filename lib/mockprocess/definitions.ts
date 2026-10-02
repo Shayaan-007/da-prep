@@ -646,7 +646,7 @@ export const MOCKS: MockProcess[] = [
       { kind: "test", name: "Online tests: numerical reasoning", testId: "scales-numerical", stageOrder: 2, note: "Aon (cut-e) tests are reported for campus roles, not confirmed for apprentices. This uses an Aon-style statement format." },
       { kind: "test", name: "Online tests: deductive reasoning", testId: "shl-deductive", stageOrder: 2, note: "Stands in for the reported logical reasoning test." },
       { kind: "test", name: "Online tests: situational judgement", testId: "sjt-most-least", stageOrder: 2, note: "Campus candidates report a chat-style situational judgement test; this replica uses written scenarios." },
-      NOT_REPLICATED("Online tests: switchChallenge", 2, "Campus candidates report Aon's switchChallenge, where you work out which operators changed a sequence of shapes.", "Not replicated here; reported for campus roles only."),
+      { kind: "test", name: "Online tests: switchChallenge", testId: "switch-challenge", stageOrder: 2, note: "Campus candidates report Aon's switchChallenge; this is a simplified, non-animated version. Reported for campus roles only." },
       {
         kind: "qa",
         name: "HireVue video interview",
